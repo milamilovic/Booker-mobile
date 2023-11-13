@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText">
+
+    <item
+        android:id="@+id/nav_home"
+        android:title="Home"
+        />
+
+    <item
+        android:id="@+id/nav_account"
+        android:title="My Account"
+        />
+
+    <item
+        android:id="@+id/nav_reservations"
+        android:title="Reservations" />
+
+    <item
+        android:id="@+id/nav_notifications"
+        android:title="Notifications" />
+
+    <item
+        android:id="@+id/nav_accommodations"
+        android:title="My accommodations" />
+
+    <item
+        android:id="@+id/nav_reservation_requests"
+        android:title="Reservation requests" />
+
+    <item
+        android:id="@+id/nav_comments"
+        android:title="Approve comments" />
+
+    <item
+        android:id="@+id/nav_block"
+        android:title="Approve blocking" />
+
+    <item
+        android:id="@+id/nav_approve_accommodations"
+        android:title="Approve accommodations" />
+
+    <item
+        android:id="@+id/nav_favorite"
+        android:title="Favorite accommodations" />
+
+    <item
+        android:id="@+id/nav_login"
+        android:title="Log in" />
+
+    <item
+        android:id="@+id/nav_register"
+        android:title="Register" />
+
+    <item
+        android:id="@+id/nav_logout"
+        android:title="Log out"
+        />
+
+</menu>
