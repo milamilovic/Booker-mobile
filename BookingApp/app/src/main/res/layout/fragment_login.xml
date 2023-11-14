@@ -38,12 +38,71 @@
             android:layout_marginHorizontal="40dp"
             android:fontFamily="sans-serif-light"
             android:minHeight="48dp"
+<<<<<<< HEAD
             android:autofillHints="emailAddress"
             android:background="@drawable/round_corner"
             android:backgroundTint="@color/transparent_80_light_gray"
             android:textColor="@color/dark_gray"
             android:paddingHorizontal="15dp"
             />
+=======
+            android:selectAllOnFocus="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/logo"
+            android:focusableInTouchMode="true"
+            android:focusable="true"/>
+
+        <!-- Password EditText -->
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:autofillHints="@string/password"
+            android:drawableStart="@drawable/baseline_password_24"
+            android:drawablePadding="20dp"
+            android:hint="@string/password"
+            android:imeActionLabel="Sign in"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:minHeight="48dp"
+            android:selectAllOnFocus="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/email" />
+
+        <!-- Login Button -->
+        <Button
+            android:id="@+id/login"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/round_corner_alternative"
+            android:enabled="true"
+            android:text="@string/log_in"
+            android:textColor="@color/light_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/password"
+            app:layout_constraintVertical_bias="0.2" />
+
+        <!-- Cancel Button -->
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/round_corner"
+            android:text="@string/cancel"
+            android:textColor="@color/transparent_80_dark_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/login"
+            app:layout_constraintVertical_bias="0.2" />
+>>>>>>> parent of a66ead1 (FragmentLogin layout update)
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/password_edittext"
