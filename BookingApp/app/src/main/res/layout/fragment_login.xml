@@ -6,18 +6,12 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-<<<<<<< Updated upstream
-    android:paddingLeft="@dimen/fragment_horizontal_margin"
-    android:paddingTop="@dimen/fragment_vertical_margin"
-    android:paddingRight="@dimen/fragment_horizontal_margin"
-    android:paddingBottom="@dimen/fragment_vertical_margin"
-=======
     android:paddingLeft="@dimen/horizontal_fragment_margin"
     android:paddingTop="@dimen/vertical_fragment_margin"
     android:paddingRight="@dimen/horizontal_fragment_margin"
     android:paddingBottom="@dimen/vertical_fragment_margin"
->>>>>>> Stashed changes
     tools:context="com.example.bookingapp.fragments.LoginFragment"
+    tools:context="com.example.bookingapp.LoginFragment"
     android:background="@drawable/phone_background_1">
 
     <!-- Green ConstraintLayout as background -->
@@ -115,7 +109,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="32dp"
             android:background="@drawable/round_corner"
-            android:text="@string/action_cancel"
+            android:text="@string/cancel"
             android:textColor="@color/transparent_80_dark_gray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
