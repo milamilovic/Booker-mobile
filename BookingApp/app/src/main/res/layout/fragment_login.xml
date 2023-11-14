@@ -11,7 +11,6 @@
     android:paddingRight="@dimen/horizontal_fragment_margin"
     android:paddingBottom="@dimen/vertical_fragment_margin"
     tools:context="com.example.bookingapp.fragments.LoginFragment"
-    tools:context="com.example.bookingapp.LoginFragment"
     android:background="@drawable/phone_background_1">
 
     <!-- Green ConstraintLayout as background -->
@@ -109,7 +108,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="32dp"
             android:background="@drawable/round_corner"
-            android:text="@string/cancel"
+            android:text="@string/action_cancel"
             android:textColor="@color/transparent_80_dark_gray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
