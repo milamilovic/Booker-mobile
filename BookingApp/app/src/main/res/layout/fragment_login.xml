@@ -6,10 +6,17 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+<<<<<<< Updated upstream
     android:paddingLeft="@dimen/fragment_horizontal_margin"
     android:paddingTop="@dimen/fragment_vertical_margin"
     android:paddingRight="@dimen/fragment_horizontal_margin"
     android:paddingBottom="@dimen/fragment_vertical_margin"
+=======
+    android:paddingLeft="@dimen/horizontal_fragment_margin"
+    android:paddingTop="@dimen/vertical_fragment_margin"
+    android:paddingRight="@dimen/horizontal_fragment_margin"
+    android:paddingBottom="@dimen/vertical_fragment_margin"
+>>>>>>> Stashed changes
     tools:context="com.example.bookingapp.fragments.LoginFragment"
     android:background="@drawable/phone_background_1">
 

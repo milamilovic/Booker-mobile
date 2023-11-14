@@ -81,17 +81,7 @@ public class BaseActivity extends AppCompatActivity {
         }));
 
         menu.getItem(10).setOnMenuItemClickListener((v -> {
-<<<<<<< Updated upstream
-            FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
-                    .beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .replace(R.id.fragment_placeholder, LoginFragment.newInstance("Fragment 1", "Ovo je fragment 1"));
-            transaction.addToBackStack(null);
-            transaction.commit();
-            drawerLayout.closeDrawer(navigationView);
-=======
             FragmentTransition.to(LoginFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
->>>>>>> Stashed changes
 
             // Close the drawer after selecting an option
             drawerLayout.closeDrawer(GravityCompat.START);
@@ -102,6 +92,7 @@ public class BaseActivity extends AppCompatActivity {
         menu.getItem(11).setOnMenuItemClickListener((v -> {
             //Intent i = new Intent(BaseActivity.this, RegisterScreen.class);
             //startActivity(i);
+
 
             FragmentTransition.to(RegisterFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
 
