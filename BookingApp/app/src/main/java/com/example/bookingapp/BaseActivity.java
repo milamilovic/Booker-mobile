@@ -76,9 +76,13 @@ public class BaseActivity extends AppCompatActivity {
         }));
 
         menu.getItem(10).setOnMenuItemClickListener((v -> {
-            //Intent i = new Intent(BaseActivity.this, LoginActivity.class);
-            //startActivity(i);
-            FragmentTransition.to(LoginFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
+            FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .replace(R.id.fragment_placeholder, LoginFragment.newInstance("Fragment 1", "Ovo je fragment 1"));
+            transaction.addToBackStack(null);
+            transaction.commit();
+            drawerLayout.closeDrawer(navigationView);
 
             return true;
         }));
