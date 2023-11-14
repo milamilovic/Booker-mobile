@@ -10,9 +10,12 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.bookingapp.fragments.LoginFragment;
+import com.example.bookingapp.fragments.RegisterFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class BaseActivity extends AppCompatActivity {
@@ -70,12 +73,15 @@ public class BaseActivity extends AppCompatActivity {
                     .replace(R.id.fragment_placeholder, HomeFragment.newInstance("Fragment 1", "Ovo je fragment 1"));
             transaction.addToBackStack(null);
             transaction.commit();
-            drawerLayout.closeDrawer(navigationView);
-            
+
+            // Close the drawer after selecting an option
+            drawerLayout.closeDrawer(GravityCompat.START);
+
             return true;
         }));
 
         menu.getItem(10).setOnMenuItemClickListener((v -> {
+<<<<<<< Updated upstream
             FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -83,15 +89,28 @@ public class BaseActivity extends AppCompatActivity {
             transaction.addToBackStack(null);
             transaction.commit();
             drawerLayout.closeDrawer(navigationView);
+=======
+            FragmentTransition.to(LoginFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
+>>>>>>> Stashed changes
+
+            // Close the drawer after selecting an option
+            drawerLayout.closeDrawer(GravityCompat.START);
 
             return true;
         }));
 
         menu.getItem(11).setOnMenuItemClickListener((v -> {
-            Intent i = new Intent(BaseActivity.this, RegisterScreen.class);
-            startActivity(i);
+            //Intent i = new Intent(BaseActivity.this, RegisterScreen.class);
+            //startActivity(i);
+
+            FragmentTransition.to(RegisterFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
+
+            // Close the drawer after selecting an option
+            drawerLayout.closeDrawer(GravityCompat.START);
+
             return true;
         }));
+
     };
 
     @Override
