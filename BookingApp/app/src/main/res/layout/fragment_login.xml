@@ -10,6 +10,7 @@
     android:paddingTop="@dimen/vertical_fragment_margin"
     android:paddingRight="@dimen/horizontal_fragment_margin"
     android:paddingBottom="@dimen/vertical_fragment_margin"
+    tools:context="com.example.bookingapp.fragments.LoginFragment"
     tools:context="com.example.bookingapp.LoginFragment"
     android:background="@drawable/phone_background_1">
 

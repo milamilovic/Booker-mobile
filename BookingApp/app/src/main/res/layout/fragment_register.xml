@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/fragment_horizontal_margin"
+    android:paddingLeft="@dimen/horizontal_fragment_margin"
     android:paddingTop="@dimen/vertical_fragment_margin"
     android:paddingRight="@dimen/horizontal_fragment_margin"
     android:paddingBottom="@dimen/vertical_fragment_margin"
