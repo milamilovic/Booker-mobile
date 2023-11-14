@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/vertical_fragment_margin"
     android:paddingRight="@dimen/horizontal_fragment_margin"
     android:paddingBottom="@dimen/vertical_fragment_margin"
-    tools:context="com.example.bookingapp.LoginFragment"
+    tools:context="com.example.bookingapp.LoginActivity"
     android:background="@drawable/phone_background_1">
 
     <!-- Green ConstraintLayout as background -->
