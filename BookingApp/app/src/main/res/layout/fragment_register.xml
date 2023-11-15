@@ -12,6 +12,7 @@
     tools:context="com.example.bookingapp.fragments.RegisterFragment"
     android:background="@drawable/phone_background_1">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/greenBackground"
         android:layout_width="match_parent"
@@ -58,7 +59,8 @@
             android:drawablePadding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            android:textColorHint="@color/dark_gray"/>
 
         <EditText
             android:id="@+id/surname"
@@ -76,7 +78,8 @@
             android:drawablePadding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/first_name" />
+            app:layout_constraintTop_toBottomOf="@+id/first_name"
+            android:textColorHint="@color/dark_gray"/>
 
         <EditText
             android:id="@+id/address"
@@ -94,7 +97,8 @@
             android:selectAllOnFocus="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/surname" />
+            app:layout_constraintTop_toBottomOf="@+id/surname"
+            android:textColorHint="@color/dark_gray"/>
 
         <EditText
             android:id="@+id/phone"
@@ -112,7 +116,8 @@
             android:selectAllOnFocus="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/address" />
+            app:layout_constraintTop_toBottomOf="@+id/address"
+            android:textColorHint="@color/dark_gray"/>
 
         <EditText
             android:id="@+id/email"
@@ -130,7 +135,8 @@
             android:drawablePadding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/phone" />
+            app:layout_constraintTop_toBottomOf="@+id/phone"
+            android:textColorHint="@color/dark_gray"/>
 
         <EditText
             android:id="@+id/password"
@@ -142,7 +148,7 @@
             android:autofillHints="@string/prompt_password"
             android:hint="@string/prompt_password"
             android:imeActionLabel="@string/action_register_short"
-            android:imeOptions="actionDone"
+            android:imeOptions="actionNext"
             android:inputType="textPassword"
             android:minHeight="48dp"
             android:selectAllOnFocus="true"
@@ -150,7 +156,8 @@
             android:drawablePadding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/email" />
+            app:layout_constraintTop_toBottomOf="@+id/email"
+            android:textColorHint="@color/dark_gray"/>
 
         <EditText
             android:id="@+id/password_confirm"
@@ -170,7 +177,8 @@
             android:drawablePadding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/password" />
+            app:layout_constraintTop_toBottomOf="@+id/password"
+            android:textColorHint="@color/dark_gray"/>
 
         <Button
             android:id="@+id/register"
@@ -186,9 +194,10 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/cancel"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/password_confirm"
+            app:layout_constraintTop_toBottomOf="@+id/role_radio"
             app:layout_constraintVertical_bias="0.2"
-            android:background="@drawable/round_corner" />
+            android:background="@drawable/round_corner"
+            android:textColor="@color/light_gray"/>
 
         <!-- Cancel Button -->
         <Button
@@ -205,7 +214,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/register"
-            app:layout_constraintTop_toBottomOf="@+id/password_confirm"
+            app:layout_constraintTop_toBottomOf="@+id/role_radio"
             app:layout_constraintVertical_bias="0.2"
             android:background="@drawable/round_corner_alternative" />
 
@@ -219,7 +228,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.269"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cancel" />
+            app:layout_constraintTop_toBottomOf="@+id/cancel"
+            android:textColor="@color/dark_gray"/>
 
         <TextView
             android:id="@+id/sign_up_text"
@@ -231,7 +241,58 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.889"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cancel" />
+            app:layout_constraintTop_toBottomOf="@+id/cancel"
+            android:textColor="@color/dark_gray"
+            android:clickable="true"
+            android:minHeight="48dp"
+            android:minWidth="48dp"/>
+
+        <RadioGroup
+            android:id="@+id/role_radio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/password_confirm"
+            android:textAlignment="center"
+            android:gravity="center">
+
+            <RadioButton
+                android:id="@+id/radio_guest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="@string/guest_radio"
+                android:checked="true"
+                android:textColor="@color/dark_gray"/>
+
+            <RadioButton
+                android:id="@+id/radio_owner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="@string/owner_radio"
+                android:textColor="@color/dark_gray"/>
+        </RadioGroup>
+        
+        <ProgressBar
+            android:id="@+id/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foregroundGravity="center"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="64dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="64dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/role_radio"
+            app:layout_constraintStart_toStartOf="@+id/role_radio"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
