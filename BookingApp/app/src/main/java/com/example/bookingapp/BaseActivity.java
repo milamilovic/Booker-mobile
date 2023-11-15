@@ -80,6 +80,20 @@ public class BaseActivity extends AppCompatActivity {
             return true;
         }));
 
+        menu.getItem(1).setOnMenuItemClickListener((v -> {
+            FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .replace(R.id.fragment_placeholder, ProfileFragment.newInstance("Fragment 1", "Ovo je fragment 1"));
+            transaction.addToBackStack(null);
+            transaction.commit();
+
+            // Close the drawer after selecting an option
+            drawerLayout.closeDrawer(GravityCompat.START);
+
+            return true;
+        }));
+
         menu.getItem(10).setOnMenuItemClickListener((v -> {
             FragmentTransition.to(LoginFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
 
