@@ -186,7 +186,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/cancel"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/password_confirm"
+            app:layout_constraintTop_toBottomOf="@+id/role_radio"
             app:layout_constraintVertical_bias="0.2"
             android:background="@drawable/round_corner" />
 
@@ -205,7 +205,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/register"
-            app:layout_constraintTop_toBottomOf="@+id/password_confirm"
+            app:layout_constraintTop_toBottomOf="@+id/role_radio"
             app:layout_constraintVertical_bias="0.2"
             android:background="@drawable/round_corner_alternative" />
 
@@ -232,6 +232,35 @@
             app:layout_constraintHorizontal_bias="0.889"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cancel" />
+
+        <RadioGroup
+            android:id="@+id/role_radio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/password_confirm"
+            android:textAlignment="center"
+            android:gravity="center">
+
+            <RadioButton
+                android:id="@+id/radio_guest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="@string/guest_radio"
+                android:checked="true"/>
+
+            <RadioButton
+                android:id="@+id/radio_owner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="@string/owner_radio" />
+        </RadioGroup>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
