@@ -12,6 +12,7 @@
     tools:context="com.example.bookingapp.fragments.RegisterFragment"
     android:background="@drawable/phone_background_1">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/greenBackground"
         android:layout_width="match_parent"
@@ -142,7 +143,7 @@
             android:autofillHints="@string/prompt_password"
             android:hint="@string/prompt_password"
             android:imeActionLabel="@string/action_register_short"
-            android:imeOptions="actionDone"
+            android:imeOptions="actionNext"
             android:inputType="textPassword"
             android:minHeight="48dp"
             android:selectAllOnFocus="true"
