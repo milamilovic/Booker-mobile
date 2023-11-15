@@ -18,4 +18,6 @@
     <color name="transparent_80_light_gray">#80E4E4E4</color>
     <color name="transparent_80_dark_gray">#803C3C3C</color>
     <color name="transparent_80_green">#80096A2E</color>
+
+    <color name="transparent_white">#00FFFFFF</color>
 </resources>

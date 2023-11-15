@@ -42,6 +42,7 @@ public class BaseActivity extends AppCompatActivity {
 
         setup();
         setNavigation();
+
     }
     public void setup() {
         ActionBar actionBar = getSupportActionBar();
