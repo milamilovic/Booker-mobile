@@ -20,7 +20,7 @@
             android:id="@+id/toolbar"
             android:layout_height="wrap_content"
             android:minHeight="60dp"
-            android:background="@color/transparent_80_green"
+            android:background="@color/transparent_80_darker_green"
             >
 
 
