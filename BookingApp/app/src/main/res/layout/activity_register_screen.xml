@@ -17,7 +17,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="50dp"
         android:background="@drawable/round_corner"
-        android:backgroundTint="@color/transparent_40_green">
+        android:backgroundTint="@color/transparent_40_grayish_green">
 
         <ImageView
             android:layout_width="wrap_content"

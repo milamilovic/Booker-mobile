@@ -5,7 +5,7 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="colorPrimary">@color/light_gray</item>
         <item name="colorSecondary">@color/dark_gray</item>
-        <item name="colorAccent">@color/green</item>
+        <item name="colorAccent">@color/darker_green</item>
     </style>
 
     <style name="Theme.BookingApp" parent="Base.Theme.BookingApp" />
