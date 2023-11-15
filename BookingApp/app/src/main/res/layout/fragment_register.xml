@@ -59,7 +59,8 @@
             android:drawablePadding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            android:textColorHint="@color/dark_gray"/>
 
         <EditText
             android:id="@+id/surname"
@@ -77,7 +78,8 @@
             android:drawablePadding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/first_name" />
+            app:layout_constraintTop_toBottomOf="@+id/first_name"
+            android:textColorHint="@color/dark_gray"/>
 
         <EditText
             android:id="@+id/address"
@@ -95,7 +97,8 @@
             android:selectAllOnFocus="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/surname" />
+            app:layout_constraintTop_toBottomOf="@+id/surname"
+            android:textColorHint="@color/dark_gray"/>
 
         <EditText
             android:id="@+id/phone"
@@ -113,7 +116,8 @@
             android:selectAllOnFocus="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/address" />
+            app:layout_constraintTop_toBottomOf="@+id/address"
+            android:textColorHint="@color/dark_gray"/>
 
         <EditText
             android:id="@+id/email"
@@ -131,7 +135,8 @@
             android:drawablePadding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/phone" />
+            app:layout_constraintTop_toBottomOf="@+id/phone"
+            android:textColorHint="@color/dark_gray"/>
 
         <EditText
             android:id="@+id/password"
@@ -151,7 +156,8 @@
             android:drawablePadding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/email" />
+            app:layout_constraintTop_toBottomOf="@+id/email"
+            android:textColorHint="@color/dark_gray"/>
 
         <EditText
             android:id="@+id/password_confirm"
@@ -171,7 +177,8 @@
             android:drawablePadding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/password" />
+            app:layout_constraintTop_toBottomOf="@+id/password"
+            android:textColorHint="@color/dark_gray"/>
 
         <Button
             android:id="@+id/register"
@@ -189,7 +196,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/role_radio"
             app:layout_constraintVertical_bias="0.2"
-            android:background="@drawable/round_corner" />
+            android:background="@drawable/round_corner"
+            android:textColor="@color/light_gray"/>
 
         <!-- Cancel Button -->
         <Button
@@ -220,7 +228,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.269"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cancel" />
+            app:layout_constraintTop_toBottomOf="@+id/cancel"
+            android:textColor="@color/dark_gray"/>
 
         <TextView
             android:id="@+id/sign_up_text"
@@ -232,7 +241,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.889"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cancel" />
+            app:layout_constraintTop_toBottomOf="@+id/cancel"
+            android:textColor="@color/dark_gray"/>
 
         <RadioGroup
             android:id="@+id/role_radio"
@@ -252,14 +262,16 @@
                 android:layout_height="wrap_content"
                 android:padding="15dp"
                 android:text="@string/guest_radio"
-                android:checked="true"/>
+                android:checked="true"
+                android:textColor="@color/dark_gray"/>
 
             <RadioButton
                 android:id="@+id/radio_owner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="15dp"
-                android:text="@string/owner_radio" />
+                android:text="@string/owner_radio"
+                android:textColor="@color/dark_gray"/>
         </RadioGroup>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
