@@ -14,9 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.bookingapp.BaseActivity;
+import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
 import com.example.bookingapp.databinding.FragmentRegisterBinding;
 import androidx.fragment.app.Fragment;
@@ -53,6 +56,8 @@ public class RegisterFragment extends Fragment {
             }
         });
     }
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

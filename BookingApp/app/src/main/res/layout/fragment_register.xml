@@ -242,7 +242,10 @@
             app:layout_constraintHorizontal_bias="0.889"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cancel"
-            android:textColor="@color/dark_gray"/>
+            android:textColor="@color/dark_gray"
+            android:clickable="true"
+            android:minHeight="48dp"
+            android:minWidth="48dp"/>
 
         <RadioGroup
             android:id="@+id/role_radio"
@@ -273,6 +276,22 @@
                 android:text="@string/owner_radio"
                 android:textColor="@color/dark_gray"/>
         </RadioGroup>
+        
+        <ProgressBar
+            android:id="@+id/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foregroundGravity="center"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="64dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="64dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/role_radio"
+            app:layout_constraintStart_toStartOf="@+id/role_radio"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
