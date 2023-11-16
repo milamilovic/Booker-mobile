@@ -48,11 +48,10 @@
                 android:layout_marginLeft="2.5dp"
                 android:src="@drawable/icons8_heart_30_not_selected_favourite"
                 android:elevation="10dp"
-                android:background=""
+                android:background="@color/transparent"
                 android:foregroundGravity="center"
                 android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                />
+                android:scaleType="centerCrop" />
 
 
         </RelativeLayout>

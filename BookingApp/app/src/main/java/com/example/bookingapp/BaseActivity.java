@@ -31,7 +31,7 @@ public class BaseActivity extends AppCompatActivity {
         FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_placeholder, HomeFragment.newInstance("Fragment 1", "Ovo je fragment 1"));
+                .replace(R.id.fragment_placeholder, HomeFragment.newInstance());
         transaction.commit();
 
         toolbar = findViewById(R.id.toolbar);
@@ -71,7 +71,7 @@ public class BaseActivity extends AppCompatActivity {
             FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .replace(R.id.fragment_placeholder, HomeFragment.newInstance("Fragment 1", "Ovo je fragment 1"));
+                    .replace(R.id.fragment_placeholder, HomeFragment.newInstance());
             transaction.addToBackStack(null);
             transaction.commit();
 

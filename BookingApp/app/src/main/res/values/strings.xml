@@ -41,4 +41,5 @@
     <string name="apartment_description">apartment image</string>
     <string name="accommodation_description">A lovely apartment in the center of the city with a magnificent view of Buckingham pallace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.</string>
     <string name="accommodation_name">Flower Apartment</string>
+    <string name="filters">Filters</string>
 </resources>
