@@ -1,27 +1,29 @@
-package com.example.bookingapp;
+package com.example.bookingapp.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
+
+import com.example.bookingapp.FragmentTransition;
+import com.example.bookingapp.R;
+import com.example.bookingapp.databinding.FragmentHomeBinding;
+import com.example.bookingapp.databinding.FragmentLoginBinding;
 
 public class HomeFragment extends Fragment {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    FragmentHomeBinding binding;
 
-    private String mParam1;
-    private String mParam2;
+    Button searchButton;
 
-    public static HomeFragment newInstance(String param1, String param2) {
+    public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -36,8 +38,6 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -45,10 +45,14 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-
-        return view;
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+        Button logIn = binding.search;
+        logIn.setOnClickListener(v -> {
+            FragmentTransition.to(AccommodationListingFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder
+            );
+        });
+        return root;
     }
 
     @Override

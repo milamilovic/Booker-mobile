@@ -13,6 +13,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.bookingapp.fragments.HomeFragment;
 import com.example.bookingapp.fragments.LoginFragment;
 import com.example.bookingapp.fragments.RegisterFragment;
 import com.google.android.material.navigation.NavigationView;
@@ -30,7 +31,7 @@ public class BaseActivity extends AppCompatActivity {
         FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_placeholder, HomeFragment.newInstance("Fragment 1", "Ovo je fragment 1"));
+                .replace(R.id.fragment_placeholder, HomeFragment.newInstance());
         transaction.commit();
 
         toolbar = findViewById(R.id.toolbar);
@@ -70,7 +71,7 @@ public class BaseActivity extends AppCompatActivity {
             FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .replace(R.id.fragment_placeholder, HomeFragment.newInstance("Fragment 1", "Ovo je fragment 1"));
+                    .replace(R.id.fragment_placeholder, HomeFragment.newInstance());
             transaction.addToBackStack(null);
             transaction.commit();
 
