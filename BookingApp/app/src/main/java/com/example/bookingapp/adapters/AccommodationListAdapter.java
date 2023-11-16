@@ -14,8 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,9 +35,9 @@ public class AccommodationListAdapter extends ArrayAdapter<AccommodationListing>
         super(context, resource);
     }
 
-    public void AccommodationListAdapter(Context context, ArrayList<AccommodationListing> AccommodationListings){
-        //super(context, R.layout.accommodation_card, AccommodationListings);
-        aAccommodationListings = AccommodationListings;
+    public AccommodationListAdapter(Context context, ArrayList<AccommodationListing> AccommodationListings){
+        super(context, R.layout.accommodation_card, AccommodationListings);
+        this.aAccommodationListings = AccommodationListings;
 
     }
     /*
@@ -83,19 +85,28 @@ public class AccommodationListAdapter extends ArrayAdapter<AccommodationListing>
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.accommodation_card,
                     parent, false);
         }
-        LinearLayout AccommodationListingCard = convertView.findViewById(R.id.accommodation_listing_card_item);
-        ImageView imageView = convertView.findViewById(R.id.accommodation_image);
-        TextView AccommodationListingTitle = convertView.findViewById(R.id.AccommodationListing_title);
-        TextView AccommodationListingDescription = convertView.findViewById(R.id.AccommodationListing_description);
+        LinearLayout card = convertView.findViewById(R.id.accommodation_listing_card_item);
+        ImageView image = convertView.findViewById(R.id.accommodation_image);
+        TextView title = convertView.findViewById(R.id.AccommodationListing_title);
+        TextView description = convertView.findViewById(R.id.AccommodationListing_description);
+        TextView totalPrice = convertView.findViewById(R.id.accommodation_listing_price_total);
+        TextView pricePerDay = convertView.findViewById(R.id.accommodation_listing_price_per_day);
+        RatingBar ratingBar = convertView.findViewById(R.id.rating);
+        ImageButton favorite = convertView.findViewById(R.id.favorite);
 
         if(AccommodationListing != null){
-            imageView.setImageResource(AccommodationListing.getImage());
-            AccommodationListingTitle.setText(AccommodationListing.getTitle());
-            AccommodationListingDescription.setText(AccommodationListing.getDescription());
-            AccommodationListingCard.setOnClickListener(v -> {
-                // Handle click on the item at 'position'
-                Log.i("ShopApp", "Clicked: " + AccommodationListing.getTitle() + ", id: " +
-                        AccommodationListing.getId().toString());
+            image.setImageResource(AccommodationListing.getImage());
+            title.setText(AccommodationListing.getTitle());
+            description.setText(AccommodationListing.getDescription());
+            totalPrice.setText(AccommodationListing.getTotalPrice() + "$");
+            pricePerDay.setText(AccommodationListing.getTotalPrice() + "$/day");
+            ratingBar.setRating(AccommodationListing.getRating());
+            if(AccommodationListing.getFavorite()) {
+                favorite.setBackgroundResource(R.drawable.icons8_heart_30_selected_favourite);
+            } else {
+                favorite.setBackgroundResource(R.drawable.icons8_heart_30_selected_favourite);
+            }
+            card.setOnClickListener(v -> {
                 Toast.makeText(getContext(), "Clicked: " + AccommodationListing.getTitle()  +
                         ", id: " + AccommodationListing.getId().toString(), Toast.LENGTH_SHORT).show();
             });

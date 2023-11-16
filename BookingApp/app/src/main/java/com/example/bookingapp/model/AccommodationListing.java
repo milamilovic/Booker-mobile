@@ -13,10 +13,10 @@ public class AccommodationListing  implements Parcelable {
     private boolean favourite;
     private int totalPrice;
     private int pricePerDay;
-    private double rating;
+    private float rating;
 
     public AccommodationListing(Long id, String title, String description, int image, boolean favourite,
-                                int totalPrice, int  pricePerDay, double rating) {
+                                int totalPrice, int  pricePerDay, float rating) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -38,7 +38,7 @@ public class AccommodationListing  implements Parcelable {
         favourite = in.readInt() == 1;
         totalPrice = in.readInt();
         pricePerDay = in.readInt();
-        rating = in.readDouble();
+        rating = in.readFloat();
     }
 
     public Long getId() {
@@ -73,6 +73,40 @@ public class AccommodationListing  implements Parcelable {
         this.image = image;
     }
 
+    public int getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(int totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public int getPricePerDay() {
+        return pricePerDay;
+    }
+
+    public void setPricePerDay(int pricePerDay) {
+        this.pricePerDay = pricePerDay;
+    }
+
+
+    public boolean getFavorite() {
+        return favourite;
+    }
+
+    public void setFavourite(boolean isFavorite) {
+        this.favourite = isFavorite;
+    }
+
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setImage(float rating) {
+        this.rating = rating;
+    }
+
     @Override
     public String toString() {
         return "AccommodationListing{" +
@@ -100,7 +134,7 @@ public class AccommodationListing  implements Parcelable {
         dest.writeInt(favourite ? 1 : 0);
         dest.writeInt(totalPrice);
         dest.writeInt(pricePerDay);
-        dest.writeDouble(rating);
+        dest.writeFloat(rating);
     }
 
     public static final Creator<AccommodationListing> CREATOR = new Creator<AccommodationListing>() {
