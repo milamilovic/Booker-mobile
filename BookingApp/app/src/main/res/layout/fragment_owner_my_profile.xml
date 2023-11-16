@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ProfileFragment">
+    tools:context=".OwnerMyProfileFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
             android:layout_height="360dp"
             android:layout_centerHorizontal="true"
             android:background="@drawable/white_background">
-            
+
             <ImageView
                 android:id="@+id/profile_pic"
                 android:layout_width="match_parent"
@@ -108,7 +108,7 @@
                             android:drawableStart="@drawable/user_role"
                             android:drawablePadding="20dp"
                             android:fontFamily="sans-serif-medium"
-                            android:text="Guest"
+                            android:text="Owner"
                             android:textColor="@color/dark_gray"
                             android:textFontWeight="@integer/material_motion_duration_long_1"
                             android:textSize="25sp" />
@@ -269,6 +269,38 @@
                             android:textColor="@color/light_gray"
                             android:layout_marginVertical="15dp"
                             android:layout_marginHorizontal="10dp"/>
+                    </LinearLayout>
+
+                    <!--Comments block-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="360dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/profileComments"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="Comments"
+                            android:textColor="@color/dark_gray"
+                            android:textSize="40sp" />
+
+                        <androidx.core.widget.NestedScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingBottom="10dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <!--Add comments here-->
+
+                            </LinearLayout>
+                        </androidx.core.widget.NestedScrollView>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
