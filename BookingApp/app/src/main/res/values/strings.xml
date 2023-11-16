@@ -38,4 +38,7 @@
     <string name="people_hint">How many people?</string>
     <string name="when_hint">When?</string>
     <string name="search">Search!</string>
+    <string name="apartment_description">apartment image</string>
+    <string name="accommodation_description">A lovely apartment in the center of the city with a magnificent view of Buckingham pallace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.</string>
+    <string name="accommodation_name">Flower Apartment</string>
 </resources>

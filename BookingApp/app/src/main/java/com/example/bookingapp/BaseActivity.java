@@ -1,6 +1,5 @@
 package com.example.bookingapp;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +13,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.bookingapp.fragments.HomeFragment;
 import com.example.bookingapp.fragments.LoginFragment;
 import com.example.bookingapp.fragments.RegisterFragment;
 import com.google.android.material.navigation.NavigationView;

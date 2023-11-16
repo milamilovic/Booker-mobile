@@ -1,4 +1,4 @@
-package com.example.bookingapp;
+package com.example.bookingapp.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+
+import com.example.bookingapp.R;
 
 public class HomeFragment extends Fragment {
 
