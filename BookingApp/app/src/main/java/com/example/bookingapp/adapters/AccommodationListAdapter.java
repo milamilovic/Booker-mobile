@@ -109,9 +109,9 @@ public class AccommodationListAdapter extends ArrayAdapter<AccommodationListing>
             pricePerDay.setText(AccommodationListing.getPricePerDay() + "$/day");
             ratingBar.setRating(AccommodationListing.getRating());
             if(AccommodationListing.getFavorite()) {
-                favorite.setBackgroundResource(R.drawable.icons8_heart_30_selected_favourite);
+                favorite.setImageResource(R.drawable.icons8_heart_30_selected_favourite);
             } else {
-                favorite.setBackgroundResource(R.drawable.icons8_heart_30_selected_favourite);
+                favorite.setImageResource(R.drawable.icons8_heart_30_not_selected_favourite);
             }
             card.setOnClickListener(v -> {
                 ArrayList<Integer> images = new ArrayList<Integer>();

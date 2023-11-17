@@ -8,11 +8,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
+import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
 import com.example.bookingapp.adapters.ImageAdapter;
 import com.example.bookingapp.model.Accommodation;
+import com.google.android.gms.maps.SupportMapFragment;
 
 import java.util.ArrayList;
 
@@ -24,6 +27,7 @@ import java.util.ArrayList;
 public class AccommodationViewFragment extends Fragment {
 
     private Accommodation accommodation;
+    Button showMap;
     public AccommodationViewFragment() {
         // Required empty public constructor
     }
@@ -49,6 +53,13 @@ public class AccommodationViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_accommodation_view, container, false);
 
+        showMap = view.findViewById(R.id.show_map);
+        showMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransition.to( new SupportMapFragment(), getActivity(), false, R.id.fragment_placeholder);
+            }
+        });
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler);
         ArrayList<Integer> images = new ArrayList<Integer>();

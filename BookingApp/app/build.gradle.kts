@@ -38,6 +38,8 @@ dependencies {
     implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.compose.animation:animation-core-android:1.5.4")
+    //for map
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
     //for carousel
     implementation("com.github.bumptech.glide:glide:4.16.0")
     testImplementation("junit:junit:4.13.2")

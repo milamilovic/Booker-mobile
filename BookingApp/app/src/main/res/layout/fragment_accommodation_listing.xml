@@ -7,21 +7,6 @@
     tools:context=".fragments.AccommodationListingFragment"
     android:background="@drawable/phone_background_1">
 
-
-        <!-- Green Linear as background -->
-        <LinearLayout
-            android:id="@+id/greenBackground"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="40dp"
-            android:background="@drawable/round_corner_green_background"
-            android:minWidth="500dp"
-            android:orientation="vertical"
-            android:padding="10dp">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -104,5 +89,4 @@
 
             </LinearLayout>
 
-        </LinearLayout>
 </FrameLayout>
