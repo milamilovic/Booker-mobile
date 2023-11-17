@@ -61,7 +61,7 @@ public class AccommodationListingFragment extends Fragment {
 
         prepareAccommodationList(accommodations);
         listView = root.findViewById(R.id.list);
-        AccommodationListAdapter adapter = new AccommodationListAdapter(getContext(), accommodations);
+        adapter = new AccommodationListAdapter(getContext(), accommodations);
         listView.setAdapter(adapter);
 
         Button btnFilters = binding.filter;

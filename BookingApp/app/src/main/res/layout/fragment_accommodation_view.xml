@@ -23,6 +23,7 @@
         android:padding="10dp">
 
         <ScrollView
+            android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -95,7 +96,8 @@
                             android:numStars="5"
                             android:stepSize="0.1"
                             android:layout_marginTop="10dp"
-                            android:layout_marginLeft="15dp"/>
+                            android:layout_marginLeft="15dp"
+                            android:rating="3.4"/>
 
                         <TextView
                             android:id="@+id/view_profile"
@@ -152,33 +154,77 @@
                         android:textSize="20dp"
                         android:textColor="@color/dark_gray"/>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:text="@string/example_address"
+                        android:textSize="14dp"
+                        android:textColor="@color/dark_gray"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/example_address"
-                            android:textSize="14dp"
-                            android:textColor="@color/dark_gray"/>
-
-                        <Button
-                            android:id="@+id/show_map"
-                            android:layout_gravity="right"
-                            android:layout_marginLeft="80dp"
-                            android:layout_width="100dp"
-                            android:layout_height="30dp"
-                            android:background="@drawable/round_corner"
-                            android:backgroundTint="@color/light_gray"
-                            android:text="@string/show_on_map"
-                            android:textSize="10dp"
-                            android:textColor="@color/dark_gray"/>
-
-                    </LinearLayout>
+                    <Button
+                        android:id="@+id/show_map"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="10dp"
+                        android:background="@drawable/round_corner"
+                        android:backgroundTint="@color/light_gray"
+                        android:text="@string/show_on_map"
+                        android:textSize="10dp"
+                        android:textColor="@color/white"/>
 
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/round_corner"
+                    android:backgroundTint="@color/transparent_60_grayish_green"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/amenities_bold"
+                        android:textSize="20dp"
+                        android:textColor="@color/dark_gray"/>
+
+                    <ListView
+                        android:id="@+id/amenity_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp"
+                        android:minHeight="100dp"
+                        android:scrollbarThumbVertical="@android:color/darker_gray"
+                        android:scrollbarAlwaysDrawVerticalTrack="true"/>
+
+                </LinearLayout>
+
+
+                <!--Comments block-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/round_corner"
+                    android:backgroundTint="@color/transparent_60_grayish_green"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:id="@+id/profileComments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comments_bold"
+                        android:textSize="20dp"
+                        android:textColor="@color/dark_gray"/>
+
+                    <!--        add comments here       -->
+
+                </LinearLayout>
+
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

@@ -48,4 +48,6 @@
     <string name="address"><b>Address: </b></string>
     <string name="example_address">Example Address 12</string>
     <string name="show_on_map">Show on map!</string>
+    <string name="amenities_bold"><b>Amenities</b></string>
+    <string name="comments_bold"><b>Comments</b></string>
 </resources>
