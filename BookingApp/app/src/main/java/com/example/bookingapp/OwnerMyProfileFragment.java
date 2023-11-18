@@ -1,5 +1,8 @@
 package com.example.bookingapp;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,6 +10,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RatingBar;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,6 +65,50 @@ public class OwnerMyProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_owner_my_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_owner_my_profile, container, false);
+        RatingBar rb = view.findViewById(R.id.owner_rate);
+        rb.setRating(4.1f);
+
+        Button delete_btn = view.findViewById(R.id.delete_profile_button);
+        delete_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater inflater = LayoutInflater.from(requireContext());
+                View customLayout = inflater.inflate(R.layout.fragment_delete, null);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext()).setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        Intent i = new Intent(getActivity(), BaseActivity.class);
+                        startActivity(i);
+                        //TODO logout user and delete account
+                        // redirection to home page for unregistered user
+                        Toast.makeText(getActivity(), "Deleted!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.setView(customLayout);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+
+        Button logout_btn = view.findViewById(R.id.logout_profile_button);
+        logout_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(), BaseActivity.class);
+                startActivity(i);
+                //TODO log out
+            }
+        });
+
+        return view;
     }
 }
