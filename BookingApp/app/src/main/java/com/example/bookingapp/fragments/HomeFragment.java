@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
 
@@ -51,6 +52,11 @@ public class HomeFragment extends Fragment {
         logIn.setOnClickListener(v -> {
             FragmentTransition.to(AccommodationListingFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder
             );
+        });
+
+        EditText dates = binding.dates;
+        dates.setOnClickListener(v -> {
+            //TODO: make two date picking fragment/dialog
         });
         return root;
     }

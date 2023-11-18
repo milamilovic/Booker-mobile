@@ -5,40 +5,48 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-public class AccommodationListing  implements Parcelable {
+import java.util.ArrayList;
+
+public class Accommodation implements Parcelable {
     private Long id;
     private String title;
     private String description;
-    private int image;
+    private String address;
+    private ArrayList<Amenity> amenities;
+    private ArrayList<Integer> images;
     private boolean favourite;
     private int totalPrice;
     private int pricePerDay;
     private float rating;
 
-    public AccommodationListing(Long id, String title, String description, int image, boolean favourite,
-                                int totalPrice, int  pricePerDay, float rating) {
+    public Accommodation(Long id, String title, String description, ArrayList<Integer> images, boolean favourite,
+                         int totalPrice, int  pricePerDay, float rating, String address, ArrayList<Amenity> amenities) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.image = image;
+        this.images = images;
         this.favourite = favourite;
         this.totalPrice = totalPrice;
         this.pricePerDay = pricePerDay;
         this.rating = rating;
+        this.address = address;
+        this.amenities = amenities;
     }
 
-    public AccommodationListing() {
+    public Accommodation() {
     }
 
-    protected AccommodationListing(Parcel in) {
+    protected Accommodation(Parcel in) {
         id = in.readLong();
         title = in.readString();
         description = in.readString();
-        image = in.readInt();
+        images = in.readArrayList(Integer.class.getClassLoader());
         favourite = in.readInt() == 1;
         totalPrice = in.readInt();
         pricePerDay = in.readInt();
         rating = in.readFloat();
+        address = in.readString();
+        amenities = in.readArrayList(Amenity.class.getClassLoader());
     }
 
     public Long getId() {
@@ -65,12 +73,12 @@ public class AccommodationListing  implements Parcelable {
         this.description = description;
     }
 
-    public int getImage() {
-        return image;
+    public ArrayList<Integer> getImages() {
+        return images;
     }
 
-    public void setImage(int image) {
-        this.image = image;
+    public void setImages(ArrayList<Integer> image) {
+        this.images = images;
     }
 
     public int getTotalPrice() {
@@ -103,7 +111,7 @@ public class AccommodationListing  implements Parcelable {
         return rating;
     }
 
-    public void setRating(float rating) {
+    public void setImage(float rating) {
         this.rating = rating;
     }
 
@@ -112,7 +120,7 @@ public class AccommodationListing  implements Parcelable {
         return "AccommodationListing{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", image='" + image + '\'' +
+                ", image='" + images + '\'' +
                 ", is favourite for user='" + favourite + '\'' +
                 ", total price='" + totalPrice + '\'' +
                 ", price per day='" + pricePerDay + '\'' +
@@ -130,11 +138,13 @@ public class AccommodationListing  implements Parcelable {
         dest.writeLong(id);
         dest.writeString(title);
         dest.writeString(description);
-        dest.writeInt(image);
+        dest.writeList(images);
         dest.writeInt(favourite ? 1 : 0);
         dest.writeInt(totalPrice);
         dest.writeInt(pricePerDay);
         dest.writeFloat(rating);
+        dest.writeString(address);
+        dest.writeList(amenities);
     }
 
     public static final Creator<AccommodationListing> CREATOR = new Creator<AccommodationListing>() {
@@ -148,6 +158,5 @@ public class AccommodationListing  implements Parcelable {
             return new AccommodationListing[size];
         }
     };
-
 
 }

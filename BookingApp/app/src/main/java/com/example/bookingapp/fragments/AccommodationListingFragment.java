@@ -61,7 +61,7 @@ public class AccommodationListingFragment extends Fragment {
 
         prepareAccommodationList(accommodations);
         listView = root.findViewById(R.id.list);
-        AccommodationListAdapter adapter = new AccommodationListAdapter(getContext(), accommodations);
+        adapter = new AccommodationListAdapter(getContext(), accommodations);
         listView.setAdapter(adapter);
 
         Button btnFilters = binding.filter;
@@ -71,44 +71,6 @@ public class AccommodationListingFragment extends Fragment {
             bottomSheetDialog.setContentView(dialogView);
             bottomSheetDialog.show();
         });
-
-//        Spinner spinner = binding.btnSort;
-//        // Create an ArrayAdapter using the string array and a default spinner layout
-//        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
-//                android.R.layout.simple_spinner_item,
-//                getResources().getStringArray(R.array.sort_array));
-//        // Specify the layout to use when the list of choices appears
-//        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        // Apply the adapter to the spinner
-//        spinner.setAdapter(arrayAdapter);
-//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//
-//                AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-//                dialog.setMessage("Change the sort option?")
-//                        .setCancelable(false)
-//                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                Log.v("ShopApp", (String) parent.getItemAtPosition(position));
-//                                ((TextView) parent.getChildAt(0)).setTextColor(Color.MAGENTA);
-//                            }
-//                        })
-//                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                dialog.cancel();
-//                            }
-//                        });
-//                AlertDialog alert = dialog.create();
-//                alert.show();
-//            }
-//
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//                // TODO Auto-generated method stub
-//            }
-//        });
 
 
         return root;
