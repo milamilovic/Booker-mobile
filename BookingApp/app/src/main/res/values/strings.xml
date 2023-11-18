@@ -40,4 +40,9 @@
     <string name="search">Search!</string>
     <string name="report">Report</string>
     <string name="report_user">Report user</string>
+    <string name="name_amp_surname_hint"><![CDATA[name & surname]]></string>
+    <string name="phone_number_hint">phone number</string>
+    <string name="address_hint">address</string>
+    <string name="email_hint">e-mail address</string>
+    <string name="log_out_button">Log out</string>
 </resources>

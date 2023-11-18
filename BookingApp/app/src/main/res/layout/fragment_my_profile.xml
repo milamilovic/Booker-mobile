@@ -92,10 +92,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-medium"
+                            android:hint="@string/name_amp_surname_hint"
                             android:text="Maria Jones"
                             android:textSize="30sp"
                             android:textColor="@color/dark_gray"
                             android:textStyle="bold"
+                            android:gravity="center"
                             android:focusable="true"
                             android:focusableInTouchMode="true"
                             android:selectAllOnFocus="true"
@@ -158,6 +160,7 @@
                                 android:inputType="textEmailAddress"
                                 android:minHeight="48dp"
                                 android:selectAllOnFocus="true"
+                                android:hint="@string/email_hint"
                                 android:text="maria.jones@domain.com"
                                 android:textColor="@color/dark_gray" />
 
@@ -172,6 +175,7 @@
                                 android:inputType="textPostalAddress"
                                 android:minHeight="48dp"
                                 android:selectAllOnFocus="true"
+                                android:hint="@string/address_hint"
                                 android:text="292 University Hill Road, USA"
                                 android:textColor="@color/dark_gray" />
 
@@ -186,6 +190,7 @@
                                 android:inputType="phone"
                                 android:minHeight="48dp"
                                 android:selectAllOnFocus="true"
+                                android:hint="@string/phone_number_hint"
                                 android:text="270-446-6573"
                                 android:textColor="@color/dark_gray" />
                         </LinearLayout>
@@ -270,6 +275,18 @@
                             android:layout_marginVertical="15dp"
                             android:layout_marginHorizontal="10dp"/>
                     </LinearLayout>
+
+                    <!--Log out-->
+                    <Button
+                        android:id="@+id/logout_profile_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/round_corner_alternative"
+                        android:enabled="true"
+                        android:text="@string/log_out_button"
+                        android:textColor="@color/light_gray"
+                        android:layout_marginVertical="15dp"
+                        android:layout_marginHorizontal="10dp"/>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
