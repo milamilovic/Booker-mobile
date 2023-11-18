@@ -99,6 +99,16 @@ public class OwnerMyProfileFragment extends Fragment {
             }
         });
 
+        Button logout_btn = view.findViewById(R.id.logout_profile_button);
+        logout_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(), BaseActivity.class);
+                startActivity(i);
+                //TODO log out
+            }
+        });
+
         return view;
     }
 }
