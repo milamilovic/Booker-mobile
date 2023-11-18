@@ -99,7 +99,6 @@
                     </LinearLayout>
                 </RelativeLayout>
 
-                <!--User info-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -107,15 +106,49 @@
                     android:paddingHorizontal="10dp"
                     android:orientation="vertical">
 
-                    <ImageView
-                        android:id="@+id/report_owner_icon"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="10dp"
-                        android:padding="10dp"
-                        android:src="@drawable/more_32"
-                        android:layout_gravity="right"/>
+                        android:orientation="horizontal">
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="25sp"
+                            android:text="4.1"
+                            android:padding="10dp"
+                            android:textColor="@color/dark_gray"
+                            android:layout_gravity="center"/>
+
+                        <RatingBar
+                            android:id="@+id/owner_rate"
+                            style="?android:attr/ratingBarStyleIndicator"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:isIndicator="true"
+                            android:stepSize="0.1"
+                            android:layout_marginEnd="10dp"
+                            android:theme="@style/RatingBar"/>
+
+                        <!--Helper-->
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <ImageView
+                            android:id="@+id/report_owner_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="10dp"
+                            android:padding="10dp"
+                            android:src="@drawable/more_32"
+                            android:gravity="end|center"/>
+                    </LinearLayout>
+
+                    <!--User info-->
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -207,6 +240,8 @@
 
                             </LinearLayout>
                         </androidx.core.widget.NestedScrollView>
+
+                        <!--Add rating user-->
 
                         <LinearLayout
                             android:layout_width="match_parent"

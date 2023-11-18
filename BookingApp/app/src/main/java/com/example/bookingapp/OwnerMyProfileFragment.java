@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,6 +60,9 @@ public class OwnerMyProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_owner_my_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_owner_my_profile, container, false);
+        RatingBar rb = view.findViewById(R.id.owner_rate);
+        rb.setRating(4.1f);
+        return view;
     }
 }

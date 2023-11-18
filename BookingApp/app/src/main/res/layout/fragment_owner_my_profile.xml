@@ -115,6 +115,37 @@
                     </LinearLayout>
                 </RelativeLayout>
 
+                <!--Rate-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@color/grayish_green"
+                    android:gravity="center"
+                    android:paddingTop="20dp">
+
+                    <TextView
+                        android:id="@+id/owner_rate_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="25sp"
+                        android:paddingRight="10dp"
+                        android:text="4.1"
+                        android:textColor="@color/dark_gray"
+                        android:layout_gravity="center"/>
+
+                    <RatingBar
+                        android:id="@+id/owner_rate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="?android:attr/ratingBarStyleIndicator"
+                        android:numStars="5"
+                        android:stepSize="0.1"
+                        android:isIndicator="true"
+                        android:theme="@style/RatingBar"/>
+                </LinearLayout>
+
                 <!--User info-->
                 <LinearLayout
                     android:layout_width="match_parent"

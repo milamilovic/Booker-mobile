@@ -8,5 +8,11 @@
         <item name="colorAccent">@color/darker_green</item>
     </style>
 
+    <!--Rating bar-->
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/transparent_80_dark_gray</item>
+        <item name="colorControlActivated">@color/dark_gray</item>
+    </style>
+
     <style name="Theme.BookingApp" parent="Base.Theme.BookingApp" />
 </resources>
