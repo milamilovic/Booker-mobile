@@ -38,4 +38,6 @@
     <string name="people_hint">How many people?</string>
     <string name="when_hint">When?</string>
     <string name="search">Search!</string>
+    <string name="report">Report</string>
+    <string name="report_user">Report user</string>
 </resources>
