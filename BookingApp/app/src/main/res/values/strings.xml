@@ -45,4 +45,5 @@
     <string name="address_hint">address</string>
     <string name="email_hint">e-mail address</string>
     <string name="log_out_button">Log out</string>
+    <string name="deleting_message">You are deleting your account. A lot of functionalities will be disabled to you. Are you sure you want to continue?</string>
 </resources>
