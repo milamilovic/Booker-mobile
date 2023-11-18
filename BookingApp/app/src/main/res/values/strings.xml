@@ -46,4 +46,17 @@
     <string name="email_hint">e-mail address</string>
     <string name="log_out_button">Log out</string>
     <string name="deleting_message">You are deleting your account. A lot of functionalities will be disabled to you. Are you sure you want to continue?</string>
+    <string name="apartment_description">apartment image</string>
+    <string name="accommodation_description">A lovely apartment in the center of the city with a magnificent view of Buckingham pallace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.</string>
+    <string name="accommodation_name">Flower Apartment</string>
+    <string name="filters">Filters</string>
+    <string name="description"><b>Description</b></string>
+    <string name="owner"><b>Owner</b></string>
+    <string name="view_profile"><u>View profile</u></string>
+    <string name="address"><b>Address: </b></string>
+    <string name="example_address">Example Address 12</string>
+    <string name="show_on_map">Show on map!</string>
+    <string name="amenities_bold"><b>Amenities</b></string>
+    <string name="comments_bold"><b>Comments</b></string>
+    <string name="make_a_reservation"><b>Make a Reservation!</b></string>
 </resources>
