@@ -13,9 +13,9 @@
         android:id="@+id/greenBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="40dp"
         android:background="@drawable/round_corner_green_background"
         android:minWidth="500dp"
@@ -260,7 +260,7 @@
                         android:maxHeight="10dp"
                         android:autofillHints="@string/when_hint"
                         android:drawableStart="@drawable/icons8_calendar_32"
-                        android:drawablePadding="20dp"
+                        android:drawablePadding="10dp"
                         android:hint="@string/when_hint"
                         android:textColorHint="@color/transparent_80_dark_gray"
                         android:inputType="date"
@@ -269,19 +269,40 @@
                         android:focusable="false"
                         android:cursorVisible="false"/>
 
-                    <EditText
-                        android:id="@+id/people"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:maxHeight="10dp"
-                        android:autofillHints="@string/people_hint"
-                        android:drawableStart="@drawable/person_icon_gray"
-                        android:drawablePadding="20dp"
-                        android:hint="@string/people_hint"
-                        android:textColorHint="@color/transparent_80_dark_gray"
-                        android:inputType="number"
-                        android:minHeight="48dp"/>
+                        android:orientation="horizontal">
 
+                        <EditText
+                            android:id="@+id/people"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxHeight="10dp"
+                            android:drawableStart="@drawable/icons8_calendar_32"
+                            android:drawablePadding="10dp"
+                            android:hint="@string/people_hint"
+                            android:textColorHint="@color/transparent_80_dark_gray"
+                            android:inputType="number"
+                            android:minHeight="48dp"/>
+
+                        <EditText
+                            android:id="@+id/price"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxHeight="10dp"
+                            android:autofillHints="Price"
+                            android:drawableStart="@drawable/icons8_dollar_16"
+                            android:drawablePadding="10dp"
+                            android:hint="Price"
+                            android:textColorHint="@color/transparent_80_dark_gray"
+                            android:inputType="number"
+                            android:minHeight="48dp"
+                            android:clickable="false"
+                            android:focusable="false"
+                            android:cursorVisible="false"/>
+
+                    </LinearLayout>
                     <Button
                         android:id="@+id/make_reservation_request"
                         android:layout_gravity="center"

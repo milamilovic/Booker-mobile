@@ -1,8 +1,12 @@
 package com.example.bookingapp.fragments;
 
 import android.app.AlertDialog;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ScrollView;
 
+import com.applandeo.materialcalendarview.CalendarDay;
+import com.applandeo.materialcalendarview.CalendarUtils;
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
@@ -30,11 +36,15 @@ import com.example.bookingapp.model.Accommodation;
 import com.example.bookingapp.model.AccommodationListing;
 import com.example.bookingapp.model.Amenity;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.material.datepicker.DayViewDecorator;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Random;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -109,6 +119,7 @@ public class AccommodationViewFragment extends Fragment {
             public void onDayClick(EventDay eventDay) {
                 List<Calendar> selectedDates = calendarView.getSelectedDates();
                 if(selectedDates.size()==1) {
+                    //set text box dates
                     Calendar firstDate = selectedDates.get(0);
                     SimpleDateFormat formattedDate
                             = new SimpleDateFormat("dd.MM.yyyy.");
@@ -117,6 +128,13 @@ public class AccommodationViewFragment extends Fragment {
                     String secondDateString = formattedDate.format(secondDate.getTime());
                     String datesString = firstDateString + " - " + secondDateString;
                     dates.setText(datesString);
+
+                    //set price
+                    EditText price = view.findViewById(R.id.price);
+                    Random random = new Random();
+                    int priceNum = random.nextInt(1000);
+                    price.setText(String.valueOf(priceNum) + "$");
+
                 }
             }
         });
