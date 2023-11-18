@@ -3,6 +3,7 @@ package com.example.bookingapp.fragments;
 import android.app.AlertDialog;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,10 +12,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ScrollView;
 
+import com.applandeo.materialcalendarview.CalendarView;
+import com.applandeo.materialcalendarview.EventDay;
+import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
+import com.applandeo.materialcalendarview.listeners.OnDayLongClickListener;
 import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
 import com.example.bookingapp.adapters.AccommodationListAdapter;
@@ -25,7 +31,10 @@ import com.example.bookingapp.model.AccommodationListing;
 import com.example.bookingapp.model.Amenity;
 import com.google.android.gms.maps.SupportMapFragment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -90,6 +99,25 @@ public class AccommodationViewFragment extends Fragment {
             @Override
             public void onClick(ImageView imageView, String path) {
                 //Do something like opening the image in new activity or showing it in full screen or something else.
+            }
+        });
+
+        CalendarView calendarView = view.findViewById(R.id.calendarView);
+        EditText dates = view.findViewById(R.id.dates);
+        calendarView.setOnDayClickListener(new OnDayClickListener() {
+            @Override
+            public void onDayClick(EventDay eventDay) {
+                List<Calendar> selectedDates = calendarView.getSelectedDates();
+                if(selectedDates.size()==1) {
+                    Calendar firstDate = selectedDates.get(0);
+                    SimpleDateFormat formattedDate
+                            = new SimpleDateFormat("dd.MM.yyyy.");
+                    String firstDateString = formattedDate.format(firstDate.getTime());
+                    Calendar secondDate = eventDay.getCalendar();
+                    String secondDateString = formattedDate.format(secondDate.getTime());
+                    String datesString = firstDateString + " - " + secondDateString;
+                    dates.setText(datesString);
+                }
             }
         });
 

@@ -57,7 +57,7 @@
                     android:drawablePadding="20dp"
                     android:hint="@string/when_hint"
                     android:textColorHint="@color/transparent_60_dark_gray"
-                    android:inputType="number"
+                    android:inputType="date"
                     android:minHeight="48dp"/>
 
                 <EditText

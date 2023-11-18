@@ -42,6 +42,9 @@ dependencies {
     implementation("com.google.android.gms:play-services-maps:18.1.0")
     //for carousel
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    //for calendar
+    implementation("com.applandeo:material-calendar-view:1.9.0-rc04")
+    //for testing
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

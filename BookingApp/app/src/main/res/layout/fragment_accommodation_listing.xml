@@ -37,9 +37,8 @@
                     android:autofillHints="@string/when_hint"
                     android:drawableStart="@drawable/icons8_calendar_32"
                     android:drawablePadding="20dp"
-                    android:hint=""
+                    android:hint="23.12.2023. - 26.12.2023."
                     android:textColorHint="@color/transparent_60_dark_gray"
-                    android:inputType="number"
                     android:minHeight="48dp"/>
 
                 <LinearLayout

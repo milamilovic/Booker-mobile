@@ -38,24 +38,29 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Facilities"/>
+            android:text="Facilities"
+            android:textColor="@color/dark_gray"/>
 
         <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Wi-Fi"/>
+            android:text="Wi-Fi"
+            android:textColor="@color/dark_gray"/>
         <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="AC"/>
+            android:text="AC"
+            android:textColor="@color/dark_gray"/>
         <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Kitchen"/>
+            android:text="Kitchen"
+            android:textColor="@color/dark_gray"/>
         <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Free parking"/>
+            android:text="Free parking"
+            android:textColor="@color/dark_gray"/>
 
 
         <View
@@ -67,27 +72,33 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Accommodation type"/>
+            android:text="Accommodation type"
+            android:textColor="@color/dark_gray"/>
         <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hotel"/>
+            android:text="Hotel"
+            android:textColor="@color/dark_gray"/>
         <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Apartment"/>
+            android:text="Apartment"
+            android:textColor="@color/dark_gray"/>
         <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Room"/>
+            android:text="Room"
+            android:textColor="@color/dark_gray"/>
         <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Villa"/>
+            android:text="Villa"
+            android:textColor="@color/dark_gray"/>
         <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Resort"/>
+            android:text="Resort"
+            android:textColor="@color/dark_gray"/>
 
 
 

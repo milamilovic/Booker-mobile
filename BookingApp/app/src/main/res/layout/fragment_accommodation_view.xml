@@ -193,7 +193,7 @@
                     <ListView
                         android:id="@+id/amenity_list"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="250dp"
                         android:layout_marginTop="10dp"
                         android:minHeight="100dp"
                         android:scrollbarThumbVertical="@android:color/darker_gray"
@@ -221,6 +221,80 @@
                         android:textColor="@color/dark_gray"/>
 
                     <!--        add comments here       -->
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/reservation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/round_corner"
+                    android:backgroundTint="@color/transparent_60_grayish_green"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/make_a_reservation"
+                        android:textSize="20dp"
+                        android:textColor="@color/dark_gray"
+                        android:layout_marginBottom="10dp"/>
+
+                    <com.applandeo.materialcalendarview.CalendarView
+                        android:id="@+id/calendarView"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        app:headerColor="@color/grayish_green"
+                        app:headerLabelColor="@color/light_gray"
+                        android:fadingEdge="horizontal"
+                        app:firstDayOfWeek="monday"
+                        app:type="range_picker"
+                        app:selectionColor="@color/grayish_green"/>
+
+                    <EditText
+                        android:id="@+id/dates"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxHeight="10dp"
+                        android:autofillHints="@string/when_hint"
+                        android:drawableStart="@drawable/icons8_calendar_32"
+                        android:drawablePadding="20dp"
+                        android:hint="@string/when_hint"
+                        android:textColorHint="@color/transparent_80_dark_gray"
+                        android:inputType="date"
+                        android:minHeight="48dp"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:cursorVisible="false"/>
+
+                    <EditText
+                        android:id="@+id/people"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxHeight="10dp"
+                        android:autofillHints="@string/people_hint"
+                        android:drawableStart="@drawable/person_icon_gray"
+                        android:drawablePadding="20dp"
+                        android:hint="@string/people_hint"
+                        android:textColorHint="@color/transparent_80_dark_gray"
+                        android:inputType="number"
+                        android:minHeight="48dp"/>
+
+                    <Button
+                        android:id="@+id/make_reservation_request"
+                        android:layout_gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/round_corner_alternative"
+                        android:backgroundTint="@color/transparent_60_dark_gray"
+                        android:enabled="true"
+                        android:text="@string/make_a_reservation"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/transparent_60_dark_gray"/>
 
                 </LinearLayout>
 

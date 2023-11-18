@@ -50,4 +50,5 @@
     <string name="show_on_map">Show on map!</string>
     <string name="amenities_bold"><b>Amenities</b></string>
     <string name="comments_bold"><b>Comments</b></string>
+    <string name="make_a_reservation"><b>Make a Reservation!</b></string>
 </resources>
