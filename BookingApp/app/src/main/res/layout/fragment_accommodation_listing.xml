@@ -30,16 +30,38 @@
                     android:minHeight="48dp"/>
 
                 <EditText
-                    android:id="@+id/dates"
+                    android:id="@+id/from"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxHeight="10dp"
-                    android:autofillHints="@string/when_hint"
+                    android:autofillHints="From?"
                     android:drawableStart="@drawable/icons8_calendar_32"
                     android:drawablePadding="20dp"
-                    android:hint="23.12.2023. - 26.12.2023."
+                    android:hint="20.12.2023."
                     android:textColorHint="@color/transparent_60_dark_gray"
-                    android:minHeight="48dp"/>
+                    android:inputType="date"
+                    android:minHeight="48dp"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
+
+                <EditText
+                    android:id="@+id/until"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxHeight="10dp"
+                    android:autofillHints="Until?"
+                    android:drawableStart="@drawable/icons8_calendar_32"
+                    android:drawablePadding="20dp"
+                    android:hint="23.12.2023."
+                    android:textColorHint="@color/transparent_60_dark_gray"
+                    android:inputType="date"
+                    android:minHeight="48dp"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.AccommodationListingFragment"
+    android:background="@drawable/phone_background_1">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/search_bar_layout"
+        android:background="@drawable/round_corner"
+        android:backgroundTint="@color/transparent_60_grayish_green">
+
+        <EditText
+            android:id="@+id/name_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxHeight="10dp"
+            android:layout_marginTop="5dp"
+            android:autofillHints="Search by name!"
+            android:drawableStart="@drawable/icons8_location_32"
+            android:drawablePadding="20dp"
+            android:hint="@string/search_by_name"
+            android:textColorHint="@color/transparent_60_dark_gray"
+            android:inputType="textCapWords"
+            android:minHeight="48dp"/>
+
+        <EditText
+            android:id="@+id/date_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxHeight="10dp"
+            android:autofillHints="Search by date!"
+            android:drawableStart="@drawable/icons8_calendar_32"
+            android:drawablePadding="20dp"
+            android:hint="@string/search_by_date"
+            android:textColorHint="@color/transparent_60_dark_gray"
+            android:inputType="date"
+            android:minHeight="48dp"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icons8_filter_32"
+                android:layout_marginVertical="10dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Filter by status: "
+                android:textColor="@color/transparent_80_dark_gray"
+                android:textSize="20dp"
+                android:layout_marginVertical="10dp"
+                android:layout_marginLeft="5dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="waiting"
+                android:textColor="@color/transparent_80_dark_gray"
+                android:layout_marginRight="15dp"/>
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="approved"
+                android:textColor="@color/transparent_80_dark_gray"
+                android:layout_marginRight="15dp"/>
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="denied"
+                android:textColor="@color/transparent_80_dark_gray"
+                android:layout_marginRight="15dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp"
+            android:paddingBottom="5dp">
+
+            <Button
+                android:id="@+id/filter"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_marginRight="20dp"
+                android:minWidth="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/round_corner_alternative"
+                android:backgroundTint="@color/transparent_60_dark_gray"
+                android:enabled="true"
+                android:text="Apply filters!"
+                android:textColor="@color/white"
+                android:textColorHint="@color/transparent_60_dark_gray"/>
+
+            <Button
+                android:id="@+id/search"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:minWidth="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/round_corner_alternative"
+                android:backgroundTint="@color/transparent_60_dark_gray"
+                android:enabled="true"
+                android:text="@string/search"
+                android:textColor="@color/white"
+                android:textColorHint="@color/transparent_60_dark_gray"/>
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" />
+
+    </LinearLayout>
+
+</FrameLayout>
