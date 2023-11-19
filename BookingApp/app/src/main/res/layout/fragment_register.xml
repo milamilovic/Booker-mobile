@@ -196,7 +196,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/role_radio"
             app:layout_constraintVertical_bias="0.2"
-            android:background="@drawable/round_corner"
+            android:background="@drawable/round_corner_alternative"
             android:textColor="@color/light_gray"/>
 
         <!-- Cancel Button -->
