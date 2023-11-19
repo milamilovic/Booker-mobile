@@ -19,23 +19,24 @@ import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
 import com.example.bookingapp.fragments.AccommodationViewFragment;
 import com.example.bookingapp.model.Accommodation;
-import com.example.bookingapp.model.AccommodationRequestGuestDTO;
+import com.example.bookingapp.model.AccommodationRequestOwnerDTO;
 import com.example.bookingapp.model.Amenity;
+import com.example.bookingapp.model.GuestOwnerViewDTO;
 
 import java.util.ArrayList;
 
-public class ReservationRequestGuestAdapter  extends ArrayAdapter<AccommodationRequestGuestDTO> {
+public class ReservationRequestOwnerAdapter  extends ArrayAdapter<AccommodationRequestOwnerDTO> {
 
-    private ArrayList<AccommodationRequestGuestDTO> requests;
+    private ArrayList<AccommodationRequestOwnerDTO> requests;
     Context context;
 
-    public ReservationRequestGuestAdapter(@NonNull Context context, int resource) {
+    public ReservationRequestOwnerAdapter(@NonNull Context context, int resource) {
         super(context, resource);
         this.context = context;
     }
 
-    public ReservationRequestGuestAdapter(Context context, ArrayList<AccommodationRequestGuestDTO> requests){
-        super(context, R.layout.reservation_request_guest_card, requests);
+    public ReservationRequestOwnerAdapter(Context context, ArrayList<AccommodationRequestOwnerDTO> requests){
+        super(context, R.layout.reservation_request_owner_card, requests);
         this.requests = requests;
         this.context = context;
     }
@@ -52,7 +53,7 @@ public class ReservationRequestGuestAdapter  extends ArrayAdapter<AccommodationR
      * */
     @Nullable
     @Override
-    public AccommodationRequestGuestDTO getItem(int position) {
+    public AccommodationRequestOwnerDTO getItem(int position) {
         return requests.get(position);
     }
 
@@ -79,12 +80,12 @@ public class ReservationRequestGuestAdapter  extends ArrayAdapter<AccommodationR
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        AccommodationRequestGuestDTO request = getItem(position);
+        AccommodationRequestOwnerDTO request = getItem(position);
         if(convertView == null){
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.reservation_request_guest_card,
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.reservation_request_owner_card,
                     parent, false);
         }
-        LinearLayout card = convertView.findViewById(R.id.reservation_request_guest_card);
+        LinearLayout card = convertView.findViewById(R.id.reservation_request_owner_card);
         ImageView image = convertView.findViewById(R.id.accommodation_image);
         TextView title = convertView.findViewById(R.id.title);
         TextView status = convertView.findViewById(R.id.reservation_request_status);
@@ -92,7 +93,12 @@ public class ReservationRequestGuestAdapter  extends ArrayAdapter<AccommodationR
         TextView totalPrice = convertView.findViewById(R.id.price_total);
         TextView pricePerDay = convertView.findViewById(R.id.price_per_day);
         RatingBar ratingBar = convertView.findViewById(R.id.rating);
-        Button cancelButton = convertView.findViewById(R.id.cancel);
+        Button approve = convertView.findViewById(R.id.approve);
+        Button deny = convertView.findViewById(R.id.deny);
+        ImageView profile_image = convertView.findViewById(R.id.profile_image);
+        TextView name = convertView.findViewById(R.id.name);
+        TextView cancellations = convertView.findViewById(R.id.cancellations);
+
 
         if(request != null){
             image.setImageResource(request.getImage());
@@ -100,19 +106,23 @@ public class ReservationRequestGuestAdapter  extends ArrayAdapter<AccommodationR
             status.setText(request.getStatusFormated());
             totalPrice.setText(request.getTotalPrice() + "$");
             pricePerDay.setText(request.getPricePerDay() + "$/day");
-            ratingBar.setRating(request.getRating());
             dates.setText(request.getDateRange());
-            if(!canReservationBeCanceled(request)) {
-                cancelButton.setBackgroundResource(R.drawable.round_corner_disabled_button);
+            if(!canReservationBeApproved(request)) {
+                approve.setBackgroundResource(R.drawable.round_corner_disabled_button);
+                deny.setBackgroundResource(R.drawable.round_corner_disabled_button);
             }
+            GuestOwnerViewDTO guest = request.getGuest(request.getGuestId());
+            profile_image.setImageResource(guest.getImage());
+            name.setText(guest.getName());
+            cancellations.setText("Number of cancellations: " + guest.getNumOfCancellations());
         }
 
         return convertView;
     }
 
-    private boolean canReservationBeCanceled(AccommodationRequestGuestDTO request) {
+    private boolean canReservationBeApproved(AccommodationRequestOwnerDTO request) {
         //TODO: update this function so that it checks if cancellation period passed
-        return request.getStatus().equals("waiting");
+        return request.getGuestId()!=1L;
     }
 
 }

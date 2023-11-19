@@ -5,10 +5,12 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.example.bookingapp.R;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class AccommodationRequest   implements Parcelable {
+public class AccommodationRequestOwnerDTO  implements Parcelable {
     private Long id;
     private String title;
     private int image;
@@ -19,9 +21,11 @@ public class AccommodationRequest   implements Parcelable {
     private String status;
     private Date fromDate;
     private Date toDate;
+    private int numOfPeople;
+    private Long guestId;
 
-    public AccommodationRequest(Long id, String title, int image,
-                                int totalPrice, int  pricePerDay, float rating, String status, Date from, Date to) {
+    public AccommodationRequestOwnerDTO(Long id, String title, int image,
+                                        int totalPrice, int  pricePerDay, float rating, String status, Date from, Date to, int people, long guest) {
         this.id = id;
         this.title = title;
         this.image = image;
@@ -31,12 +35,14 @@ public class AccommodationRequest   implements Parcelable {
         this.status = status;
         this.fromDate = from;
         this.toDate = to;
+        this.numOfPeople = people;
+        this.guestId = guest;
     }
 
-    public AccommodationRequest() {
+    public AccommodationRequestOwnerDTO() {
     }
 
-    protected AccommodationRequest(Parcel in) {
+    protected AccommodationRequestOwnerDTO(Parcel in) {
         id = in.readLong();
         title = in.readString();
         image = in.readInt();
@@ -46,6 +52,8 @@ public class AccommodationRequest   implements Parcelable {
         status = in.readString();
         fromDate = (java.util.Date) in.readSerializable();
         toDate = (java.util.Date) in.readSerializable();
+        guestId = in.readLong();
+        numOfPeople = in.readInt();
     }
 
     public Long getId() {
@@ -112,6 +120,22 @@ public class AccommodationRequest   implements Parcelable {
         this.toDate = toDate;
     }
 
+    public int getNumOfPeople() {
+        return numOfPeople;
+    }
+
+    public void setNumOfPeople(int numOfPeople) {
+        this.numOfPeople = numOfPeople;
+    }
+
+    public Long getGuestId() {
+        return guestId;
+    }
+
+    public void setGuestId(Long guestId) {
+        this.guestId = guestId;
+    }
+
     public float getRating() {
         return rating;
     }
@@ -135,6 +159,8 @@ public class AccommodationRequest   implements Parcelable {
                 ", rating='" + rating + '\'' +
                 ", from='" + formatDate(fromDate) + '\'' +
                 ", to='" + formatDate(toDate) + '\'' +
+                ", number of people='" + numOfPeople + '\'' +
+                ", guest id='" + guestId + '\'' +
                 '}';
     }
 
@@ -142,6 +168,18 @@ public class AccommodationRequest   implements Parcelable {
         String myFormat="dd.MM.yyyy.";
         SimpleDateFormat dateFormat=new SimpleDateFormat(myFormat);
         return dateFormat.format(date);
+    }
+
+    public GuestOwnerViewDTO getGuest(Long guestId) {
+        if (guestId == 1L) {
+            return new GuestOwnerViewDTO(1L, "Jane Austen", 2, R.drawable.profile_image);
+        } else if (guestId == 2L) {
+            return new GuestOwnerViewDTO(2L, "Maria Blue", 0, R.drawable.hotel_image);
+        } else if (guestId == 3L) {
+            return new GuestOwnerViewDTO(3L, "Jack Fisherman", 5, R.drawable.london_image);
+        } else {
+            return new GuestOwnerViewDTO(4L, "Tom Sawyer", 1, R.drawable.villa_image);
+        }
     }
 
     @Override
@@ -160,17 +198,19 @@ public class AccommodationRequest   implements Parcelable {
         dest.writeString(status);
         dest.writeSerializable(fromDate);
         dest.writeSerializable(toDate);
+        dest.writeLong(guestId);
+        dest.writeInt(numOfPeople);
     }
 
-    public static final Creator<AccommodationRequest> CREATOR = new Creator<AccommodationRequest>() {
+    public static final Creator<AccommodationRequestOwnerDTO> CREATOR = new Creator<AccommodationRequestOwnerDTO>() {
         @Override
-        public AccommodationRequest createFromParcel(Parcel in) {
-            return new AccommodationRequest(in);
+        public AccommodationRequestOwnerDTO createFromParcel(Parcel in) {
+            return new AccommodationRequestOwnerDTO(in);
         }
 
         @Override
-        public AccommodationRequest[] newArray(int size) {
-            return new AccommodationRequest[size];
+        public AccommodationRequestOwnerDTO[] newArray(int size) {
+            return new AccommodationRequestOwnerDTO[size];
         }
     };
 
