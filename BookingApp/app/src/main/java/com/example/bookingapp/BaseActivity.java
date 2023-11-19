@@ -16,6 +16,8 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.bookingapp.fragments.HomeFragment;
 import com.example.bookingapp.fragments.LoginFragment;
 import com.example.bookingapp.fragments.RegisterFragment;
+import com.example.bookingapp.fragments.ReservationRequestOwnerFragment;
+import com.example.bookingapp.fragments.ReservationRequestsGuestFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class BaseActivity extends AppCompatActivity {
@@ -86,6 +88,24 @@ public class BaseActivity extends AppCompatActivity {
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .replace(R.id.fragment_placeholder, MyProfileFragment.newInstance("Fragment 1", "Ovo je fragment 1"));
+            transaction.addToBackStack(null);
+            transaction.commit();
+
+            // Close the drawer after selecting an option
+            drawerLayout.closeDrawer(GravityCompat.START);
+
+            return true;
+        }));
+
+        menu.getItem(5).setOnMenuItemClickListener((v -> {
+//            FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//                    .replace(R.id.fragment_placeholder, ReservationRequestsGuestFragment.newInstance());
+            FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .replace(R.id.fragment_placeholder, ReservationRequestOwnerFragment.newInstance());
             transaction.addToBackStack(null);
             transaction.commit();
 
