@@ -180,6 +180,32 @@
             app:layout_constraintTop_toBottomOf="@+id/password"
             android:textColorHint="@color/dark_gray"/>
 
+        <ToggleButton
+            android:id="@+id/togglePasswordVisibility"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textOff=""
+            android:textOn=""
+            android:background="?android:attr/selectableItemBackground"
+            android:button="@drawable/eye_toggle_selector"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/password"
+            app:layout_constraintTop_toBottomOf="@+id/email" />
+
+        <ToggleButton
+            android:id="@+id/togglePasswordConfirmVisibility"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:button="@drawable/eye_toggle_selector"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/password_confirm"
+            app:layout_constraintTop_toBottomOf="@+id/password"
+            android:textOff=""
+            android:textOn=""/>
+
         <Button
             android:id="@+id/register"
             android:layout_width="wrap_content"

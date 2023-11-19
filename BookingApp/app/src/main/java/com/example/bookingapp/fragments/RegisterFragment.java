@@ -9,13 +9,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 
 import com.example.bookingapp.BaseActivity;
@@ -37,8 +42,39 @@ public class RegisterFragment extends Fragment {
         View root = binding.getRoot();
 
         setUpRadioListeners();
+        Button register = binding.register;
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(root.getContext(), "Register successful", Toast.LENGTH_SHORT).show();
+                FragmentTransition.to(HomeFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
+            }
+        });
 
+        EditText editTextPassword = binding.password;
+        ToggleButton togglePasswordVisibility = binding.togglePasswordVisibility;
 
+        togglePasswordVisibility.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                editTextPassword.setInputType(isChecked ?
+                        InputType.TYPE_TEXT_VARIATION_PASSWORD :
+                        InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                editTextPassword.setSelection(editTextPassword.getText().length());
+            }
+        });
+
+        EditText editTextPasswordConfirm = binding.passwordConfirm;
+        ToggleButton togglePasswordConfirmVisibility = binding.togglePasswordConfirmVisibility;
+        togglePasswordConfirmVisibility.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                editTextPasswordConfirm.setInputType(isChecked ?
+                        InputType.TYPE_TEXT_VARIATION_PASSWORD :
+                        InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                editTextPasswordConfirm.setSelection(editTextPasswordConfirm.getText().length());
+            }
+        });
         return root;
     }
 
