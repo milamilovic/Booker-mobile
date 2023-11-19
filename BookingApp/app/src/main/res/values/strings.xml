@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">BookingApp</string>
-    <string name="username">Enter your email</string>
-    <string name="password">Enter your password</string>
+    <string name="username">Enter email</string>
+    <string name="password">Enter password</string>
     <string name="log_in">Log in</string>
     <string name="sign_up_underlined"><b><u>Sign up</u></b></string>
     <string name="don_t_have_an_account">Don\'t have an account?</string>

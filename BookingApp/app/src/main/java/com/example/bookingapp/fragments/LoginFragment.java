@@ -4,13 +4,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
+import com.example.bookingapp.BaseActivity;
+import com.example.bookingapp.FragmentTransition;
+import com.example.bookingapp.R;
 import com.example.bookingapp.databinding.FragmentLoginBinding;
 
 
@@ -31,7 +38,20 @@ public class LoginFragment extends Fragment {
         logIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(root.getContext(), "Login button", Toast.LENGTH_SHORT).show();
+                Toast.makeText(root.getContext(), "Login successful", Toast.LENGTH_SHORT).show();
+                FragmentTransition.to(HomeFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
+            }
+        });
+
+        EditText passwordEditText = binding.password;
+        ToggleButton togglePasswordVisibility = binding.togglePasswordVisibility;
+        togglePasswordVisibility.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                passwordEditText.setInputType(isChecked ?
+                        InputType.TYPE_TEXT_VARIATION_PASSWORD :
+                        InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                passwordEditText.setSelection(passwordEditText.getText().length());
             }
         });
         return root;
@@ -40,8 +60,9 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
+
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
