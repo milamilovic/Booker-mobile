@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.applandeo.materialcalendarview.CalendarDay;
 import com.applandeo.materialcalendarview.CalendarUtils;
@@ -28,6 +29,7 @@ import com.applandeo.materialcalendarview.EventDay;
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
 import com.applandeo.materialcalendarview.listeners.OnDayLongClickListener;
 import com.example.bookingapp.FragmentTransition;
+import com.example.bookingapp.OwnerProfileFragment;
 import com.example.bookingapp.R;
 import com.example.bookingapp.adapters.AccommodationListAdapter;
 import com.example.bookingapp.adapters.AmenityAdapter;
@@ -104,6 +106,11 @@ public class AccommodationViewFragment extends Fragment {
 
         ImageAdapter adapter = new ImageAdapter(getContext(), images);
         recyclerView.setAdapter(adapter);
+
+        TextView ownerViewProfile = view.findViewById(R.id.view_profile);
+        ownerViewProfile.setOnClickListener(v -> {
+            FragmentTransition.to(OwnerProfileFragment.newInstance("profil", "vlasnikov profil"), getActivity(), false, R.id.fragment_placeholder);
+        });
 
         adapter.setOnItemClickListener(new ImageAdapter.OnItemClickListener() {
             @Override

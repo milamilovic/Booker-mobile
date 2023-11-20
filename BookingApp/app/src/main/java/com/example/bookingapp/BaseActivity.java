@@ -13,6 +13,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.bookingapp.fragments.FavouriteAccommodationsFragment;
 import com.example.bookingapp.fragments.HomeFragment;
 import com.example.bookingapp.fragments.LoginFragment;
 import com.example.bookingapp.fragments.RegisterFragment;
@@ -106,6 +107,20 @@ public class BaseActivity extends AppCompatActivity {
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .replace(R.id.fragment_placeholder, ReservationRequestOwnerFragment.newInstance());
+            transaction.addToBackStack(null);
+            transaction.commit();
+
+            // Close the drawer after selecting an option
+            drawerLayout.closeDrawer(GravityCompat.START);
+
+            return true;
+        }));
+
+        menu.getItem(9).setOnMenuItemClickListener((v -> {
+            FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .replace(R.id.fragment_placeholder, FavouriteAccommodationsFragment.newInstance());
             transaction.addToBackStack(null);
             transaction.commit();
 
