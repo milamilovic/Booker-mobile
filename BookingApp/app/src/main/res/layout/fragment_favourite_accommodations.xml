@@ -13,8 +13,7 @@
         android:orientation="vertical"
         android:id="@+id/search_bar_layout"
         android:background="@drawable/round_corner"
-        android:backgroundTint="@color/transparent_60_grayish_green"
-        android:layout_margin="20dp">
+        android:backgroundTint="@color/transparent_60_grayish_green">
 
         <TextView
             android:layout_width="wrap_content"
@@ -23,7 +22,8 @@
             android:textStyle="bold"
             android:textSize="20sp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp"
+            android:textColor="@color/dark_gray"/>
 
         <ListView
             android:id="@+id/list"
