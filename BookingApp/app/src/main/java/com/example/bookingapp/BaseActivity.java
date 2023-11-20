@@ -3,6 +3,8 @@ package com.example.bookingapp;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -34,7 +36,7 @@ public class BaseActivity extends AppCompatActivity {
         FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_placeholder, HomeFragment.newInstance());
+                .replace(R.id.fragment_placeholder, LoginFragment.newInstance());
         transaction.commit();
 
         toolbar = findViewById(R.id.toolbar);
@@ -42,6 +44,13 @@ public class BaseActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
 
+        ImageView toolbarLogo = findViewById(R.id.toolbar_logo);
+        toolbarLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransition.to(HomeFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
+            }
+        });
 
         setup();
         setNavigation();

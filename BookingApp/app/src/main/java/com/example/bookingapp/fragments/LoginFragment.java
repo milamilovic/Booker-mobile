@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -52,6 +53,22 @@ public class LoginFragment extends Fragment {
                         InputType.TYPE_TEXT_VARIATION_PASSWORD :
                         InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 passwordEditText.setSelection(passwordEditText.getText().length());
+            }
+        });
+
+        Button btnCancel = binding.cancel;
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransition.to(HomeFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
+            }
+        });
+
+        TextView signUpText = binding.signUpText;
+        signUpText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransition.to(RegisterFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
             }
         });
         return root;

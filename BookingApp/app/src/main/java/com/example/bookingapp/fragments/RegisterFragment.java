@@ -77,6 +77,22 @@ public class RegisterFragment extends Fragment {
                 editTextPasswordConfirm.setSelection(editTextPasswordConfirm.getText().length());
             }
         });
+
+        Button btnCancel = binding.cancel;
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransition.to(HomeFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
+            }
+        });
+
+        TextView logInText = binding.signUpText;
+        logInText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransition.to(LoginFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
+            }
+        });
         return root;
     }
 
