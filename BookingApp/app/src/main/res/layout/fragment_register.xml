@@ -60,7 +60,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:textColorHint="@color/dark_gray"/>
+            android:textColorHint="@color/transparent_60_dark_gray"
+            android:textColor="@color/dark_gray"/>
 
         <EditText
             android:id="@+id/surname"
@@ -79,7 +80,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/first_name"
-            android:textColorHint="@color/dark_gray"/>
+            android:textColorHint="@color/transparent_60_dark_gray"
+            android:textColor="@color/dark_gray"/>
 
         <EditText
             android:id="@+id/address"
@@ -98,7 +100,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/surname"
-            android:textColorHint="@color/dark_gray"/>
+            android:textColorHint="@color/transparent_60_dark_gray"
+            android:textColor="@color/dark_gray"/>
 
         <EditText
             android:id="@+id/phone"
@@ -117,7 +120,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/address"
-            android:textColorHint="@color/dark_gray"/>
+            android:textColorHint="@color/transparent_60_dark_gray"
+            android:textColor="@color/dark_gray"/>
 
         <EditText
             android:id="@+id/email"
@@ -136,7 +140,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/phone"
-            android:textColorHint="@color/dark_gray"/>
+            android:textColorHint="@color/transparent_60_dark_gray"
+            android:textColor="@color/dark_gray"/>
 
         <EditText
             android:id="@+id/password"
@@ -157,7 +162,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/email"
-            android:textColorHint="@color/dark_gray"/>
+            android:textColorHint="@color/transparent_60_dark_gray"
+            android:textColor="@color/dark_gray"/>
 
         <EditText
             android:id="@+id/password_confirm"
@@ -178,7 +184,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/password"
-            android:textColorHint="@color/dark_gray"/>
+            android:textColorHint="@color/transparent_60_dark_gray"
+            android:textColor="@color/dark_gray"/>
 
         <ToggleButton
             android:id="@+id/togglePasswordVisibility"

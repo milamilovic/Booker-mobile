@@ -63,7 +63,8 @@
             app:layout_constraintTop_toBottomOf="@+id/logo"
             android:focusableInTouchMode="true"
             android:focusable="true"
-            android:textColorHint="@color/dark_gray"/>
+            android:textColorHint="@color/transparent_60_dark_gray"
+            android:textColor="@color/dark_gray"/>
 
         <!-- Password EditText -->
         <EditText
@@ -83,7 +84,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/email"
-            android:textColorHint="@color/dark_gray" />
+            android:textColorHint="@color/transparent_60_dark_gray"
+            android:textColor="@color/dark_gray"/>
 
         <ToggleButton
             android:id="@+id/togglePasswordVisibility"
