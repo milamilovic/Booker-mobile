@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,26 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.db.williamchart.data.AxisType;
+import com.db.williamchart.data.Label;
+import com.db.williamchart.view.BarChartView;
 import com.example.bookingapp.R;
+
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ReportFragment extends Fragment {
 
+    private static final LinkedHashMap<String, Float> data = new LinkedHashMap<String, Float>() {{
+        put("jan", (float) 100);
+        put("feb", (float) 80);
+        put("mar", (float) 120);
+        put("apr", (float) 110);
+        put("may", (float) 130);
+        put("jun", (float) 105);
+    }};
 
     public ReportFragment() {
     }
@@ -61,6 +78,7 @@ public class ReportFragment extends Fragment {
                     returnView.findViewById(R.id.interval_report_layout).setVisibility(View.VISIBLE);
                     returnView.findViewById(R.id.accommodation_report_layout).setVisibility(View.GONE);
                 } else {
+                    //if accommodation report is selected
                     returnView.findViewById(R.id.accommodation_report_layout).setVisibility(View.VISIBLE);
                     returnView.findViewById(R.id.interval_report_layout).setVisibility(View.GONE);
                 }
@@ -74,6 +92,14 @@ public class ReportFragment extends Fragment {
 
         dropdown.setSelection(0);
         returnView.findViewById(R.id.accommodation_report_layout).setVisibility(View.GONE);
+
+        BarChartView intervalChart = returnView.findViewById(R.id.interval_chart);
+        intervalChart.getAnimation().setDuration(1200L);
+        intervalChart.animate(data);
+
+        intervalChart.setLabelsSize(20f);
+        intervalChart.setScaleY(3f);
+        intervalChart.setAxis(AxisType.X);
 
         return returnView;
     }

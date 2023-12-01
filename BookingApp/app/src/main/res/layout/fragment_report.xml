@@ -37,6 +37,7 @@
                 android:id="@+id/spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:minHeight="48dp"
                 android:background="@drawable/round_corner_alternative"
                 android:backgroundTint="@color/light_gray"
                 android:spinnerMode="dropdown"
@@ -47,13 +48,54 @@
                 android:id="@+id/interval_report_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/from"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Interval report"
-                    android:textColor="@color/dark_gray"/>
+                    android:autofillHints="From?"
+                    android:drawableStart="@drawable/icons8_calendar_32"
+                    android:drawablePadding="20dp"
+                    android:hint="@string/from"
+                    android:textColorHint="@color/transparent_60_dark_gray"
+                    android:inputType="date"
+                    android:minHeight="48dp"
+                    android:layout_marginTop="20dp"/>
+
+                <EditText
+                    android:id="@+id/until"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="Until?"
+                    android:drawableStart="@drawable/icons8_calendar_32"
+                    android:drawablePadding="20dp"
+                    android:hint="@string/until"
+                    android:textColorHint="@color/transparent_60_dark_gray"
+                    android:inputType="date"
+                    android:minHeight="48dp"
+                    android:layout_marginBottom="20dp"/>
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="15dp"
+                    android:minHeight="350dp"
+                    >
+
+                    <com.db.williamchart.view.BarChartView
+                        android:layout_marginTop="100dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="500dp"
+                        android:layout_width="match_parent"
+                        app:chart_spacing="70dp"
+                        app:chart_barsColor="@color/transparent_80_grayish_green"
+                        app:chart_barsBackgroundColor="@color/transparent"
+                        app:chart_barsRadius="5dp"
+                        android:id="@+id/interval_chart"
+                    />
+                </androidx.core.widget.NestedScrollView>
+
 
             </LinearLayout>
 
@@ -61,7 +103,7 @@
                 android:id="@+id/accommodation_report_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 >
 
                 <TextView
