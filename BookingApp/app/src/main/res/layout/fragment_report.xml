@@ -22,6 +22,7 @@
             android:layout_marginBottom="40dp"
             android:background="@drawable/round_corner_green_background"
             android:minWidth="500dp"
+            android:minHeight="900dp"
             android:orientation="vertical"
             android:padding="10dp">
 
@@ -48,6 +49,7 @@
                 android:id="@+id/interval_report_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:minHeight="900dp"
                 android:orientation="vertical">
 
                 <EditText
@@ -76,25 +78,52 @@
                     android:minHeight="48dp"
                     android:layout_marginBottom="20dp"/>
 
-                <androidx.core.widget.NestedScrollView
+                <com.db.williamchart.view.BarChartView
+                    android:layout_marginTop="100dp"
+                    android:layout_height="100dp"
                     android:layout_width="match_parent"
+                    app:chart_spacing="70dp"
+                    app:chart_barsColor="@color/transparent_80_grayish_green"
+                    app:chart_barsBackgroundColor="@color/transparent"
+                    app:chart_barsRadius="5dp"
+                    android:id="@+id/interval_chart_reservations"
+                />
+
+                <com.db.williamchart.view.BarChartView
+                    android:layout_marginTop="240dp"
+                    android:layout_height="100dp"
+                    android:layout_width="match_parent"
+                    app:chart_spacing="70dp"
+                    app:chart_barsColor="@color/transparent_80_grayish_green"
+                    app:chart_barsBackgroundColor="@color/transparent"
+                    app:chart_barsRadius="5dp"
+                    android:id="@+id/interval_chart_profit"
+                    />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingVertical="15dp"
-                    android:minHeight="350dp"
+                    android:orientation="vertical"
+                    android:background="@drawable/round_corner"
+                    android:backgroundTint="@color/white"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="120dp"
                     >
 
-                    <com.db.williamchart.view.BarChartView
-                        android:layout_marginTop="100dp"
+                    <Button
+                        android:id="@+id/pdf"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:minWidth="150dp"
                         android:layout_height="wrap_content"
-                        android:minHeight="500dp"
-                        android:layout_width="match_parent"
-                        app:chart_spacing="70dp"
-                        app:chart_barsColor="@color/transparent_80_grayish_green"
-                        app:chart_barsBackgroundColor="@color/transparent"
-                        app:chart_barsRadius="5dp"
-                        android:id="@+id/interval_chart"
-                    />
-                </androidx.core.widget.NestedScrollView>
+                        android:background="@drawable/round_corner_alternative"
+                        android:backgroundTint="@color/transparent_60_dark_gray"
+                        android:enabled="true"
+                        android:text="Generate PDF"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/transparent_60_dark_gray"/>
+
+                </LinearLayout>
 
 
             </LinearLayout>
@@ -106,11 +135,64 @@
                 android:orientation="vertical"
                 >
 
-                <TextView
+                <Spinner
+                    android:id="@+id/spinner_accommodation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:background="@drawable/round_corner_alternative"
+                    android:backgroundTint="@color/light_gray"
+                    android:spinnerMode="dropdown"
+                    android:textColor="@color/dark_gray"
+                    android:layout_marginTop="20dp"
+                    />
+
+                <com.db.williamchart.view.BarChartView
+                    android:layout_marginTop="100dp"
+                    android:layout_height="100dp"
+                    android:layout_width="match_parent"
+                    app:chart_spacing="70dp"
+                    app:chart_barsColor="@color/transparent_80_grayish_green"
+                    app:chart_barsBackgroundColor="@color/transparent"
+                    app:chart_barsRadius="5dp"
+                    android:id="@+id/accommodation_chart_reservations"
+                    />
+
+                <com.db.williamchart.view.BarChartView
+                    android:layout_marginTop="240dp"
+                    android:layout_height="100dp"
+                    android:layout_width="match_parent"
+                    app:chart_spacing="70dp"
+                    app:chart_barsColor="@color/transparent_80_grayish_green"
+                    app:chart_barsBackgroundColor="@color/transparent"
+                    app:chart_barsRadius="5dp"
+                    android:id="@+id/accommodation_chart_profit"
+                    />
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Accommodation report"
-                    android:textColor="@color/dark_gray"/>
+                    android:orientation="vertical"
+                    android:background="@drawable/round_corner"
+                    android:backgroundTint="@color/white"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="120dp"
+                    >
+
+                    <Button
+                        android:id="@+id/pdf2"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:minWidth="150dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/round_corner_alternative"
+                        android:backgroundTint="@color/transparent_60_dark_gray"
+                        android:enabled="true"
+                        android:text="Generate PDF"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/transparent_60_dark_gray"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
