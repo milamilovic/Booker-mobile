@@ -78,4 +78,5 @@
     <string name="submit">Submit</string>
     <string name="next_image">next image</string>
     <string name="previous_image">previous image</string>
+    <string name="select_report_type_you_want">Select report type you want:</string>
 </resources>
