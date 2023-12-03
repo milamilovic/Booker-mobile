@@ -15,13 +15,13 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.bookingapp.fragments.CreateAccommodationBaseFragment;
 import com.example.bookingapp.fragments.FavouriteAccommodationsFragment;
 import com.example.bookingapp.fragments.HomeFragment;
 import com.example.bookingapp.fragments.LoginFragment;
 import com.example.bookingapp.fragments.RegisterFragment;
 import com.example.bookingapp.fragments.ReportFragment;
 import com.example.bookingapp.fragments.ReservationRequestOwnerFragment;
-import com.example.bookingapp.fragments.ReservationRequestsGuestFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class BaseActivity extends AppCompatActivity {
@@ -171,6 +171,14 @@ public class BaseActivity extends AppCompatActivity {
             FragmentTransition.to(RegisterFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
 
             // Close the drawer after selecting an option
+            drawerLayout.closeDrawer(GravityCompat.START);
+
+            return true;
+        }));
+
+        menu.getItem(12).setOnMenuItemClickListener((v-> {
+            FragmentTransition.to(CreateAccommodationBaseFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
+
             drawerLayout.closeDrawer(GravityCompat.START);
 
             return true;
