@@ -6,5 +6,9 @@
         <item name="colorPrimary">@color/dark_gray</item>
         <item name="colorSecondary">@color/light_gray</item>
         <item name="colorAccent">@color/darker_green</item>
+
     </style>
+
+
+
 </resources>

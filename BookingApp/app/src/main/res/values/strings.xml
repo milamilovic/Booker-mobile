@@ -76,4 +76,6 @@
     <string name="max_people">Max</string>
     <string name="basic_price">Basic price</string>
     <string name="submit">Submit</string>
+    <string name="next_image">next image</string>
+    <string name="previous_image">previous image</string>
 </resources>

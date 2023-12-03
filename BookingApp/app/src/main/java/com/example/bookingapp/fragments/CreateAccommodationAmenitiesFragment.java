@@ -13,14 +13,11 @@ import androidx.fragment.app.Fragment;
 
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
@@ -31,21 +28,20 @@ import android.widget.ViewSwitcher;
 
 import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
-import com.example.bookingapp.adapters.ImageAdapter;
-import com.example.bookingapp.databinding.FragmentCreateAmenitiesBinding;
+import com.example.bookingapp.databinding.FragmentCreateAccommodationAmenitiesBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class CreateFragmentAmenitiesFragment extends Fragment {
+public class CreateAccommodationAmenitiesFragment extends Fragment {
     ImageButton btPrevious, btNext;
     Button select;
     private ImageSwitcher imageSwitcher;
 
     int imageList[] = {R.drawable.london_image, R.drawable.copenhagen_image, R.drawable.hotel_image};
     int count = imageList.length;
-    private FragmentCreateAmenitiesBinding binding;
+    private FragmentCreateAccommodationAmenitiesBinding binding;
     private int currentIndex = 0;
     private int PICK_IMAGE_MULTIPLE = 1;
     private String imageEncoded;
@@ -56,14 +52,14 @@ public class CreateFragmentAmenitiesFragment extends Fragment {
 
 
 
-    public static CreateFragmentAmenitiesFragment newInstance() {
-        return new CreateFragmentAmenitiesFragment();
+    public static CreateAccommodationAmenitiesFragment newInstance() {
+        return new CreateAccommodationAmenitiesFragment();
     }
 
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentCreateAmenitiesBinding.inflate(inflater, container, false);
+        binding = FragmentCreateAccommodationAmenitiesBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         btPrevious = binding.btnPrevious;

@@ -9,14 +9,14 @@
     android:paddingBottom="@dimen/vertical_fragment_margin"
     android:background="@drawable/phone_background_1"
     android:id="@+id/container"
-    tools:context=".fragments.CreateFragmentAmenitiesFragment">
+    tools:context=".fragments.CreateAccommodationAmenitiesFragment">
 
     <LinearLayout
         android:id="@+id/greenBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="start"
-        android:layout_gravity="start"
+        android:layout_gravity="center"
         android:background="@drawable/round_corner_green_background"
         android:orientation="vertical"
         android:layout_marginStart="32dp"
@@ -30,7 +30,7 @@
             android:layout_width="150dp"
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/booker_high_resolution_logo_transparent"
+            android:src="@drawable/booker_favicon_color"
             android:contentDescription="@string/background_description"/>
 
         <GridLayout
@@ -55,7 +55,9 @@
                 android:textColor="@color/dark_gray"
                 android:minHeight="48dp"
                 android:minWidth="48dp"
-                android:paddingEnd="15dp"/>
+                android:paddingEnd="15dp"
+                android:buttonTint="@color/transparent_80_darker_green"
+                android:foregroundTint="@color/transparent_60_light_gray" />
 
             <CheckBox
                 android:id="@+id/cbAC"
@@ -65,7 +67,9 @@
                 android:textColor="@color/dark_gray"
                 android:minHeight="48dp"
                 android:minWidth="48dp"
-                android:paddingEnd="15dp"/>
+                android:paddingEnd="15dp"
+                android:buttonTint="@color/transparent_80_darker_green"
+                android:foregroundTint="@color/transparent_60_light_gray"/>
 
             <CheckBox
                 android:id="@+id/cbKitchen"
@@ -75,7 +79,9 @@
                 android:textColor="@color/dark_gray"
                 android:minHeight="48dp"
                 android:minWidth="48dp"
-                android:paddingEnd="15dp"/>
+                android:paddingEnd="15dp"
+                android:buttonTint="@color/transparent_80_darker_green"
+                android:foregroundTint="@color/transparent_60_light_gray"/>
 
             <CheckBox
                 android:id="@+id/cbParking"
@@ -85,7 +91,9 @@
                 android:textColor="@color/dark_gray"
                 android:minHeight="48dp"
                 android:minWidth="48dp"
-                android:paddingEnd="15dp"/>
+                android:paddingEnd="15dp"
+                android:buttonTint="@color/transparent_80_darker_green"
+                android:foregroundTint="@color/transparent_60_light_gray"/>
 
         </GridLayout>
 
@@ -101,7 +109,8 @@
                 android:layout_width="50dp"
                 android:layout_height="80dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/baseline_navigate_before_24"/>
+                android:src="@drawable/baseline_navigate_before_24"
+                android:contentDescription="@string/previous_image" />
 
             <ImageSwitcher
                 android:id="@+id/imageSwitcher"
@@ -113,7 +122,8 @@
                 android:layout_width="50dp"
                 android:layout_height="80dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/baseline_navigate_next_24"/>
+                android:src="@drawable/baseline_navigate_next_24"
+                android:contentDescription="@string/next_image"/>
         </LinearLayout>
 
         <Button
@@ -126,7 +136,9 @@
             android:text="@string/add_images"
             android:drawableEnd="@drawable/baseline_add_photo_alternate_24"
             android:drawablePadding="10dp"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/round_corner_alternative"
+            android:textColor="@color/light_gray"/>
 
         <EditText
             android:id="@+id/editTextLocation"

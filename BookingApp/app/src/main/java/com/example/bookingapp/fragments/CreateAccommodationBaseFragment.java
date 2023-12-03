@@ -17,12 +17,6 @@ import android.widget.TextView;
 import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
 import com.example.bookingapp.databinding.FragmentCreateAccommodationBaseBinding;
-import com.example.bookingapp.databinding.FragmentCreateAmenitiesBinding;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
 
 
 public class CreateAccommodationBaseFragment extends Fragment {
@@ -47,7 +41,7 @@ public class CreateAccommodationBaseFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                    FragmentTransition.to(CreateFragmentAmenitiesFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
+                    FragmentTransition.to(CreateAccommodationAmenitiesFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
                     return true;
                 }
                 return false;
