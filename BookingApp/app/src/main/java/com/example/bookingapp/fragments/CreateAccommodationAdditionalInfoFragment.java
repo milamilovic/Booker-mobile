@@ -50,6 +50,7 @@ public class CreateAccommodationAdditionalInfoFragment extends Fragment {
         setupDatePickers();
         setupNumberPickers();
         setupAccommodationTypeSpinner();
+        setupSubmitListener();
         return root;
     }
 
@@ -58,8 +59,8 @@ public class CreateAccommodationAdditionalInfoFragment extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Accommodation will be created after admin's check", Toast.LENGTH_SHORT).show();
-                FragmentTransition.to(CreateAccommodationBaseFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
+                Toast.makeText(getContext(), "Accommodation will be created after administrator's check", Toast.LENGTH_SHORT).show();
+                FragmentTransition.to(AccommodationListingFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
             }
         });
     }
