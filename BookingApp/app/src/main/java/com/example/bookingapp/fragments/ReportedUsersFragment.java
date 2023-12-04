@@ -64,9 +64,9 @@ public class ReportedUsersFragment extends Fragment {
     }
 
     User senderUser = new User("SenderName", "SenderSurname");
-    Account sender = new Account(senderUser, Role.GUEST, null);
+    Account sender = new Account(senderUser, Role.GUEST, null, false);
     User receiverUser = new User("ReceiverName", "ReceiverSurname");
-    Account receiver = new Account(receiverUser, Role.OWNER, null);
+    Account receiver = new Account(receiverUser, Role.OWNER, null, false);
     Date date = new Date();
     String reason = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
             "Morbi vulputate volutpat lacus, ut rutrum eros hendrerit non. Cras volutpat congue auctor. " +

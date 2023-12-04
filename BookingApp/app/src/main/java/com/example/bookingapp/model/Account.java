@@ -10,6 +10,7 @@ public class Account implements Parcelable {
     private User user;
     private Role role;
     private String password;
+    private boolean blocked;
 
     public User getUser() {
         return user;
@@ -35,10 +36,19 @@ public class Account implements Parcelable {
         this.password = password;
     }
 
-    public Account(User user, Role role, String password) {
+    public boolean getBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
+    }
+
+    public Account(User user, Role role, String password, boolean blocked) {
         this.user = user;
         this.role = role;
         this.password = password;
+        this.blocked = blocked;
     }
 
     public Account() {}
@@ -68,6 +78,7 @@ public class Account implements Parcelable {
         dest.writeParcelable(user, flags);
         dest.writeString(role.name());
         dest.writeString(password);
+        dest.writeBoolean(blocked);
     }
 
     @Override
@@ -76,6 +87,7 @@ public class Account implements Parcelable {
                 "user=" + user +
                 ", role=" + role +
                 ", password='" + password + '\'' +
+                ", blocked=" + blocked +
                 '}';
     }
 }
