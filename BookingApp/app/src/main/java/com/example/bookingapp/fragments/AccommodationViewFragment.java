@@ -96,7 +96,7 @@ public class AccommodationViewFragment extends Fragment {
         showMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransition.to( new SupportMapFragment(), getActivity(), false, R.id.fragment_placeholder);
+                FragmentTransition.to( new MapFragment(), getActivity(), false, R.id.fragment_placeholder);
             }
         });
 
