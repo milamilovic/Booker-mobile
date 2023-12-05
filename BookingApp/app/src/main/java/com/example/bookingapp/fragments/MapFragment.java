@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,50 +21,49 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends FragmentActivity implements OnMapReadyCallback {
 
     GoogleMap googleMap;
-    private MapView mapView;
-    FrameLayout mapContainer;
+    FrameLayout map;
 
-    public MapFragment() {
-        // Required empty public constructor
-    }
-
-    public static MapFragment newInstance() {
-        MapFragment fragment = new MapFragment();
-        return fragment;
-    }
+    MapView mapView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_map, container, false);
+        setContentView(R.layout.fragment_map);
 
 
-        mapView = (MapView) view.findViewById(R.id.map_view);
-        mapContainer = view.findViewById(R.id.map_fragment_containter);
+        map = findViewById(R.id.map);
 
-        SupportMapFragment mapFragment = SupportMapFragment.newInstance();
-        getParentFragmentManager().beginTransaction().add(R.id.map_fragment_containter, mapFragment).commit();
+        SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        return view;
+//        MapsInitializer.initialize(this);
+
+        mapView = findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(googleMap -> {
+            LatLng place = new LatLng(0, 0);
+            googleMap.addMarker(new MarkerOptions()
+                    .position(place)
+                    .title("Address"));
+            googleMap.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(place, 15));
+        });
 
     }
+
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
 
-        MapsInitializer.initialize(getActivity());
+//        MapsInitializer.initialize(this);
 
         this.googleMap = googleMap;
-        LatLng place = new LatLng(0, 0);
+        LatLng place = new LatLng(0d, 0d);
         googleMap.addMarker(new MarkerOptions()
                 .position(place)
                 .title("Address"));
@@ -71,15 +71,4 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 CameraUpdateFactory.newLatLngZoom(place, 15));
     }
 
-    @Override
-    public void onResume() {
-        mapView.onResume();
-        super.onResume();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mapView.onDestroy();
-    }
 }

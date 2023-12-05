@@ -6,12 +6,22 @@
         <item name="colorPrimary">@color/light_gray</item>
         <item name="colorSecondary">@color/dark_gray</item>
         <item name="colorAccent">@color/darker_green</item>
+        <item name="android:alertDialogTheme">@style/AlertDialogCustom</item>
     </style>
 
     <!--Rating bar-->
     <style name="RatingBar" parent="Theme.AppCompat">
         <item name="colorControlNormal">@color/transparent_80_dark_gray</item>
         <item name="colorControlActivated">@color/dark_gray</item>
+    </style>
+
+    <!--Dialog color-->
+    <style name="AlertDialogCustom" parent="android:Theme.Material.Light.Dialog.Alert">
+        <item name="colorAccent">@color/light_gray</item>
+        <item name="android:textColor">@color/grayish_green</item>
+        <item name="android:backgroundTint">#e5e5e5</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
     </style>
 
     <style name="Theme.BookingApp" parent="Base.Theme.BookingApp" />

@@ -1,6 +1,8 @@
 package com.example.bookingapp.fragments;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -31,6 +33,7 @@ import com.applandeo.materialcalendarview.listeners.OnDayLongClickListener;
 import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.OwnerProfileFragment;
 import com.example.bookingapp.R;
+import com.example.bookingapp.SplashScreen;
 import com.example.bookingapp.adapters.AccommodationListAdapter;
 import com.example.bookingapp.adapters.AmenityAdapter;
 import com.example.bookingapp.adapters.ImageAdapter;
@@ -163,6 +166,30 @@ public class AccommodationViewFragment extends Fragment {
                         break;
                 }
                 return false;
+            }
+        });
+
+        //make reservation request button on click
+        view.findViewById(R.id.make_reservation_request).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext()
+                ).setNegativeButton("Stay on this page",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                }).setPositiveButton("Go to your reservation requests", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        FragmentTransition.to(ReservationRequestsGuestFragment.newInstance(), getActivity(), true, R.id.fragment_placeholder);
+
+                    }
+                });
+                builder.setMessage("You made a reservation request!");
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 

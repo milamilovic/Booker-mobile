@@ -1,6 +1,8 @@
 package com.example.bookingapp.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +21,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
 import com.example.bookingapp.fragments.AccommodationViewFragment;
+import com.example.bookingapp.fragments.ReservationRequestsGuestFragment;
 import com.example.bookingapp.model.Accommodation;
 import com.example.bookingapp.model.AccommodationRequestGuestDTO;
 import com.example.bookingapp.model.Amenity;
@@ -104,6 +108,26 @@ public class ReservationRequestGuestAdapter  extends ArrayAdapter<AccommodationR
             dates.setText(request.getDateRange());
             if(!canReservationBeCanceled(request)) {
                 cancelButton.setBackgroundResource(R.drawable.round_corner_disabled_button);
+            } else {
+                cancelButton.setOnClickListener(v -> {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext()
+                    ).setNegativeButton("Go back",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).setPositiveButton("I'm sure!", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(context, "Reservation request canceled!", Toast.LENGTH_SHORT).show();
+                            //TODO: cancel and refresh
+                        }
+                    });
+                    builder.setMessage("Are you sure you want to cancel your reservation request?");
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                });
             }
         }
 
