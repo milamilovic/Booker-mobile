@@ -2,13 +2,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.MapFragment"
-    android:id="@+id/map_fragment_containter">
+    android:id="@+id/map">
 
     <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/map_view"/>
-
+        android:apiKey="AIzaSyAszR_C2FZWvKHLAxarpRq-GqveV2fBsno"
+        app:cameraZoom="12"
+        app:mapType="normal"
+        />
 
 </FrameLayout>

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -110,6 +111,13 @@ public class ReservationRequestOwnerAdapter  extends ArrayAdapter<AccommodationR
             if(!canReservationBeApproved(request)) {
                 approve.setBackgroundResource(R.drawable.round_corner_disabled_button);
                 deny.setBackgroundResource(R.drawable.round_corner_disabled_button);
+            } else {
+                approve.setOnClickListener(v -> {
+                    Toast.makeText(context, "Reservation request approved!", Toast.LENGTH_SHORT).show();
+                });
+                deny.setOnClickListener(v -> {
+                    Toast.makeText(context, "Reservation request denied!", Toast.LENGTH_SHORT).show();
+                });
             }
             GuestOwnerViewDTO guest = request.getGuest(request.getGuestId());
             profile_image.setImageResource(guest.getImage());

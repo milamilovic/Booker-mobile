@@ -6,9 +6,16 @@
         <item name="colorPrimary">@color/dark_gray</item>
         <item name="colorSecondary">@color/light_gray</item>
         <item name="colorAccent">@color/darker_green</item>
-
+        <item name="android:alertDialogTheme">@style/AlertDialogCustom</item>
     </style>
 
-
+    <!--Dialog color-->
+    <style name="AlertDialogCustom" parent="android:Theme.Material.Light.Dialog.Alert">
+        <item name="colorAccent">@color/light_gray</item>
+        <item name="android:textColor">@color/grayish_green</item>
+        <item name="android:backgroundTint">#e5e5e5</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
 
 </resources>
