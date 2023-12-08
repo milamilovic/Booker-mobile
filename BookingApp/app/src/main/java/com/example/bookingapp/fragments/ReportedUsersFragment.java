@@ -19,6 +19,8 @@ import com.example.bookingapp.model.ReportedUsersListing;
 import com.example.bookingapp.model.Role;
 import com.example.bookingapp.model.User;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -49,10 +51,16 @@ public class ReportedUsersFragment extends Fragment {
         binding = FragmentReportedUsersBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        prepareReportsList(reports);
         listView = root.findViewById(R.id.list);
+        try {
+            prepareReportsList(reports);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
         adapter = new ReportedUsersAdapter(getContext(), reports);
         listView.setAdapter(adapter);
+
+
 
         return root;
     }
@@ -63,24 +71,25 @@ public class ReportedUsersFragment extends Fragment {
         binding = null;
     }
 
-    User senderUser = new User("SenderName", "SenderSurname");
-    Account sender = new Account(senderUser, Role.GUEST, null, false);
-    User receiverUser = new User("ReceiverName", "ReceiverSurname");
-    Account receiver = new Account(receiverUser, Role.OWNER, null, false);
-    Date date = new Date();
-    String reason = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-            "Morbi vulputate volutpat lacus, ut rutrum eros hendrerit non. Cras volutpat congue auctor. " +
-            "Nunc in porta enim. Sed pulvinar mollis mollis. " +
-            "Cras quis magna ac mauris egestas rhoncus ac eu eros.";
+    private void prepareReportsList(ArrayList<ReportedUsersListing> products) throws ParseException {
+        User senderUser = new User("Maria", "Jones");
+        Account sender = new Account(senderUser, Role.GUEST, null, false);
+        User receiverUser = new User("Sara", "West");
+        Account receiver = new Account(receiverUser, Role.OWNER, null, false);
+        String reason = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                "Morbi vulputate volutpat lacus, ut rutrum eros hendrerit non. Cras volutpat congue auctor. ";
 
+        User receiverUser2 = new User("John", "Doe");
+        Account receiver2 = new Account(receiverUser2, Role.OWNER, null, true);
 
-    private void prepareReportsList(ArrayList<ReportedUsersListing> products){
-        products.add(new ReportedUsersListing(sender, receiver, date, reason));
-        products.add(new ReportedUsersListing(sender, receiver, date, reason));
-        products.add(new ReportedUsersListing(sender, receiver, date, reason));
-        products.add(new ReportedUsersListing(sender, receiver, date, reason));
-        products.add(new ReportedUsersListing(sender, receiver, date, reason));
-        products.add(new ReportedUsersListing(sender, receiver, date, reason));
-        products.add(new ReportedUsersListing(sender, receiver, date, reason));
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
+
+        products.add(new ReportedUsersListing(sender, receiver, formatter.parse("01.12.2023. 17:23"), reason));
+        products.add(new ReportedUsersListing(sender, receiver, formatter.parse("08.12.2023. 17:23"), reason));
+        products.add(new ReportedUsersListing(sender, receiver, formatter.parse("08.12.2023. 17:23"), reason));
+        products.add(new ReportedUsersListing(sender, receiver, formatter.parse("08.12.2023. 17:23"), reason));
+        products.add(new ReportedUsersListing(sender, receiver2, formatter.parse("08.12.2023. 17:23"), reason));
+        products.add(new ReportedUsersListing(sender, receiver, formatter.parse("08.12.2023. 17:23"), reason));
+        products.add(new ReportedUsersListing(sender, receiver, formatter.parse("08.12.2023. 17:23"), reason));
     }
 }

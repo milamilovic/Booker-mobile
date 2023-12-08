@@ -68,7 +68,10 @@ public class User implements Parcelable {
         this.phone = phone;
     }
 
-    public User(String name, String surname){}
+    public User(String name, String surname){
+        this.name = name;
+        this.surname = surname;
+    }
 
     public User(){ }
 

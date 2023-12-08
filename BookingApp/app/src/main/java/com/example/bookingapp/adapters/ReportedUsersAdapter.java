@@ -13,12 +13,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.example.bookingapp.R;
 import com.example.bookingapp.model.AccommodationRequestOwnerDTO;
 import com.example.bookingapp.model.GuestOwnerViewDTO;
 import com.example.bookingapp.model.ReportedUsersListing;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class ReportedUsersAdapter extends ArrayAdapter<ReportedUsersListing> {
@@ -61,24 +63,28 @@ public class ReportedUsersAdapter extends ArrayAdapter<ReportedUsersListing> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.block_user_request_card,
                     parent, false);
         }
-        LinearLayout card = convertView.findViewById(R.id.block_user_card);
         TextView sender = convertView.findViewById(R.id.sender);
         TextView sender_role = convertView.findViewById(R.id.sender_role);
         TextView receiver = convertView.findViewById(R.id.receiver);
         TextView receiver_role = convertView.findViewById(R.id.receiver_role);
         TextView date = convertView.findViewById(R.id.report_date);
-        TextView reason = convertView.findViewById(R.id.reason);
+        TextView reason = convertView.findViewById(R.id.report_reason);
         Button block = convertView.findViewById(R.id.block_button);
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 
         if(request != null){
             sender.setText(request.getSender().getUser().getName() + " " + request.getSender().getUser().getSurname());
-            sender_role.setText(request.getSender().getRole().toString());
+            sender_role.setText("[" + request.getSender().getRole().toString().toLowerCase() + "]");
             receiver.setText(request.getReceiver().getUser().getName() + " " + request.getReceiver().getUser().getSurname());
-            receiver_role.setText(request.getReceiver().getRole().toString());
-            date.setText(request.getDate().toString());
+            receiver_role.setText("[" + request.getReceiver().getRole().toString().toLowerCase() + "]");
+            date.setText(formatter.format(request.getDate()));
             reason.setText(request.getReason());
-            if(!canUserBeBlocked(request)) {
-                block.setBackgroundResource(R.drawable.round_corner_disabled_button);
+            if(canUserBeUnblocked(request)) {
+                //block.setBackgroundResource(R.drawable.round_corner_disabled_button);
+                block.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.transparent_60_dark_gray));
+                block.setTextColor(ContextCompat.getColor(getContext(), R.color.dark_gray));
+
                 block.setText("Unblock user");
             }
         }
@@ -86,7 +92,8 @@ public class ReportedUsersAdapter extends ArrayAdapter<ReportedUsersListing> {
         return convertView;
     }
 
-    private boolean canUserBeBlocked(ReportedUsersListing request){
+    private boolean canUserBeUnblocked(ReportedUsersListing request){
+        // if user is blocked, he can be unblocked
         return request.getReceiver().getBlocked();
     }
  }

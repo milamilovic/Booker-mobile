@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ReportedUsersListing implements Parcelable {
@@ -57,7 +58,7 @@ public class ReportedUsersListing implements Parcelable {
     public ReportedUsersListing(Parcel in) {
         sender = in.readParcelable(User.class.getClassLoader());
         receiver = in.readParcelable(User.class.getClassLoader());
-        date = new Date(in.readLong());
+        date = (java.util.Date) in.readSerializable();
         reason = in.readString();
     }
 
@@ -66,9 +67,15 @@ public class ReportedUsersListing implements Parcelable {
         return "ReportedUsersListing{" +
                 "sender=" + sender.getUser().getName() + sender.getUser().getSurname() +
                 ", receiver=" + receiver +
-                ", date=" + date +
+                ", date=" + formatDate(date) +
                 ", reason='" + reason + '\'' +
                 '}';
+    }
+
+    private String formatDate(Date date) {
+        String myFormat = "HH:mm dd.MM.yyyy.";
+        SimpleDateFormat dateFormat = new SimpleDateFormat(myFormat);
+        return dateFormat.format(date);
     }
 
     @Override
@@ -80,7 +87,7 @@ public class ReportedUsersListing implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeParcelable(sender, flags);
         dest.writeParcelable(receiver, flags);
-        dest.writeLong(date.getTime());
+        dest.writeString(formatDate(date));
         dest.writeString(reason);
     }
 

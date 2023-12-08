@@ -1,5 +1,6 @@
 package com.example.bookingapp.model;
 
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -78,7 +79,9 @@ public class Account implements Parcelable {
         dest.writeParcelable(user, flags);
         dest.writeString(role.name());
         dest.writeString(password);
-        dest.writeBoolean(blocked);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            dest.writeBoolean(blocked);
+        }
     }
 
     @Override
