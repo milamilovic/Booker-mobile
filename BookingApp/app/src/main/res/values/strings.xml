@@ -63,4 +63,20 @@
     <string name="until">Until?</string>
     <string name="search_by_name">Search by name!</string>
     <string name="search_by_date">Search by date!</string>
+    <string name="name_of_accommodation">Name</string>
+    <string name="description_of_accommodation">Description</string>
+    <string name="location">Location</string>
+    <string name="wifi">wifi</string>
+    <string name="ac">AC</string>
+    <string name="kitchen">kitchen</string>
+    <string name="free_parking">free parking</string>
+    <string name="short_description">Short description</string>
+    <string name="add_images">Add images</string>
+    <string name="min_people">Min</string>
+    <string name="max_people">Max</string>
+    <string name="basic_price">Basic price</string>
+    <string name="submit">Submit</string>
+    <string name="next_image">next image</string>
+    <string name="previous_image">previous image</string>
+    <string name="select_report_type_you_want">Select report type you want:</string>
 </resources>

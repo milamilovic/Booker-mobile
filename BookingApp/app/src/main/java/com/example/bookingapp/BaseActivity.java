@@ -15,13 +15,13 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.bookingapp.fragments.CreateAccommodationBaseFragment;
 import com.example.bookingapp.fragments.FavouriteAccommodationsFragment;
 import com.example.bookingapp.fragments.HomeFragment;
 import com.example.bookingapp.fragments.LoginFragment;
 import com.example.bookingapp.fragments.RegisterFragment;
 import com.example.bookingapp.fragments.ReportedUsersFragment;
 import com.example.bookingapp.fragments.ReservationRequestOwnerFragment;
-import com.example.bookingapp.fragments.ReservationRequestsGuestFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class BaseActivity extends AppCompatActivity {
@@ -85,7 +85,7 @@ public class BaseActivity extends AppCompatActivity {
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .replace(R.id.fragment_placeholder, HomeFragment.newInstance());
-            transaction.addToBackStack(null);
+            transaction.addToBackStack("home");
             transaction.commit();
 
             // Close the drawer after selecting an option
@@ -117,7 +117,7 @@ public class BaseActivity extends AppCompatActivity {
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .replace(R.id.fragment_placeholder, ReservationRequestOwnerFragment.newInstance());
-            transaction.addToBackStack(null);
+            transaction.addToBackStack("requests");
             transaction.commit();
 
             // Close the drawer after selecting an option
@@ -145,7 +145,7 @@ public class BaseActivity extends AppCompatActivity {
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .replace(R.id.fragment_placeholder, FavouriteAccommodationsFragment.newInstance());
-            transaction.addToBackStack(null);
+            transaction.addToBackStack("favourites+");
             transaction.commit();
 
             // Close the drawer after selecting an option
@@ -155,7 +155,12 @@ public class BaseActivity extends AppCompatActivity {
         }));
 
         menu.getItem(10).setOnMenuItemClickListener((v -> {
-            FragmentTransition.to(LoginFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
+            FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .replace(R.id.fragment_placeholder, ReportFragment.newInstance());
+            transaction.addToBackStack("reports");
+            transaction.commit();
 
             // Close the drawer after selecting an option
             drawerLayout.closeDrawer(GravityCompat.START);
@@ -164,6 +169,15 @@ public class BaseActivity extends AppCompatActivity {
         }));
 
         menu.getItem(11).setOnMenuItemClickListener((v -> {
+            FragmentTransition.to(LoginFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
+
+            // Close the drawer after selecting an option
+            drawerLayout.closeDrawer(GravityCompat.START);
+
+            return true;
+        }));
+
+        menu.getItem(12).setOnMenuItemClickListener((v -> {
             //Intent i = new Intent(BaseActivity.this, RegisterScreen.class);
             //startActivity(i);
 
@@ -171,6 +185,14 @@ public class BaseActivity extends AppCompatActivity {
             FragmentTransition.to(RegisterFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
 
             // Close the drawer after selecting an option
+            drawerLayout.closeDrawer(GravityCompat.START);
+
+            return true;
+        }));
+
+        menu.getItem(12).setOnMenuItemClickListener((v-> {
+            FragmentTransition.to(CreateAccommodationBaseFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
+
             drawerLayout.closeDrawer(GravityCompat.START);
 
             return true;

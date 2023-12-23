@@ -46,12 +46,20 @@
         android:title="Favorite accommodations" />
 
     <item
+        android:id="@+id/nav_reports"
+        android:title="Reports" />
+
+    <item
         android:id="@+id/nav_login"
         android:title="Log in" />
 
     <item
         android:id="@+id/nav_register"
         android:title="Register" />
+    <item
+        android:id="@+id/create_accommodation"
+        android:title="Create accommodation"/>
+
 
     <item
         android:id="@+id/nav_logout"

@@ -58,7 +58,7 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
         Button logIn = binding.search;
         logIn.setOnClickListener(v -> {
-            FragmentTransition.to(AccommodationListingFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder
+            FragmentTransition.to(AccommodationListingFragment.newInstance(), getActivity(), true, R.id.fragment_placeholder
             );
         });
 

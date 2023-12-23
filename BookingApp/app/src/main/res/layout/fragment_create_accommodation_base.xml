@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.CreateAccommodationBaseFragment"
+    tools:ignore="HardcodedText"
+    android:id="@+id/container"
+    android:paddingLeft="@dimen/horizontal_fragment_margin"
+    android:paddingTop="@dimen/vertical_fragment_margin"
+    android:paddingRight="@dimen/horizontal_fragment_margin"
+    android:paddingBottom="@dimen/vertical_fragment_margin"
+    android:background="@drawable/phone_background_1">
+
+    <LinearLayout
+        android:id="@+id/greenBackground"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/round_corner_green_background"
+        android:minWidth="500dp"
+        android:orientation="vertical"
+        android:gravity="start"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/background_description"
+            android:src="@drawable/booker_favicon_color"/>
+
+        <EditText
+            android:id="@+id/editTextName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:background="@drawable/edit_text_border"
+            android:hint="@string/name_of_accommodation"
+            android:textColor="@color/dark_gray"
+            android:drawableStart="@drawable/baseline_apartment_24"
+            android:drawablePadding="20dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginTop="64dp"
+            android:inputType="text"
+            android:textColorHint="@color/dark_gray"/>
+
+        <EditText
+            android:id="@+id/editTextDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:background="@drawable/edit_text_border"
+            android:hint="@string/description_of_accommodation"
+            android:textColor="@color/dark_gray"
+            android:drawableStart="@drawable/baseline_description_24"
+            android:drawablePadding="20dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginTop="64dp"
+            android:inputType="textMultiLine"
+            android:textColorHint="@color/dark_gray"/>
+
+        <EditText
+            android:id="@+id/editTextShortDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:background="@drawable/edit_text_border"
+            android:hint="@string/short_description"
+            android:textColor="@color/dark_gray"
+            android:drawableStart="@drawable/baseline_description_24"
+            android:drawablePadding="20dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginTop="64dp"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:textColorHint="@color/dark_gray"/>
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
