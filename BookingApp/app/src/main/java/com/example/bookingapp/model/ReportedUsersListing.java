@@ -66,7 +66,7 @@ public class ReportedUsersListing implements Parcelable {
     public String toString() {
         return "ReportedUsersListing{" +
                 "sender=" + sender.getUser().getName() + sender.getUser().getSurname() +
-                ", receiver=" + receiver +
+                ", receivers=" + receiver +
                 ", date=" + formatDate(date) +
                 ", reason='" + reason + '\'' +
                 '}';
