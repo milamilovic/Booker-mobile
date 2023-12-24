@@ -74,6 +74,11 @@ public class LoginFragment extends Fragment {
                     Response<Token> response = call.execute();
                     Token product1 = response.body();
                     System.out.println(product1);
+                    SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString(JWT_TOKEN_KEY, product1.getToken());
+                    editor.putLong(USER_ID_KEY, product1.getUserId());
+                    editor.apply();
                     getActivity().getSupportFragmentManager().popBackStack();
                     Toast.makeText(root.getContext(), "Login successful", Toast.LENGTH_SHORT).show();
                     FragmentTransition.to(HomeFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);

@@ -244,7 +244,7 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
             return true;
         }));
 
-        menu.getItem(12).setOnMenuItemClickListener((v-> {
+        menu.getItem(13).setOnMenuItemClickListener((v-> {
             FragmentTransition.to(CreateAccommodationBaseFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
 
             drawerLayout.closeDrawer(GravityCompat.START);
