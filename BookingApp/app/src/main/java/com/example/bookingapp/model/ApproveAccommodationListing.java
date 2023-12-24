@@ -1,58 +1,41 @@
 package com.example.bookingapp.model;
 
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import java.util.ArrayList;
-
-public class Accommodation implements Parcelable {
+public class ApproveAccommodationListing implements Parcelable {
     private Long id;
     private String title;
     private String description;
-    private String address;
-    private ArrayList<Amenity> amenities;
-    private ArrayList<Integer> images;
-    private boolean favourite;
+    private int image;
     private int totalPrice;
     private int pricePerDay;
     private float rating;
-    private boolean approved;
 
-    public Accommodation(Long id, String title, String description, ArrayList<Integer> images, boolean favourite,
-                         int totalPrice, int  pricePerDay, float rating, String address, ArrayList<Amenity> amenities, boolean approved) {
+    public ApproveAccommodationListing(Long id, String title, String description, int image, boolean favourite,
+                                int totalPrice, int  pricePerDay, float rating) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.images = images;
-        this.favourite = favourite;
+        this.image = image;
         this.totalPrice = totalPrice;
         this.pricePerDay = pricePerDay;
         this.rating = rating;
-        this.address = address;
-        this.amenities = amenities;
-        this.approved = approved;
     }
 
-    public Accommodation() {
+    public ApproveAccommodationListing() {
     }
 
-    protected Accommodation(Parcel in) {
+    protected ApproveAccommodationListing(Parcel in) {
         id = in.readLong();
         title = in.readString();
         description = in.readString();
-        images = in.readArrayList(Integer.class.getClassLoader());
-        favourite = in.readInt() == 1;
+        image = in.readInt();
         totalPrice = in.readInt();
         pricePerDay = in.readInt();
         rating = in.readFloat();
-        address = in.readString();
-        amenities = in.readArrayList(Amenity.class.getClassLoader());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            approved = in.readBoolean();
-        }
     }
 
     public Long getId() {
@@ -79,12 +62,12 @@ public class Accommodation implements Parcelable {
         this.description = description;
     }
 
-    public ArrayList<Integer> getImages() {
-        return images;
+    public int getImage() {
+        return image;
     }
 
-    public void setImages(ArrayList<Integer> image) {
-        this.images = images;
+    public void setImage(int image) {
+        this.image = image;
     }
 
     public int getTotalPrice() {
@@ -103,30 +86,12 @@ public class Accommodation implements Parcelable {
         this.pricePerDay = pricePerDay;
     }
 
-
-    public boolean getFavorite() {
-        return favourite;
-    }
-
-    public void setFavourite(boolean isFavorite) {
-        this.favourite = isFavorite;
-    }
-
-
     public float getRating() {
         return rating;
     }
 
-    public void setImage(float rating) {
+    public void setRating(float rating) {
         this.rating = rating;
-    }
-
-    public boolean getApproved(){
-        return approved;
-    }
-
-    public void setApproved(boolean approved){
-        this.approved = approved;
     }
 
     @Override
@@ -134,12 +99,10 @@ public class Accommodation implements Parcelable {
         return "AccommodationListing{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", image='" + images + '\'' +
-                ", is favourite for user='" + favourite + '\'' +
+                ", image='" + image + '\'' +
                 ", total price='" + totalPrice + '\'' +
                 ", price per day='" + pricePerDay + '\'' +
                 ", rating='" + rating + '\'' +
-                ", approved='" + approved + '\'' +
                 '}';
     }
 
@@ -153,28 +116,21 @@ public class Accommodation implements Parcelable {
         dest.writeLong(id);
         dest.writeString(title);
         dest.writeString(description);
-        dest.writeList(images);
-        dest.writeInt(favourite ? 1 : 0);
+        dest.writeInt(image);
         dest.writeInt(totalPrice);
         dest.writeInt(pricePerDay);
         dest.writeFloat(rating);
-        dest.writeString(address);
-        dest.writeList(amenities);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            dest.writeBoolean(approved);
-        }
     }
 
-    public static final Creator<AccommodationListing> CREATOR = new Creator<AccommodationListing>() {
+    public static final Creator<ApproveAccommodationListing> CREATOR = new Creator<ApproveAccommodationListing>() {
         @Override
-        public AccommodationListing createFromParcel(Parcel in) {
-            return new AccommodationListing(in);
+        public ApproveAccommodationListing createFromParcel(Parcel in) {
+            return new ApproveAccommodationListing(in);
         }
 
         @Override
-        public AccommodationListing[] newArray(int size) {
-            return new AccommodationListing[size];
+        public ApproveAccommodationListing[] newArray(int size) {
+            return new ApproveAccommodationListing[size];
         }
     };
-
 }

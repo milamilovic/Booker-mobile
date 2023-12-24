@@ -20,6 +20,7 @@ import com.example.bookingapp.fragments.FavouriteAccommodationsFragment;
 import com.example.bookingapp.fragments.HomeFragment;
 import com.example.bookingapp.fragments.LoginFragment;
 import com.example.bookingapp.fragments.RegisterFragment;
+import com.example.bookingapp.fragments.ReportFragment;
 import com.example.bookingapp.fragments.ReportedUsersFragment;
 import com.example.bookingapp.fragments.ReservationRequestOwnerFragment;
 import com.google.android.material.navigation.NavigationView;
