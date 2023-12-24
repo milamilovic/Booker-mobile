@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -62,31 +63,46 @@ public class LoginFragment extends Fragment {
         logIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+
                 Log.d("BookingApp", "Login start");
                 LoginUserDTO loginUserDTO = new LoginUserDTO(emailEditText.getText().toString(), passwordEditText.getText().toString());
                 Call<Token> call = ClientUtils.userService.findByEmailAndPassword(loginUserDTO);
-                call.enqueue(new Callback<Token>() {
-                    @Override
-                    public void onResponse(Call<Token> call, Response<Token> response) {
-                        Log.d("REZ", "onResponse entered");
-                        if (response.code() == 200) {
-                            Log.d("REZ","Meesage recieved");
-                            System.out.println(response.body());
-                            Token product1 = response.body();
-                            System.out.println(product1);
-                            getActivity().getSupportFragmentManager().popBackStack();
-                            Toast.makeText(root.getContext(), "Login successful", Toast.LENGTH_SHORT).show();
-                            FragmentTransition.to(HomeFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
-                        } else {
-                            Log.d("REZ","Meesage recieved: "+response.code());
-                        }
-                    }
 
-                    @Override
-                    public void onFailure(Call<Token> call, Throwable t) {
-                        Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
-                    }
-                });
+                try{
+                    Response<Token> response = call.execute();
+                    Token product1 = response.body();
+                    System.out.println(product1);
+                    getActivity().getSupportFragmentManager().popBackStack();
+                    Toast.makeText(root.getContext(), "Login successful", Toast.LENGTH_SHORT).show();
+                    FragmentTransition.to(HomeFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                }
+
+//                call.enqueue(new Callback<Token>() {
+//                    @Override
+//                    public void onResponse(Call<Token> call, Response<Token> response) {
+//                        Log.d("REZ", "onResponse entered");
+//                        if (response.code() == 200) {
+//                            Log.d("REZ","Meesage recieved");
+//                            System.out.println(response.body());
+//                            Token product1 = response.body();
+//                            System.out.println(product1);
+//                            getActivity().getSupportFragmentManager().popBackStack();
+//                            Toast.makeText(root.getContext(), "Login successful", Toast.LENGTH_SHORT).show();
+//                            FragmentTransition.to(HomeFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
+//                        } else {
+//                            Log.d("REZ","Meesage recieved: "+response.code());
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<Token> call, Throwable t) {
+//                        Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
+//                    }
+//                });
 
             }
         });
