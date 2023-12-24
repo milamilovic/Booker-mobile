@@ -11,15 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.bookingapp.R;
+import com.example.bookingapp.model.Image;
 
 import java.util.ArrayList;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
     Context context;
-    ArrayList<Integer> arrayList;
+    ArrayList<Image> arrayList;
     OnItemClickListener onItemClickListener;
 
-    public ImageAdapter(Context context, ArrayList<Integer> arrayList) {
+    public ImageAdapter(Context context, ArrayList<Image> arrayList) {
         this.context = context;
         this.arrayList = arrayList;
     }
