@@ -69,7 +69,7 @@ public class ApproveAccommodationAdapter extends ArrayAdapter<ApproveAccommodati
             title.setText(accommodation.getTitle());
             description.setText(accommodation.getDescription());
             ratingBar.setRating(accommodation.getRating());
-            image.setImageResource(accommodation.getImage());
+            //image.setImageResource(accommodation.getImage());
         }
 
         return convertView;

@@ -1,5 +1,6 @@
 package com.example.bookingapp.model;
 
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -11,13 +12,15 @@ public class ApproveAccommodationListing implements Parcelable {
     private String description;
     private int image;
     private float rating;
+    private boolean approved;
 
-    public ApproveAccommodationListing(Long id, String title, String description, int image, float rating) {
+    public ApproveAccommodationListing(Long id, String title, String description, int image, float rating, boolean approved) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.image = image;
         this.rating = rating;
+        this.approved = approved;
     }
 
     public ApproveAccommodationListing() {
@@ -29,6 +32,9 @@ public class ApproveAccommodationListing implements Parcelable {
         description = in.readString();
         image = in.readInt();
         rating = in.readFloat();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            approved = in.readBoolean();
+        }
     }
 
     public Long getId() {
@@ -71,13 +77,17 @@ public class ApproveAccommodationListing implements Parcelable {
         this.rating = rating;
     }
 
+    public boolean getApproved(){ return approved;}
+
+    public void setApproved(boolean approved){this.approved = approved;}
+
     @Override
     public String toString() {
         return "AccommodationListing{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", image='" + image + '\'' +
-                ", rating='" + rating + '\'' +
+                ", approved='" + approved + '\'' +
                 '}';
     }
 
@@ -93,6 +103,9 @@ public class ApproveAccommodationListing implements Parcelable {
         dest.writeString(description);
         dest.writeInt(image);
         dest.writeFloat(rating);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            dest.writeBoolean(approved);
+        }
     }
 
     public static final Creator<ApproveAccommodationListing> CREATOR = new Creator<ApproveAccommodationListing>() {

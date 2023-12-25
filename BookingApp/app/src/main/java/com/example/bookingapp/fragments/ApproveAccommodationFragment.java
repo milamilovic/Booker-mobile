@@ -61,20 +61,20 @@ public class ApproveAccommodationFragment extends Fragment {
 
     private void prepareUnapprovedAccommodationList(ArrayList<ApproveAccommodationListing> unapprovedAccommodation) throws ParseException {
         unapprovedAccommodation.add(new ApproveAccommodationListing(1L, "Flower Apartment",
-                "A lovely apartment in the center of the city with a magnificent view of Buckingham pallace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.",
-                R.drawable.apartment_image, 4.3F));
+                "A lovely apartment in the center of the city with a magnificent view of Buckingham palace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.",
+                R.drawable.apartment_image, 4.3F, false));
         unapprovedAccommodation.add(new ApproveAccommodationListing(2L, "Flower Apartment",
-                "A lovely apartment in the center of the city with a magnificent view of Buckingham pallace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.",
-                R.drawable.apartment_image, 4.3F));
+                "A lovely apartment in the center of the city with a magnificent view of Buckingham palace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.",
+                R.drawable.apartment_image, 4.3F, false));
         unapprovedAccommodation.add(new ApproveAccommodationListing(3L, "Flower Apartment",
-                "A lovely apartment in the center of the city with a magnificent view of Buckingham pallace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.",
-                R.drawable.apartment_image, 4.3F));
+                "A lovely apartment in the center of the city with a magnificent view of Buckingham palace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.",
+                R.drawable.apartment_image, 4.3F, false));
         unapprovedAccommodation.add(new ApproveAccommodationListing(4L, "Flower Apartment",
-                "A lovely apartment in the center of the city with a magnificent view of Buckingham pallace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.",
-                R.drawable.apartment_image, 4.3F));
+                "A lovely apartment in the center of the city with a magnificent view of Buckingham palace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.",
+                R.drawable.apartment_image, 4.3F, false));
         unapprovedAccommodation.add(new ApproveAccommodationListing(5L, "Flower Apartment",
-                "A lovely apartment in the center of the city with a magnificent view of Buckingham pallace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.",
-                R.drawable.apartment_image, 4.3F));
+                "A lovely apartment in the center of the city with a magnificent view of Buckingham palace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.",
+                R.drawable.apartment_image, 4.3F, false));
     }
 
     @Override

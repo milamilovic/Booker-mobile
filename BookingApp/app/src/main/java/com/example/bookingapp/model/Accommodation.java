@@ -172,7 +172,6 @@ public class Accommodation implements Parcelable {
         return "AccommodationListing{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", rating='" + rating + '\'' +
                 ", approved='" + approved + '\'' +
                 "}";
     }
