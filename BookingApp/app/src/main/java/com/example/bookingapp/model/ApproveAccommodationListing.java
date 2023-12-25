@@ -10,18 +10,13 @@ public class ApproveAccommodationListing implements Parcelable {
     private String title;
     private String description;
     private int image;
-    private int totalPrice;
-    private int pricePerDay;
     private float rating;
 
-    public ApproveAccommodationListing(Long id, String title, String description, int image, boolean favourite,
-                                int totalPrice, int  pricePerDay, float rating) {
+    public ApproveAccommodationListing(Long id, String title, String description, int image, float rating) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.image = image;
-        this.totalPrice = totalPrice;
-        this.pricePerDay = pricePerDay;
         this.rating = rating;
     }
 
@@ -33,8 +28,6 @@ public class ApproveAccommodationListing implements Parcelable {
         title = in.readString();
         description = in.readString();
         image = in.readInt();
-        totalPrice = in.readInt();
-        pricePerDay = in.readInt();
         rating = in.readFloat();
     }
 
@@ -70,22 +63,6 @@ public class ApproveAccommodationListing implements Parcelable {
         this.image = image;
     }
 
-    public int getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(int totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public int getPricePerDay() {
-        return pricePerDay;
-    }
-
-    public void setPricePerDay(int pricePerDay) {
-        this.pricePerDay = pricePerDay;
-    }
-
     public float getRating() {
         return rating;
     }
@@ -100,8 +77,6 @@ public class ApproveAccommodationListing implements Parcelable {
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", image='" + image + '\'' +
-                ", total price='" + totalPrice + '\'' +
-                ", price per day='" + pricePerDay + '\'' +
                 ", rating='" + rating + '\'' +
                 '}';
     }
@@ -117,8 +92,6 @@ public class ApproveAccommodationListing implements Parcelable {
         dest.writeString(title);
         dest.writeString(description);
         dest.writeInt(image);
-        dest.writeInt(totalPrice);
-        dest.writeInt(pricePerDay);
         dest.writeFloat(rating);
     }
 
