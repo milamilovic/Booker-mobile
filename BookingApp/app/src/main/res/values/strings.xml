@@ -79,4 +79,11 @@
     <string name="next_image">next image</string>
     <string name="previous_image">previous image</string>
     <string name="select_report_type_you_want">Select report type you want:</string>
+    <string name="autosync_problem">Automatic Sync problem</string>
+    <string name="no_internet">Bad news, no internet connection</string>
+    <string name="turn_wifi_on">Turn wifi on</string>
+    <string name="autosync_warning">Automatic Sync warning</string>
+    <string name="connect_to_wifi">Please connect to wifi to sync data</string>
+    <string name="autosync">Automatic Sync</string>
+    <string name="good_news_sync">Good news, everything is sync now.</string>
 </resources>

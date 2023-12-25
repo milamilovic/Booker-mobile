@@ -40,6 +40,7 @@ import com.example.bookingapp.adapters.ImageAdapter;
 import com.example.bookingapp.model.Accommodation;
 import com.example.bookingapp.model.AccommodationListing;
 import com.example.bookingapp.model.Amenity;
+import com.example.bookingapp.model.Image;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.datepicker.DayViewDecorator;
 
@@ -101,9 +102,9 @@ public class AccommodationViewFragment extends Fragment {
         });
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler);
-        ArrayList<Integer> images = new ArrayList<Integer>();
+        ArrayList<Image> images = new ArrayList<Image>();
 
-        for(int image : accommodation.getImages()) {
+        for(Image image : accommodation.getImages()) {
             images.add(image);
         }
 

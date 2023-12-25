@@ -10,7 +10,11 @@ import com.example.bookingapp.R;
 import com.example.bookingapp.fragments.AccommodationViewFragment;
 import com.example.bookingapp.model.Accommodation;
 import com.example.bookingapp.model.AccommodationListing;
+import com.example.bookingapp.model.Address;
 import com.example.bookingapp.model.Amenity;
+import com.example.bookingapp.model.Availability;
+import com.example.bookingapp.model.Image;
+import com.example.bookingapp.model.Price;
 
 import android.content.Context;
 import android.util.Log;
@@ -114,15 +118,13 @@ public class AccommodationListAdapter extends ArrayAdapter<AccommodationListing>
                 favorite.setImageResource(R.drawable.icons8_heart_30_not_selected_favourite);
             }
             card.setOnClickListener(v -> {
-                ArrayList<Integer> images = new ArrayList<Integer>();
-                images.add(R.drawable.apartment_image);
-                images.add(R.drawable.paris_image);
-                images.add(R.drawable.copenhagen_image);
-                images.add(R.drawable.madrid_image);
-                images.add(R.drawable.room_image);
-                images.add(R.drawable.hotel_image);
-                images.add(R.drawable.lisbon_image);
-                images.add(R.drawable.london_image);
+                ArrayList<Image> images = new ArrayList<Image>();
+                images.add(new Image(1L, "../../../../../res/drawable/paris_image.jpg", "", null));
+                images.add(new Image(1L, "../../../../../res/drawable/copenhagen_image.jpg", "", null));
+                images.add(new Image(1L, "../../../../../res/drawable/madrid_image.jpg", "", null));
+                images.add(new Image(1L, "../../../../../res/drawable/room_image.jpg", "", null));
+                images.add(new Image(1L, "../../../../../res/drawable/hotel_image.jpg", "", null));
+                images.add(new Image(1L, "../../../../../res/drawable/lisbon_image.jpg", "", null));
                 ArrayList<Amenity> amenities = new ArrayList<Amenity>();
                 amenities.add(new Amenity(1L, "Wi-Fi", R.drawable.icons8_settings_24));
                 amenities.add(new Amenity(2L, "AC", R.drawable.icons8_calendar_32));
@@ -131,7 +133,7 @@ public class AccommodationListAdapter extends ArrayAdapter<AccommodationListing>
                 FragmentTransition.to(AccommodationViewFragment.newInstance(new Accommodation(AccommodationListing.getId(),
                         AccommodationListing.getTitle(), "The units come with parquet floors and feature a fully equipped kitchen with a microwave, a dining area, a flat-screen TV with streaming services, and a private bathroom with walk-in shower and a hair dryer. A toaster, a fridge and stovetop are also available, as well as a coffee machine and a kettle.\n" +
                         "\u2028Eventim Apollo is 2.4 km from the apartment, while South Kensington Underground Station is 3 km from the property. The nearest airport is London Heathrow Airport, 21 km from Central London Luxury Studios Fulham Close to Underground Newly Refurbished.",
-                        images, false, 360, 120, 4.8f, "my address", amenities, true)), (FragmentActivity) context, true, R.id.fragment_placeholder);
+                        images, new ArrayList<Availability>(), new ArrayList<Price>(), new ArrayList<Object>(), new ArrayList<Object>(), 2L, amenities, 1, 5, new Address(1L, "Ulica 111", "London", 12.21, 15.55, null))), (FragmentActivity) context, true, R.id.fragment_placeholder);
             });
         }
 
