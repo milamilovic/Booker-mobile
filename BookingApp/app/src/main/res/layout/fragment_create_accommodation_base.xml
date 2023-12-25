@@ -261,31 +261,31 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp">
 
-                <Button
-                    android:id="@+id/btnSubmit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/submit"
-                    android:background="@drawable/round_corner_alternative"
-                    android:textColor="@color/light_gray"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"/>
+            <Button
+                android:id="@+id/btnSubmit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/submit"
+                android:background="@drawable/round_corner_alternative"
+                android:textColor="@color/light_gray"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"/>
 
-                <Button
-                    android:id="@+id/btnCancel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/round_corner_alternative"
-                    android:textColor="@color/light_gray"
-                    android:text="@string/action_cancel"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"/>
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_corner_alternative"
+                android:textColor="@color/light_gray"
+                android:text="@string/action_cancel"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>

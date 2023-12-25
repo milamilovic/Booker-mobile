@@ -33,10 +33,17 @@ public class BaseActivity extends AppCompatActivity{
     ActionBarDrawerToggle actionBarDrawerToggle;
     Toolbar toolbar;
     DrawerLayout drawerLayout;
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_activity);
+
+
 
         FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
                 .beginTransaction()
@@ -225,7 +232,7 @@ public class BaseActivity extends AppCompatActivity{
             return true;
         }));
 
-        menu.getItem(12).setOnMenuItemClickListener((v-> {
+        menu.getItem(13).setOnMenuItemClickListener((v-> {
             FragmentTransition.to(CreateAccommodationBaseFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
 
             drawerLayout.closeDrawer(GravityCompat.START);
@@ -294,6 +301,7 @@ public class BaseActivity extends AppCompatActivity{
     protected void onDestroy() {
         super.onDestroy();
     }
+
 
     private void handleLoggedInUser(String token) {
         // Example: Display a message with the token
