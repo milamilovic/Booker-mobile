@@ -86,7 +86,7 @@ public class AmenityAdapter extends ArrayAdapter<Amenity> {
 
         if(amenity != null){
             if(amenity.getName().equals("wifi")) {
-                image.setImageResource(R.drawable.ic_action_network_wifi);
+                image.setImageResource(R.drawable.icons8_wifi_30);
             } else if(amenity.getName().equals("free cancellation")) {
                 image.setImageResource(R.drawable.icons8_dollar_32);
             }else if(amenity.getName().equals("AC")) {
