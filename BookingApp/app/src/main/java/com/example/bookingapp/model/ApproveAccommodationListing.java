@@ -1,41 +1,40 @@
 package com.example.bookingapp.model;
 
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-public class AccommodationListing  implements Parcelable {
+public class ApproveAccommodationListing implements Parcelable {
     private Long id;
     private String title;
     private String description;
-    private Image image;
-    private double totalPrice;
-    private double pricePerDay;
+    private int image;
     private float rating;
+    private boolean approved;
 
-    public AccommodationListing(Long id, String title, String description, Image image, boolean favourite,
-                                double totalPrice, double  pricePerDay, float rating) {
+    public ApproveAccommodationListing(Long id, String title, String description, int image, float rating, boolean approved) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.image = image;
-        this.totalPrice = totalPrice;
-        this.pricePerDay = pricePerDay;
         this.rating = rating;
+        this.approved = approved;
     }
 
-    public AccommodationListing() {
+    public ApproveAccommodationListing() {
     }
 
-    protected AccommodationListing(Parcel in) {
+    protected ApproveAccommodationListing(Parcel in) {
         id = in.readLong();
         title = in.readString();
         description = in.readString();
-        image = in.readParcelable(Image.class.getClassLoader());
-        totalPrice = in.readDouble();
-        pricePerDay = in.readDouble();
+        image = in.readInt();
         rating = in.readFloat();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            approved = in.readBoolean();
+        }
     }
 
     public Long getId() {
@@ -62,30 +61,13 @@ public class AccommodationListing  implements Parcelable {
         this.description = description;
     }
 
-    public Image getImage() {
+    public int getImage() {
         return image;
     }
 
-    public void setImage(Image image) {
+    public void setImage(int image) {
         this.image = image;
     }
-
-    public double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public double getPricePerDay() {
-        return pricePerDay;
-    }
-
-    public void setPricePerDay(double pricePerDay) {
-        this.pricePerDay = pricePerDay;
-    }
-
 
     public float getRating() {
         return rating;
@@ -95,14 +77,17 @@ public class AccommodationListing  implements Parcelable {
         this.rating = rating;
     }
 
+    public boolean getApproved(){ return approved;}
+
+    public void setApproved(boolean approved){this.approved = approved;}
+
     @Override
     public String toString() {
         return "AccommodationListing{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", total price='" + totalPrice + '\'' +
-                ", price per day='" + pricePerDay + '\'' +
-                ", rating='" + rating + '\'' +
+                ", image='" + image + '\'' +
+                ", approved='" + approved + '\'' +
                 '}';
     }
 
@@ -116,23 +101,22 @@ public class AccommodationListing  implements Parcelable {
         dest.writeLong(id);
         dest.writeString(title);
         dest.writeString(description);
-        dest.writeParcelable(image, 4);
-        dest.writeDouble(totalPrice);
-        dest.writeDouble(pricePerDay);
+        dest.writeInt(image);
         dest.writeFloat(rating);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            dest.writeBoolean(approved);
+        }
     }
 
-    public static final Creator<AccommodationListing> CREATOR = new Creator<AccommodationListing>() {
+    public static final Creator<ApproveAccommodationListing> CREATOR = new Creator<ApproveAccommodationListing>() {
         @Override
-        public AccommodationListing createFromParcel(Parcel in) {
-            return new AccommodationListing(in);
+        public ApproveAccommodationListing createFromParcel(Parcel in) {
+            return new ApproveAccommodationListing(in);
         }
 
         @Override
-        public AccommodationListing[] newArray(int size) {
-            return new AccommodationListing[size];
+        public ApproveAccommodationListing[] newArray(int size) {
+            return new ApproveAccommodationListing[size];
         }
     };
-
-
 }
