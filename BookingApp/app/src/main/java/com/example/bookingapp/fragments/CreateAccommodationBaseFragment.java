@@ -34,19 +34,7 @@ public class CreateAccommodationBaseFragment extends Fragment {
         binding = FragmentCreateAccommodationBaseBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        EditText editText = binding.editTextShortDescription;
-        editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                    FragmentTransition.to(CreateAccommodationAmenitiesFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
-                    return true;
-                }
-                return false;
-            }
-        });
 
         return root;
     }
