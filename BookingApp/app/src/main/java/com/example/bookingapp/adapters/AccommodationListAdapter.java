@@ -1,6 +1,8 @@
 package com.example.bookingapp.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
@@ -34,6 +36,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class AccommodationListAdapter extends ArrayAdapter<AccommodationListing> {
@@ -106,17 +109,22 @@ public class AccommodationListAdapter extends ArrayAdapter<AccommodationListing>
         ImageButton favorite = convertView.findViewById(R.id.favorite);
 
         if(AccommodationListing != null){
-            image.setImageResource(AccommodationListing.getImage());
+            File imgFile = new File(AccommodationListing.getImage().getPath_mobile());
+            if(imgFile.exists()){
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                image.setImageBitmap(myBitmap);
+            }
             title.setText(AccommodationListing.getTitle());
             description.setText(AccommodationListing.getDescription());
             totalPrice.setText(AccommodationListing.getTotalPrice() + "$");
             pricePerDay.setText(AccommodationListing.getPricePerDay() + "$/day");
             ratingBar.setRating(AccommodationListing.getRating());
-            if(AccommodationListing.getFavorite()) {
-                favorite.setImageResource(R.drawable.icons8_heart_30_selected_favourite);
-            } else {
-                favorite.setImageResource(R.drawable.icons8_heart_30_not_selected_favourite);
-            }
+            //TODO: SET FAVOURITE
+//            if(AccommodationListing.getFavorite()) {
+//                favorite.setImageResource(R.drawable.icons8_heart_30_selected_favourite);
+//            } else {
+//                favorite.setImageResource(R.drawable.icons8_heart_30_not_selected_favourite);
+//            }
             card.setOnClickListener(v -> {
                 ArrayList<Image> images = new ArrayList<Image>();
                 images.add(new Image(1L, "../../../../../res/drawable/paris_image.jpg", "", null));

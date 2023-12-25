@@ -31,60 +31,14 @@ import com.example.bookingapp.fragments.ReportedUsersFragment;
 import com.example.bookingapp.fragments.ReservationRequestOwnerFragment;
 import com.google.android.material.navigation.NavigationView;
 
-public class BaseActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
-    public static String SYNC_DATA = "SYNC_DATA";
+public class BaseActivity extends AppCompatActivity{
     ActionBarDrawerToggle actionBarDrawerToggle;
     Toolbar toolbar;
     DrawerLayout drawerLayout;
-
-
-
-    private static final String JWT_TOKEN_KEY = "jwt_token";
-    private static final String USER_ID_KEY = "user_id";
-
-    public void saveJwtToken(String token) {
-        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(JWT_TOKEN_KEY, token);
-        editor.apply();
-    }
-
-    public String getJwtToken() {
-        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        return preferences.getString(JWT_TOKEN_KEY, null);
-    }
-
-    public void saveUserId(long userId) {
-        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(USER_ID_KEY, (int) userId);
-        editor.apply();
-    }
-
-    // Retrieve user ID from SharedPreferences
-    public int getUserId() {
-        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        return preferences.getInt(USER_ID_KEY, -1); // -1 is a default value if the key is not found
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_activity);
-
-        String storedToken = getJwtToken();
-//        if (storedToken != null) {
-//            // Token exists, you can use it as needed
-//            // Example: Call a method to handle a logged-in user
-//            //handleLoggedInUser(storedToken);
-//        }
-
-        int storedUserId = getUserId();
-        if (storedUserId != -1) {
-            // User ID exists, you can use it as needed
-            // Example: Call a method to handle a logged-in user
-            handleLoggedInUserWithId(storedUserId);
-        }
 
         FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
                 .beginTransaction()
@@ -327,11 +281,6 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
-
     }
 
     private void handleLoggedInUser(String token) {

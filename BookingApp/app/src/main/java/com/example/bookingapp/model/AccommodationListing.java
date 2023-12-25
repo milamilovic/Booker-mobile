@@ -9,19 +9,17 @@ public class AccommodationListing  implements Parcelable {
     private Long id;
     private String title;
     private String description;
-    private int image;
-    private boolean favourite;
-    private int totalPrice;
-    private int pricePerDay;
+    private Image image;
+    private double totalPrice;
+    private double pricePerDay;
     private float rating;
 
-    public AccommodationListing(Long id, String title, String description, int image, boolean favourite,
-                                int totalPrice, int  pricePerDay, float rating) {
+    public AccommodationListing(Long id, String title, String description, Image image, boolean favourite,
+                                double totalPrice, double  pricePerDay, float rating) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.image = image;
-        this.favourite = favourite;
         this.totalPrice = totalPrice;
         this.pricePerDay = pricePerDay;
         this.rating = rating;
@@ -34,10 +32,9 @@ public class AccommodationListing  implements Parcelable {
         id = in.readLong();
         title = in.readString();
         description = in.readString();
-        image = in.readInt();
-        favourite = in.readInt() == 1;
-        totalPrice = in.readInt();
-        pricePerDay = in.readInt();
+        image = in.readParcelable(Image.class.getClassLoader());
+        totalPrice = in.readDouble();
+        pricePerDay = in.readDouble();
         rating = in.readFloat();
     }
 
@@ -65,37 +62,28 @@ public class AccommodationListing  implements Parcelable {
         this.description = description;
     }
 
-    public int getImage() {
+    public Image getImage() {
         return image;
     }
 
-    public void setImage(int image) {
+    public void setImage(Image image) {
         this.image = image;
     }
 
-    public int getTotalPrice() {
+    public double getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(int totalPrice) {
+    public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
 
-    public int getPricePerDay() {
+    public double getPricePerDay() {
         return pricePerDay;
     }
 
-    public void setPricePerDay(int pricePerDay) {
+    public void setPricePerDay(double pricePerDay) {
         this.pricePerDay = pricePerDay;
-    }
-
-
-    public boolean getFavorite() {
-        return favourite;
-    }
-
-    public void setFavourite(boolean isFavorite) {
-        this.favourite = isFavorite;
     }
 
 
@@ -112,8 +100,6 @@ public class AccommodationListing  implements Parcelable {
         return "AccommodationListing{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", image='" + image + '\'' +
-                ", is favourite for user='" + favourite + '\'' +
                 ", total price='" + totalPrice + '\'' +
                 ", price per day='" + pricePerDay + '\'' +
                 ", rating='" + rating + '\'' +
@@ -130,10 +116,9 @@ public class AccommodationListing  implements Parcelable {
         dest.writeLong(id);
         dest.writeString(title);
         dest.writeString(description);
-        dest.writeInt(image);
-        dest.writeInt(favourite ? 1 : 0);
-        dest.writeInt(totalPrice);
-        dest.writeInt(pricePerDay);
+        dest.writeParcelable(image, 4);
+        dest.writeDouble(totalPrice);
+        dest.writeDouble(pricePerDay);
         dest.writeFloat(rating);
     }
 

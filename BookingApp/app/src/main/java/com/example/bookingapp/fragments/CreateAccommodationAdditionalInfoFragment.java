@@ -60,7 +60,7 @@ public class CreateAccommodationAdditionalInfoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "Accommodation will be created after administrator's check", Toast.LENGTH_SHORT).show();
-                FragmentTransition.to(AccommodationListingFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
+                //FragmentTransition.to(AccommodationListingFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
             }
         });
     }
