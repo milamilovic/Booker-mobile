@@ -28,6 +28,8 @@ import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.databinding.FragmentLoginBinding;
 import com.example.bookingapp.dto.users.LoginUserDTO;
 import com.example.bookingapp.dto.users.Token;
+import com.example.bookingapp.dto.users.UserDTO;
+import com.example.bookingapp.enums.Role;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -46,6 +48,7 @@ public class LoginFragment extends Fragment {
 
     private static final String JWT_TOKEN_KEY = "jwt_token";
     private static final String USER_ID_KEY = "user_id";
+    private static final String USER_ROLE_KEY = "user_role";
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -95,6 +98,28 @@ public class LoginFragment extends Fragment {
                             System.out.println(response.body());
                             Token product1 = response.body();
                             System.out.println(product1);
+                            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPref.edit();
+                            editor.putString(JWT_TOKEN_KEY, product1.getToken());
+                            editor.putLong(USER_ID_KEY, product1.getUserId());
+                            editor.apply();
+                            Call<UserDTO> userDTOCall = ClientUtils.userService.getById(product1.getUserId());
+                            userDTOCall.enqueue(new Callback<UserDTO>() {
+                                @Override
+                                public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
+                                    UserDTO userDTO = response.body();
+                                    Role role = userDTO.getRole();
+                                    SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedPref.edit();
+                                    editor.putString(USER_ROLE_KEY, String.valueOf(role));
+                                    editor.apply();
+                                }
+
+                                @Override
+                                public void onFailure(Call<UserDTO> call, Throwable t) {
+                                    Log.d("REZ", "Error in retrieving user role!");
+                                }
+                            });
                             getActivity().getSupportFragmentManager().popBackStack();
                             Toast.makeText(root.getContext(), "Login successful", Toast.LENGTH_SHORT).show();
                             FragmentTransition.to(HomeFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
