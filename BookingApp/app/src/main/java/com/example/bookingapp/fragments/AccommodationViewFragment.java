@@ -11,8 +11,12 @@ import android.os.Bundle;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.StrictMode;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.applandeo.materialcalendarview.CalendarDay;
 import com.applandeo.materialcalendarview.CalendarUtils;
@@ -37,10 +42,13 @@ import com.example.bookingapp.SplashScreen;
 import com.example.bookingapp.adapters.AccommodationListAdapter;
 import com.example.bookingapp.adapters.AmenityAdapter;
 import com.example.bookingapp.adapters.ImageAdapter;
+import com.example.bookingapp.clients.ClientUtils;
+import com.example.bookingapp.enums.ReservationRequestStatus;
 import com.example.bookingapp.model.Accommodation;
 import com.example.bookingapp.model.AccommodationListing;
 import com.example.bookingapp.model.Amenity;
 import com.example.bookingapp.model.Image;
+import com.example.bookingapp.model.ReservationRequest;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.datepicker.DayViewDecorator;
 
@@ -52,6 +60,10 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link AccommodationViewFragment#newInstance} factory method to
@@ -60,6 +72,7 @@ import java.util.Random;
 public class AccommodationViewFragment extends Fragment {
 
     private Accommodation accommodation;
+    private static Long id;
 
     public static ArrayList<Amenity> amenities = new ArrayList<Amenity>();
     ListView listView;
@@ -77,6 +90,9 @@ public class AccommodationViewFragment extends Fragment {
 
     public static AccommodationViewFragment newInstance(Accommodation accommodation) {
         AccommodationViewFragment fragment = new AccommodationViewFragment(accommodation);
+        Bundle args = new Bundle();
+        args.putLong("id", accommodation.getId());
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -84,6 +100,18 @@ public class AccommodationViewFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            Bundle args = getArguments();
+            id = args.getLong("id");
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            Call<Accommodation> call = ClientUtils.accommodationService.findAccommodation(id);
+            try{
+                Response<Accommodation> response = call.execute();
+                accommodation = (Accommodation) response.body();
+            }catch(Exception ex){
+                System.out.println("EXCEPTION WHILE GETTING ACCOMMODATION");
+                ex.printStackTrace();
+            }
             amenities = getArguments().getParcelableArrayList(ARG_PARAM);
         }
     }
@@ -97,16 +125,25 @@ public class AccommodationViewFragment extends Fragment {
         showMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransition.to( new MapFragment(), getActivity(), false, R.id.fragment_placeholder);
+                FragmentTransition.to( MapFragment.newInstance(accommodation.getAddress().getLatitude(), accommodation.getAddress().getLongitude()), getActivity(), false, R.id.fragment_placeholder);
             }
         });
 
-        RecyclerView recyclerView = view.findViewById(R.id.recycler);
-        ArrayList<Image> images = new ArrayList<Image>();
+        TextView description = (TextView)view.findViewById(R.id.description);
+        description.setText(accommodation.getDescription());
+        TextView address = (TextView)view.findViewById(R.id.address);
+        address.setText(accommodation.getAddress().toString());
 
-        for(Image image : accommodation.getImages()) {
-            images.add(image);
-        }
+        RecyclerView recyclerView = view.findViewById(R.id.recycler);
+        ArrayList<Integer> images = new ArrayList<Integer>();
+        images.add(R.drawable.apartment_image);
+        images.add(R.drawable.paris_image);
+        images.add(R.drawable.copenhagen_image);
+        images.add(R.drawable.madrid_image);
+        images.add(R.drawable.room_image);
+        images.add(R.drawable.hotel_image);
+        images.add(R.drawable.lisbon_image);
+        images.add(R.drawable.london_image);
 
         ImageAdapter adapter = new ImageAdapter(getContext(), images);
         recyclerView.setAdapter(adapter);
@@ -133,26 +170,19 @@ public class AccommodationViewFragment extends Fragment {
                     //set text box dates
                     Calendar firstDate = selectedDates.get(0);
                     SimpleDateFormat formattedDate
-                            = new SimpleDateFormat("dd.MM.yyyy.");
+                            = new SimpleDateFormat("yyyy-MM-dd");
                     String firstDateString = formattedDate.format(firstDate.getTime());
                     Calendar secondDate = eventDay.getCalendar();
                     String secondDateString = formattedDate.format(secondDate.getTime());
                     String datesString = firstDateString + " - " + secondDateString;
                     dates.setText(datesString);
-
-                    //set price
-                    EditText price = view.findViewById(R.id.price);
-                    Random random = new Random();
-                    int priceNum = random.nextInt(1000);
-                    price.setText(String.valueOf(priceNum) + "$");
-
                 }
             }
         });
 
         ScrollView scrollView = view.findViewById(R.id.scroll_view);
 
-        prepareAmenityList(amenities);
+        amenities = (ArrayList<Amenity>) accommodation.getAmenities();
         listView = view.findViewById(R.id.amenity_list);
         AmenityAdapter amenityAdapter = new AmenityAdapter(getContext(), amenities);
         listView.setAdapter(amenityAdapter);
@@ -170,10 +200,104 @@ public class AccommodationViewFragment extends Fragment {
             }
         });
 
+        view.findViewById(R.id.calculate_price).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String datesString = String.valueOf(dates.getText());
+                if(datesString.contains(" - ")) {
+                    //get dates
+                    String firstDateString = datesString.split(" - ")[0];
+                    String secondDateString = datesString.split(" - ")[1];
+
+                    //get people
+                    EditText people_edit = view.findViewById(R.id.people);
+                    //calclulate price
+                    EditText price = view.findViewById(R.id.price);
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    if(!people_edit.getText().equals("")) {
+                        int people = Integer.parseInt(people_edit.getText().toString());
+                        System.out.println(people);
+                        if(people>0) {
+                            Call<Double> call = ClientUtils.accommodationService.getPrice(accommodation.getId(), firstDateString, secondDateString, people);
+                            try {
+                                Response<Double> response = call.execute();
+                                Double d = response.body();
+                                price.setText(String.valueOf(d.doubleValue()) + "$");
+                            } catch (Exception ex) {
+                                System.out.println("EXCEPTION WHILE GETTING PRICE");
+                                ex.printStackTrace();
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Number of guests must be at least 1!", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "Please input number of guests!", Toast.LENGTH_SHORT).show();
+                    }
+//                    price.setText(String.valueOf(priceNum) + "$");
+
+                } else {
+                    Toast.makeText(getContext(), "Please input dates!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         //make reservation request button on click
         view.findViewById(R.id.make_reservation_request).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //make a reservation request
+                String datesString = String.valueOf(dates.getText());
+                if(datesString.contains(" - ")) {
+                    //get dates
+                    String firstDateString = datesString.split(" - ")[0];
+                    String secondDateString = datesString.split(" - ")[1];
+                    //get people
+                    EditText people_edit = view.findViewById(R.id.people);
+                    //make reservation
+                    EditText price = view.findViewById(R.id.price);
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    if (!people_edit.getText().equals("")) {
+                        int people = Integer.parseInt(people_edit.getText().toString());
+                        System.out.println(people);
+                        if (people > 0) {
+                            Call<Double> call = ClientUtils.accommodationService.getPrice(accommodation.getId(), firstDateString, secondDateString, people);
+                            try {
+                                Response<Double> response = call.execute();
+                                Double d = response.body();
+                                double cost = d.doubleValue();
+                                ReservationRequest reservationRequest = new ReservationRequest(
+                                        1L, id, firstDateString, secondDateString, people,
+                                        ReservationRequestStatus.WAITING, false, cost
+                                );
+                                Call<ReservationRequest> call2 = ClientUtils.accommodationService.makeRequest(reservationRequest);
+                                try {
+                                    Response<ReservationRequest> response2 = call2.execute();
+                                    ReservationRequest request = response2.body();
+                                    System.out.println("requset made!");
+                                } catch (Exception ex) {
+                                    System.out.println("EXCEPTION WHILE MAKING RESERVATION");
+                                    ex.printStackTrace();
+                                }
+                            } catch (Exception ex) {
+                                System.out.println("EXCEPTION WHILE GETTING PRICE");
+                                ex.printStackTrace();
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Number of guests must be at least 1!", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "Please input number of guests!", Toast.LENGTH_SHORT).show();
+                    }
+//                    price.setText(String.valueOf(priceNum) + "$");
+
+                } else {
+                    Toast.makeText(getContext(), "Please input dates!", Toast.LENGTH_SHORT).show();
+                }
+
+
+                //successful
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext()
                 ).setNegativeButton("Stay on this page",
                         new DialogInterface.OnClickListener() {
@@ -195,20 +319,5 @@ public class AccommodationViewFragment extends Fragment {
         });
 
         return view;
-    }
-
-    private void prepareAmenityList(ArrayList<Amenity> amenities) {
-        amenities.add(new Amenity(1L, "Wi-Fi", R.drawable.icons8_settings_24));
-        amenities.add(new Amenity(2L, "AC", R.drawable.icons8_calendar_32));
-        amenities.add(new Amenity(3L, "popular location", R.drawable.icons8_location_32));
-        amenities.add(new Amenity(4L, "clean", R.drawable.icons8_help_24));
-        amenities.add(new Amenity(1L, "Wi-Fi", R.drawable.icons8_settings_24));
-        amenities.add(new Amenity(2L, "AC", R.drawable.icons8_calendar_32));
-        amenities.add(new Amenity(3L, "popular location", R.drawable.icons8_location_32));
-        amenities.add(new Amenity(4L, "clean", R.drawable.icons8_help_24));
-        amenities.add(new Amenity(1L, "Wi-Fi", R.drawable.icons8_settings_24));
-        amenities.add(new Amenity(2L, "AC", R.drawable.icons8_calendar_32));
-        amenities.add(new Amenity(3L, "popular location", R.drawable.icons8_location_32));
-        amenities.add(new Amenity(4L, "clean", R.drawable.icons8_help_24));
     }
 }
