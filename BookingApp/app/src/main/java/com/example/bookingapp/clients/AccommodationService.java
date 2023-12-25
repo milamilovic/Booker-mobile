@@ -1,5 +1,7 @@
 package com.example.bookingapp.clients;
 
+import com.example.bookingapp.dto.accommodation.AccommodationViewDTO;
+import com.example.bookingapp.dto.accommodation.CreateAccommodationDTO;
 import com.example.bookingapp.dto.users.LoginUserDTO;
 import com.example.bookingapp.dto.users.Token;
 import com.example.bookingapp.model.Accommodation;
@@ -58,6 +60,12 @@ public interface AccommodationService {
     Call<List<ApproveAccommodationListing>> findAllUnapproved();
 
     @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @POST("accommodations/create_accommodation")
+    Call<AccommodationViewDTO> insert(@Body CreateAccommodationDTO createAccommodationDTO);
+   @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })

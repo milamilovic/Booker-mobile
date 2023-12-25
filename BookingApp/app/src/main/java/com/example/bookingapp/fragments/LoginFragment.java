@@ -103,23 +103,23 @@ public class LoginFragment extends Fragment {
                             editor.putString(JWT_TOKEN_KEY, product1.getToken());
                             editor.putLong(USER_ID_KEY, product1.getUserId());
                             editor.apply();
-                            Call<UserDTO> userDTOCall = ClientUtils.userService.getById(product1.getUserId());
-                            userDTOCall.enqueue(new Callback<UserDTO>() {
-                                @Override
-                                public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
-                                    UserDTO userDTO = response.body();
-                                    Role role = userDTO.getRole();
-                                    SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = sharedPref.edit();
-                                    editor.putString(USER_ROLE_KEY, String.valueOf(role));
-                                    editor.apply();
-                                }
-
-                                @Override
-                                public void onFailure(Call<UserDTO> call, Throwable t) {
-                                    Log.d("REZ", "Error in retrieving user role!");
-                                }
-                            });
+//                            Call<UserDTO> userDTOCall = ClientUtils.userService.getById(product1.getUserId());
+//                            userDTOCall.enqueue(new Callback<UserDTO>() {
+//                                @Override
+//                                public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
+//                                    UserDTO userDTO = response.body();
+//                                    Role role = userDTO.getRole();
+//                                    SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+//                                    SharedPreferences.Editor editor = sharedPref.edit();
+//                                    editor.putString(USER_ROLE_KEY, String.valueOf(role));
+//                                    editor.apply();
+//                                }
+//
+//                                @Override
+//                                public void onFailure(Call<UserDTO> call, Throwable t) {
+//                                    Log.d("REZ", "Error in retrieving user role!");
+//                                }
+//                            });
                             getActivity().getSupportFragmentManager().popBackStack();
                             Toast.makeText(root.getContext(), "Login successful", Toast.LENGTH_SHORT).show();
                             FragmentTransition.to(HomeFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
