@@ -1,5 +1,7 @@
 package com.example.bookingapp.clients;
 
+import com.example.bookingapp.dto.accommodation.AccommodationViewDTO;
+import com.example.bookingapp.dto.accommodation.CreateAccommodationDTO;
 import com.example.bookingapp.model.Accommodation;
 import com.example.bookingapp.model.AccommodationListing;
 import com.example.bookingapp.model.Filter;
@@ -36,4 +38,12 @@ public interface AccommodationService {
                                   @Path("location") String location,
                                   @Path("people") int people,
                                   @Body ArrayList<Filter> filters);
+
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @POST("accommodations/create_accommodation")
+    Call<AccommodationViewDTO> insert(@Body CreateAccommodationDTO createAccommodationDTO);
 }
