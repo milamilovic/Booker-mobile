@@ -10,11 +10,11 @@ public class ApproveAccommodationListing implements Parcelable {
     private Long id;
     private String title;
     private String description;
-    private int image;
+    private Image image;
     private float rating;
     private boolean approved;
 
-    public ApproveAccommodationListing(Long id, String title, String description, int image, float rating, boolean approved) {
+    public ApproveAccommodationListing(Long id, String title, String description, Image image, float rating, boolean approved) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -30,7 +30,7 @@ public class ApproveAccommodationListing implements Parcelable {
         id = in.readLong();
         title = in.readString();
         description = in.readString();
-        image = in.readInt();
+        image = in.readParcelable(Image.class.getClassLoader());
         rating = in.readFloat();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             approved = in.readBoolean();
@@ -61,11 +61,11 @@ public class ApproveAccommodationListing implements Parcelable {
         this.description = description;
     }
 
-    public int getImage() {
+    public Image getImage() {
         return image;
     }
 
-    public void setImage(int image) {
+    public void setImage(Image image) {
         this.image = image;
     }
 
@@ -86,7 +86,6 @@ public class ApproveAccommodationListing implements Parcelable {
         return "AccommodationListing{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", image='" + image + '\'' +
                 ", approved='" + approved + '\'' +
                 '}';
     }
@@ -101,7 +100,7 @@ public class ApproveAccommodationListing implements Parcelable {
         dest.writeLong(id);
         dest.writeString(title);
         dest.writeString(description);
-        dest.writeInt(image);
+        dest.writeParcelable(new Image(), flags);
         dest.writeFloat(rating);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             dest.writeBoolean(approved);

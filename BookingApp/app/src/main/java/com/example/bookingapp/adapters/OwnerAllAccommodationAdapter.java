@@ -82,7 +82,7 @@ public class OwnerAllAccommodationAdapter extends ArrayAdapter<ApproveAccommodat
             title.setText(accommodation.getTitle());
             description.setText(accommodation.getDescription());
             ratingBar.setRating(accommodation.getRating());
-            image.setImageResource(accommodation.getImage());
+            //image.setImageResource(accommodation.getImage());
             if (accommodation.getApproved()){
                 status.setText("approved");
             } else{
