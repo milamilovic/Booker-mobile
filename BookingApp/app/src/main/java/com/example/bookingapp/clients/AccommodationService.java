@@ -50,4 +50,12 @@ public interface AccommodationService {
     @PUT("accommodations/approve/{accommodationId}")
     Call<String> approveAccommodation(@Path("accommodationId")Long accommodationId);
 
+
+    @Headers("Content-Type: application/json")
+    @GET("accommodations/owner/{ownerId}/active")
+    Call<List<ApproveAccommodationListing>> findApprovedForOwner(@Path("ownerId")Long ownerId);
+
+    @Headers("Content-Type: application/json")
+    @GET("accommodations/owner/{ownerId}")
+    Call<List<ApproveAccommodationListing>> findAllForOwner(@Path("ownerId")Long ownerId);
 }
