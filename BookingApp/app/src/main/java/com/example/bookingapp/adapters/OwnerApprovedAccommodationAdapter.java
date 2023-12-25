@@ -82,7 +82,7 @@ public class OwnerApprovedAccommodationAdapter extends ArrayAdapter<ApproveAccom
             title.setText(accommodation.getTitle());
             description.setText(accommodation.getDescription());
             ratingBar.setRating(accommodation.getRating());
-            image.setImageResource(accommodation.getImage());
+            //image.setImageResource(accommodation.getImage());
             statusLayout.setVisibility(View.GONE);
             card.setOnClickListener(v->{
                 ArrayList<Image> images = new ArrayList<Image>();

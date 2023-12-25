@@ -14,6 +14,7 @@ import com.example.bookingapp.adapters.OwnerAllAccommodationAdapter;
 import com.example.bookingapp.adapters.OwnerApprovedAccommodationAdapter;
 import com.example.bookingapp.databinding.FragmentOwnerAccommodationListingBinding;
 import com.example.bookingapp.model.ApproveAccommodationListing;
+import com.example.bookingapp.model.Image;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -80,33 +81,33 @@ public class OwnerAccommodationFragmentListing extends Fragment {
     private void prepareApprovedAccommodationList(ArrayList<ApproveAccommodationListing> approvedAccommodation) throws ParseException {
         approvedAccommodation.add(new ApproveAccommodationListing(1L, "Flower Apartment",
                 "A lovely apartment in the center of the city with a magnificent view of Buckingham palace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.",
-                R.drawable.apartment_image, 4.3F, true));
+                new Image(), 4.3F, true));
         approvedAccommodation.add(new ApproveAccommodationListing(2L, "Flower Apartment",
                 "A lovely apartment in the center of the city with a magnificent view of Buckingham palace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.",
-                R.drawable.apartment_image, 4.3F, true));
+                new Image(), 4.3F, true));
         approvedAccommodation.add(new ApproveAccommodationListing(3L, "Flower Apartment",
                 "A lovely apartment in the center of the city with a magnificent view of Buckingham palace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.",
-                R.drawable.apartment_image, 4.3F, true));
+                new Image(), 4.3F, true));
         approvedAccommodation.add(new ApproveAccommodationListing(5L, "Flower Apartment",
                 "A lovely apartment in the center of the city with a magnificent view of Buckingham palace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.",
-                R.drawable.apartment_image, 4.3F, true));
+                new Image(), 4.3F, true));
     }
 
     private void prepareAllAccommodationList(ArrayList<ApproveAccommodationListing> allAccommodation) throws ParseException {
         allAccommodation.add(new ApproveAccommodationListing(1L, "Flower Apartment",
                 "A lovely apartment in the center of the city with a magnificent view of Buckingham palace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.",
-                R.drawable.apartment_image, 4.3F, true));
+                new Image(), 4.3F, true));
         allAccommodation.add(new ApproveAccommodationListing(2L, "Flower Apartment",
                 "A lovely apartment in the center of the city with a magnificent view of Buckingham palace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.",
-                R.drawable.apartment_image, 4.3F, true));
+                new Image(), 4.3F, true));
         allAccommodation.add(new ApproveAccommodationListing(3L, "Flower Apartment",
                 "A lovely apartment in the center of the city with a magnificent view of Buckingham palace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.",
-                R.drawable.apartment_image, 4.3F, true));
+                new Image(), 4.3F, true));
         allAccommodation.add(new ApproveAccommodationListing(4L, "Unapproved Apartment",
                 "A lovely apartment in the center of the city with a magnificent view of Buckingham palace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.",
-                R.drawable.apartment_image, 4.3F, false));
+                new Image(), 4.3F, false));
         allAccommodation.add(new ApproveAccommodationListing(5L, "Flower Apartment",
                 "A lovely apartment in the center of the city with a magnificent view of Buckingham palace and the city square. Has one bedroom and two separate bathrooms. Has a terrace.",
-                R.drawable.apartment_image, 4.3F, true));
+                new Image(), 4.3F, true));
     }
 }
