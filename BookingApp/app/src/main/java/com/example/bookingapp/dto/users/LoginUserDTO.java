@@ -1,8 +1,8 @@
 package com.example.bookingapp.dto.users;
 
 public class LoginUserDTO {
-    private String email;
-    private String password;
+    public String email;
+    public String password;
 
     public LoginUserDTO() {
     }
