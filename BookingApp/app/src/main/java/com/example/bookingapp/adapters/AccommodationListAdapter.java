@@ -3,12 +3,15 @@ package com.example.bookingapp.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.StrictMode;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 
 import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
+import com.example.bookingapp.clients.AccommodationRating;
+import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.fragments.AccommodationViewFragment;
 import com.example.bookingapp.model.Accommodation;
 import com.example.bookingapp.model.AccommodationListing;
@@ -33,11 +36,18 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AccommodationListAdapter extends ArrayAdapter<AccommodationListing> {
 
@@ -109,16 +119,26 @@ public class AccommodationListAdapter extends ArrayAdapter<AccommodationListing>
         ImageButton favorite = convertView.findViewById(R.id.favorite);
 
         if(AccommodationListing != null){
-            File imgFile = new File(AccommodationListing.getImage().getPath_mobile());
-            if(imgFile.exists()){
-                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                image.setImageBitmap(myBitmap);
-            }
+            //TODO: getting image
             title.setText(AccommodationListing.getTitle());
             description.setText(AccommodationListing.getDescription());
             totalPrice.setText(AccommodationListing.getTotalPrice() + "$");
             pricePerDay.setText(AccommodationListing.getPricePerDay() + "$/day");
-            ratingBar.setRating(AccommodationListing.getRating());
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            Call<List<AccommodationRating>> call = ClientUtils.accommodationService.getRatings(AccommodationListing.getId());
+            try{
+                Response<List<AccommodationRating>> response = call.execute();
+                List<AccommodationRating> ratings = (List<AccommodationRating>) response.body();
+                float rating_float = 0;
+                for(AccommodationRating a : ratings) {
+                    rating_float += a.getRate();
+                }
+                ratingBar.setRating(rating_float);
+            }catch(Exception ex){
+                System.out.println("EXCEPTION WHILE GETTING RATINGS");
+                ex.printStackTrace();
+            }
             //TODO: SET FAVOURITE
 //            if(AccommodationListing.getFavorite()) {
 //                favorite.setImageResource(R.drawable.icons8_heart_30_selected_favourite);
@@ -126,22 +146,20 @@ public class AccommodationListAdapter extends ArrayAdapter<AccommodationListing>
 //                favorite.setImageResource(R.drawable.icons8_heart_30_not_selected_favourite);
 //            }
             card.setOnClickListener(v -> {
-                ArrayList<Image> images = new ArrayList<Image>();
-                images.add(new Image(1L, "../../../../../res/drawable/paris_image.jpg", "", null));
-                images.add(new Image(1L, "../../../../../res/drawable/copenhagen_image.jpg", "", null));
-                images.add(new Image(1L, "../../../../../res/drawable/madrid_image.jpg", "", null));
-                images.add(new Image(1L, "../../../../../res/drawable/room_image.jpg", "", null));
-                images.add(new Image(1L, "../../../../../res/drawable/hotel_image.jpg", "", null));
-                images.add(new Image(1L, "../../../../../res/drawable/lisbon_image.jpg", "", null));
-                ArrayList<Amenity> amenities = new ArrayList<Amenity>();
-                amenities.add(new Amenity(1L, "Wi-Fi", R.drawable.icons8_settings_24));
-                amenities.add(new Amenity(2L, "AC", R.drawable.icons8_calendar_32));
-                amenities.add(new Amenity(3L, "popular location", R.drawable.icons8_location_32));
-                amenities.add(new Amenity(4L, "clean", R.drawable.icons8_help_24));
-                FragmentTransition.to(AccommodationViewFragment.newInstance(new Accommodation(AccommodationListing.getId(),
-                        AccommodationListing.getTitle(), "The units come with parquet floors and feature a fully equipped kitchen with a microwave, a dining area, a flat-screen TV with streaming services, and a private bathroom with walk-in shower and a hair dryer. A toaster, a fridge and stovetop are also available, as well as a coffee machine and a kettle.\n" +
-                        "\u2028Eventim Apollo is 2.4 km from the apartment, while South Kensington Underground Station is 3 km from the property. The nearest airport is London Heathrow Airport, 21 km from Central London Luxury Studios Fulham Close to Underground Newly Refurbished.",
-                        images, new ArrayList<Availability>(), new ArrayList<Price>(), new ArrayList<Object>(), new ArrayList<Object>(), 2L, amenities, 1, 5, new Address(1L, "Ulica 111", "London", 12.21, 15.55, null))), (FragmentActivity) context, true, R.id.fragment_placeholder);
+                StrictMode.setThreadPolicy(policy);
+                Call<Accommodation> accommodation = ClientUtils.accommodationService.findAccommodation(AccommodationListing.getId());
+                try{
+                    Response<Accommodation> response = accommodation.execute();
+                    Accommodation acc = (Accommodation) response.body();
+                    FragmentTransition.to(AccommodationViewFragment.newInstance(acc), (FragmentActivity) context, true, R.id.fragment_placeholder);
+                }catch(Exception ex){
+                    System.out.println("EXCEPTION WHILE GETTING ACCOMMODATION");
+                    ex.printStackTrace();
+                }
+//                FragmentTransition.to(AccommodationViewFragment.newInstance(new Accommodation(AccommodationListing.getId(),
+//                        AccommodationListing.getTitle(), "The units come with parquet floors and feature a fully equipped kitchen with a microwave, a dining area, a flat-screen TV with streaming services, and a private bathroom with walk-in shower and a hair dryer. A toaster, a fridge and stovetop are also available, as well as a coffee machine and a kettle.\n" +
+//                        "\u2028Eventim Apollo is 2.4 km from the apartment, while South Kensington Underground Station is 3 km from the property. The nearest airport is London Heathrow Airport, 21 km from Central London Luxury Studios Fulham Close to Underground Newly Refurbished.",
+//                        images, new ArrayList<Availability>(), new ArrayList<Price>(), new ArrayList<Object>(), new ArrayList<Object>(), 2L, amenities, 1, 5, new Address(1L, "Ulica 111", "London", 12.21, 15.55, null))), (FragmentActivity) context, true, R.id.fragment_placeholder);
             });
         }
 

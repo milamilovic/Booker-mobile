@@ -1,6 +1,8 @@
 package com.example.bookingapp.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import androidx.annotation.Nullable;
 import com.example.bookingapp.R;
 import com.example.bookingapp.model.Amenity;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class AmenityAdapter extends ArrayAdapter<Amenity> {
@@ -82,7 +85,15 @@ public class AmenityAdapter extends ArrayAdapter<Amenity> {
         TextView name = convertView.findViewById(R.id.name);
 
         if(amenity != null){
-            image.setImageResource(amenity.getImage());
+            if(amenity.getName().equals("wifi")) {
+                image.setImageResource(R.drawable.ic_action_network_wifi);
+            } else if(amenity.getName().equals("free cancellation")) {
+                image.setImageResource(R.drawable.icons8_dollar_32);
+            }else if(amenity.getName().equals("AC")) {
+                image.setImageResource(R.drawable.icons8_calendar_32);
+            }else if(amenity.getName().equals("good location")) {
+                image.setImageResource(R.drawable.icons8_location_32);
+            }
             name.setText(amenity.getName());
         }
 

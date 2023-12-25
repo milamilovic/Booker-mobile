@@ -66,6 +66,14 @@ public class Accommodation implements Parcelable {
         }
     }
 
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
     public Long getId() {
         return id;
     }
@@ -167,12 +175,19 @@ public class Accommodation implements Parcelable {
         this.approved = approved;
     }
 
+    public List<Amenity> getAmenities() {
+        return amenities;
+    }
+
+    public void setAmenities(List<Amenity> amenities) {
+        this.amenities = amenities;
+    }
+
     @Override
     public String toString() {
         return "AccommodationListing{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", rating='" + rating + '\'' +
                 ", approved='" + approved + '\'' +
                 "}";
     }
