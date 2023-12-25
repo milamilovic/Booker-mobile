@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -18,16 +19,16 @@ import com.example.bookingapp.model.ApproveAccommodationListing;
 
 import java.util.ArrayList;
 
-public class OwnerAllAccommodationAdapter extends ArrayAdapter<ApproveAccommodationListing> {
+public class OwnerApprovedAccommodationAdapter extends ArrayAdapter<ApproveAccommodationListing> {
     private ArrayList<ApproveAccommodationListing> approveAccommodationListings;
     Context context;
 
-    public OwnerAllAccommodationAdapter(@NonNull Context context, int resource) {
+    public OwnerApprovedAccommodationAdapter(@NonNull Context context, int resource) {
         super(context, resource);
         this.context = context;
     }
 
-    public OwnerAllAccommodationAdapter(Context context, ArrayList<ApproveAccommodationListing> approveAccommodationListing){
+    public OwnerApprovedAccommodationAdapter(Context context, ArrayList<ApproveAccommodationListing> approveAccommodationListing){
         super(context, R.layout.owner_update_accommodation_card, approveAccommodationListing);
         this.approveAccommodationListings = approveAccommodationListing;
         this.context = context;
@@ -63,18 +64,15 @@ public class OwnerAllAccommodationAdapter extends ArrayAdapter<ApproveAccommodat
         ImageView image = convertView.findViewById(R.id.accommodation_image);
         ImageView update = convertView.findViewById(R.id.update_button);
         ImageView delete = convertView.findViewById(R.id.delete_button);
-        TextView status = convertView.findViewById(R.id.accommodation_approved);
+
+        LinearLayout statusLayout = convertView.findViewById(R.id.status);
 
         if (accommodation != null) {
             title.setText(accommodation.getTitle());
             description.setText(accommodation.getDescription());
             ratingBar.setRating(accommodation.getRating());
             image.setImageResource(accommodation.getImage());
-            if (accommodation.getApproved()){
-                status.setText("approved");
-            } else{
-                status.setText("unapproved");
-            }
+            statusLayout.setVisibility(View.GONE);
         }
 
         return convertView;
