@@ -90,7 +90,7 @@ public class RegisterFragment extends Fragment {
                     createUserDTO.setRole(Role.OWNER);
                 }
 
-                new RegisterAsyncTask().execute(createUserDTO);
+               new RegisterAsyncTask().execute(createUserDTO);
 //                Call<CreateUserDTO> call = ClientUtils.userService.saveUser(createUserDTO);
 //
 //                try {
