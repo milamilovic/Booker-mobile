@@ -72,7 +72,7 @@ public interface AccommodationService {
     @POST("requests")
     Call<ReservationRequest> makeRequest(@Body ReservationRequest request);
     
-  @Headers({
+    @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
@@ -87,4 +87,11 @@ public interface AccommodationService {
     @Headers("Content-Type: application/json")
     @GET("accommodations/owner/{ownerId}")
     Call<List<ApproveAccommodationListing>> findAllForOwner(@Path("ownerId")Long ownerId);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @PUT("accommodations/update/{accommodationId}")
+    Call<String> updateAccommodation(@Path("accommodationId")Long accommodationId, @Body Accommodation accommodation);
 }

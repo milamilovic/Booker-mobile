@@ -76,14 +76,14 @@ public class OwnerApprovedAccommodationAdapter extends ArrayAdapter<ApproveAccom
         ImageView delete = convertView.findViewById(R.id.delete_button);
         LinearLayout card = convertView.findViewById(R.id.approve_accommodation_card);
 
-        LinearLayout statusLayout = convertView.findViewById(R.id.status);
+        //LinearLayout statusLayout = convertView.findViewById(R.id.status);
 
         if (accommodation != null) {
             title.setText(accommodation.getTitle());
             description.setText(accommodation.getDescription());
             ratingBar.setRating(accommodation.getRating());
             //image.setImageResource(accommodation.getImage());
-            statusLayout.setVisibility(View.GONE);
+            //statusLayout.setVisibility(View.GONE);
             card.setOnClickListener(v->{
                 ArrayList<Image> images = new ArrayList<Image>();
                 images.add(new Image(1L, "../../../../../res/drawable/paris_image.jpg", "", null));
