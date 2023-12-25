@@ -131,6 +131,7 @@
                         android:textColor="@color/dark_gray"/>
 
                     <TextView
+                        android:id="@+id/description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/dark_gray"
@@ -155,6 +156,7 @@
                         android:textColor="@color/dark_gray"/>
 
                     <TextView
+                        android:id="@+id/address"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/example_address"
@@ -178,7 +180,7 @@
                         android:backgroundTint="@color/transparent_60_dark_gray"
                         android:text="@string/show_on_map"
                         android:textSize="10dp"
-                        android:textColor="@color/dark_gray"/>
+                        android:textColor="@color/light_gray"/>
 
                     </LinearLayout>
 
@@ -291,7 +293,7 @@
                             android:maxHeight="10dp"
                             android:drawableStart="@drawable/icons8_calendar_32"
                             android:drawablePadding="10dp"
-                            android:hint="@string/people_hint"
+                            android:text="1"
                             android:textColorHint="@color/transparent_80_dark_gray"
                             android:inputType="number"
                             android:minHeight="48dp"/>
@@ -313,6 +315,20 @@
                             android:cursorVisible="false"/>
 
                     </LinearLayout>
+
+                    <Button
+                        android:id="@+id/calculate_price"
+                        android:layout_gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/round_corner_alternative"
+                        android:backgroundTint="@color/transparent_60_dark_gray"
+                        android:enabled="true"
+                        android:text="Calculate price!"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/transparent_60_dark_gray"/>
                     <Button
                         android:id="@+id/make_reservation_request"
                         android:layout_gravity="center"

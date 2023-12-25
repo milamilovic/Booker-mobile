@@ -9,12 +9,15 @@ public class Amenity implements Parcelable{
 
     private Long id;
     private String name;
-    private int image;
 
-    public Amenity(Long id, String name, int image) {
+    private Object accommodation;
+    private String image_path;
+
+    public Amenity(Long id, String name, String image, Object accommodation) {
         this.id = id;
         this.name = name;
-        this.image = image;
+        this.image_path = image;
+        this.accommodation = accommodation;
     }
 
     public Amenity() {
@@ -23,7 +26,7 @@ public class Amenity implements Parcelable{
     protected Amenity(Parcel in) {
         id = in.readLong();
         name = in.readString();
-        image = in.readInt();
+        image_path = in.readString();
     }
 
     public Long getId() {
@@ -42,19 +45,18 @@ public class Amenity implements Parcelable{
         this.name = name;
     }
 
-    public int getImage() {
-        return image;
+    public String getImage_path() {
+        return image_path;
     }
 
-    public void setImage(int image) {
-        this.image = image;
+    public void setImage_path(String image) {
+        this.image_path = image;
     }
 
     @Override
     public String toString() {
         return "Amenity{" +
                 "name='" + name + '\'' +
-                ", image='" + image + '\'' +
                 '}';
     }
 
@@ -67,7 +69,7 @@ public class Amenity implements Parcelable{
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeLong(id);
         dest.writeString(name);
-        dest.writeInt(image);
+        dest.writeString(image_path);
     }
 
     public static final Parcelable.Creator<Amenity> CREATOR = new Parcelable.Creator<Amenity>() {

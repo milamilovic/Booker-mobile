@@ -11,16 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.bookingapp.R;
-import com.example.bookingapp.model.Image;
 
 import java.util.ArrayList;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
     Context context;
-    ArrayList<Image> arrayList;
+    ArrayList<Integer> arrayList;
     OnItemClickListener onItemClickListener;
 
-    public ImageAdapter(Context context, ArrayList<Image> arrayList) {
+    public ImageAdapter(Context context, ArrayList<Integer> arrayList) {
         this.context = context;
         this.arrayList = arrayList;
     }
@@ -44,7 +43,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-            ImageView imageView;
+        ImageView imageView;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.list_item_image);

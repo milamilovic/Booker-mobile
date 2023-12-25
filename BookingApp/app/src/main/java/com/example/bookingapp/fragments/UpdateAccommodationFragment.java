@@ -68,16 +68,21 @@ public class UpdateAccommodationFragment extends Fragment {
         showMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransition.to( new MapFragment(), getActivity(), false, R.id.fragment_placeholder);
+                FragmentTransition.to( new MapFragment(0.0, 0.0), getActivity(), false, R.id.fragment_placeholder);
             }
         });
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler);
-        ArrayList<Image> images = new ArrayList<Image>();
 
-        for(Image image : accommodation.getImages()) {
-            images.add(image);
-        }
+        ArrayList<Integer> images = new ArrayList<Integer>();
+        images.add(R.drawable.apartment_image);
+        images.add(R.drawable.paris_image);
+        images.add(R.drawable.copenhagen_image);
+        images.add(R.drawable.madrid_image);
+        images.add(R.drawable.room_image);
+        images.add(R.drawable.hotel_image);
+        images.add(R.drawable.lisbon_image);
+        images.add(R.drawable.london_image);
 
         ImageAdapter adapter = new ImageAdapter(getContext(), images);
         recyclerView.setAdapter(adapter);
@@ -104,9 +109,9 @@ public class UpdateAccommodationFragment extends Fragment {
     }
 
     private void prepareAmenityList(ArrayList<Amenity> amenities) {
-        amenities.add(new Amenity(1L, "Wi-Fi", R.drawable.icons8_settings_24));
-        amenities.add(new Amenity(2L, "AC", R.drawable.icons8_calendar_32));
-        amenities.add(new Amenity(3L, "popular location", R.drawable.icons8_location_32));
-        amenities.add(new Amenity(4L, "clean", R.drawable.icons8_help_24));
+        amenities.add(new Amenity(1L, "Wi-Fi", "", null));
+        amenities.add(new Amenity(2L, "AC", "", null));
+        amenities.add(new Amenity(3L, "popular location", "", null));
+        amenities.add(new Amenity(4L, "clean", "", null));
     }
 }
