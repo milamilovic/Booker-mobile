@@ -86,4 +86,13 @@
     <string name="connect_to_wifi">Please connect to wifi to sync data</string>
     <string name="autosync">Automatic Sync</string>
     <string name="good_news_sync">Good news, everything is sync now.</string>
+    <string name="title">Title</string>
+    <string name="example_city">Example City</string>
+    <string name="city_hint">city</string>
+    <string name="example_street">Example street 123</string>
+    <string name="street_hint">street</string>
+    <string name="example_longitude">Example longitude</string>
+    <string name="example_latitude">Example latitude</string>
+    <string name="latitude_hint">latitude</string>
+    <string name="longitude_hint">longitude</string>
 </resources>
