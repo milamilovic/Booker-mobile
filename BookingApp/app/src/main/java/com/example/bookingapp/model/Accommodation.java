@@ -1,5 +1,6 @@
 package com.example.bookingapp.model;
 
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -22,10 +23,11 @@ public class Accommodation implements Parcelable {
     private Long ownerId;
     private int min_capacity;
     private int max_capacity;
+    private boolean approved;
 
     public Accommodation(Long id, String title, String description, List<Image> images, List<Availability> availabilities,
                          List<Price> prices, List<Object> comments, List<Object> ratings, Long ownerId,
-                         ArrayList<Amenity> amenities, int max_capacity, int min_capacity, Address address) {
+                         ArrayList<Amenity> amenities, int max_capacity, int min_capacity, boolean approved, Address address) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -38,6 +40,7 @@ public class Accommodation implements Parcelable {
         this.max_capacity = max_capacity;
         this.min_capacity = min_capacity;
         this.amenities = amenities;
+        this.approved = approved;
         this.address = address;
     }
 
@@ -58,6 +61,9 @@ public class Accommodation implements Parcelable {
         min_capacity = in.readInt();
         max_capacity = in.readInt();
         amenities = in.readArrayList(Amenity.class.getClassLoader());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            approved = in.readBoolean();
+        }
     }
 
     public Long getId() {
@@ -153,12 +159,22 @@ public class Accommodation implements Parcelable {
         this.ratings = rating;
     }
 
+    public boolean getApproved(){
+        return approved;
+    }
+
+    public void setApproved(boolean approved){
+        this.approved = approved;
+    }
+
     @Override
     public String toString() {
         return "AccommodationListing{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                '}';
+                ", rating='" + rating + '\'' +
+                ", approved='" + approved + '\'' +
+                "}";
     }
 
     @Override
@@ -181,6 +197,9 @@ public class Accommodation implements Parcelable {
         dest.writeInt(min_capacity);
         dest.writeInt(max_capacity);
         dest.writeList(amenities);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            dest.writeBoolean(approved);
+        }
     }
 
     public static final Creator<AccommodationListing> CREATOR = new Creator<AccommodationListing>() {
