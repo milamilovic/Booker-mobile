@@ -43,10 +43,6 @@ public class SyncService extends Service {
                 handler.post(() -> {
                     //UI Thread work here
                     Log.i("REZ", "UI Thread work here");
-                    Intent ints = new Intent(BaseActivity.SYNC_DATA);
-                    int intsStatus = CheckConnectionTools.getConnectivityStatus(getApplicationContext());
-                    ints.putExtra(RESULT_CODE, intsStatus);
-                    getApplicationContext().sendBroadcast(ints);
                 });
             });
         }

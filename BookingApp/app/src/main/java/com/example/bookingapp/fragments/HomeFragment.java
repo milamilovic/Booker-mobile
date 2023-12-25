@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -20,6 +21,7 @@ import com.example.bookingapp.databinding.FragmentLoginBinding;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class HomeFragment extends Fragment {
 
@@ -58,8 +60,31 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
         Button logIn = binding.search;
         logIn.setOnClickListener(v -> {
-            FragmentTransition.to(AccommodationListingFragment.newInstance(), getActivity(), true, R.id.fragment_placeholder
-            );
+            //collect data
+            String location = binding.location.getText().toString();
+            SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy.");
+            Date fromDate = null;
+            Date toDate = null;
+            try{
+                String from=(binding.from.getText().toString());
+                String to=(binding.until.getText().toString());
+                fromDate = formatter.parse(from);
+                toDate = formatter.parse(to);
+            }
+            catch (java.text.ParseException e)
+            {
+                Toast.makeText(getContext(), "Please input all the fields correctly", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            int people = Integer.parseInt(binding.people.getText().toString());
+            //validate
+            boolean valid = validateSearch(location, fromDate, toDate, people);
+            //transition
+            if(valid) {
+                FragmentTransition.to(AccommodationListingFragment.newInstance(location, fromDate, toDate, people), getActivity(), true, R.id.fragment_placeholder);
+            } else {
+                Toast.makeText(getContext(), "Please input all the fields correctly", Toast.LENGTH_SHORT).show();
+            }
         });
 
 
@@ -101,6 +126,14 @@ public class HomeFragment extends Fragment {
 
         return root;
     }
+
+    private boolean validateSearch(String location, Date fromDate, Date toDate, int people) {
+        if(location.equals("") || fromDate==null || toDate==null || fromDate.after(toDate) || people<1 || fromDate.before(new Date())) {
+            return false;
+        }
+        return true;
+    }
+
     private void updateLabel(EditText editText, Calendar myCalendar){
         String myFormat="dd.MM.yyyy.";
         SimpleDateFormat dateFormat=new SimpleDateFormat(myFormat);
