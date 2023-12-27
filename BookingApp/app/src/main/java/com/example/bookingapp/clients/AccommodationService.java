@@ -1,5 +1,7 @@
 package com.example.bookingapp.clients;
 
+import android.widget.CheckBox;
+
 import com.example.bookingapp.dto.accommodation.AccommodationViewDTO;
 import com.example.bookingapp.dto.accommodation.CreateAccommodationDTO;
 import com.example.bookingapp.dto.users.LoginUserDTO;
@@ -36,17 +38,6 @@ public interface AccommodationService {
                                             @Path("endDate") String endDate,
                                             @Path("location") String location,
                                             @Path("people") int people);
-
-    @Headers({
-            "User-Agent: Mobile-Android",
-            "Content-Type:application/json"
-    })
-    @POST("accommodations/search/{startDate}/{endDate}/{location}/{people}/filter")
-    Call<List<AccommodationListing>> userLogin(@Path("startDate") String startDate,
-                                  @Path("endDate") String endDate,
-                                  @Path("location") String location,
-                                  @Path("people") int people,
-                                  @Body ArrayList<Filter> filters);
 
     @Headers("Content-Type: application/json")
     @GET("prices/{id}/{firstDateString}/{secondDateString}/{people}")
@@ -94,4 +85,12 @@ public interface AccommodationService {
     })
     @PUT("accommodations/update/{accommodationId}")
     Call<String> updateAccommodation(@Path("accommodationId")Long accommodationId, @Body Accommodation accommodation);
+
+    @Headers("Content-Type: application/json")
+    @POST("accommodations/search/{startDate}/{endDate}/{location}/{people}/filter")
+    Call<List<AccommodationListing>> searchAndFilter(@Path("startDate") String startDate,
+                                                     @Path("endDate") String endDate,
+                                                     @Path("location") String location,
+                                                     @Path("people") int people,
+                                                     @Body ArrayList<Filter> filters);
 }

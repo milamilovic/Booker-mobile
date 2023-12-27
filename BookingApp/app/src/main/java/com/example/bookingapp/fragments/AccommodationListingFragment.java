@@ -1,6 +1,7 @@
 package com.example.bookingapp.fragments;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -32,6 +34,9 @@ import com.example.bookingapp.databinding.FragmentAccommodationListingBinding;
 import com.example.bookingapp.databinding.FragmentLoginBinding;
 import com.example.bookingapp.dto.users.Token;
 import com.example.bookingapp.model.AccommodationListing;
+import com.example.bookingapp.model.CheckBoxFilter;
+import com.example.bookingapp.model.Filter;
+import com.example.bookingapp.model.PriceFilter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.slider.RangeSlider;
 
@@ -64,7 +69,7 @@ public class AccommodationListingFragment extends Fragment {
     public static AccommodationListingFragment newInstance(String location, Date fromDate, Date toDate, int people) {
         AccommodationListingFragment fragment = new AccommodationListingFragment();
         Bundle args = new Bundle();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy.");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         args.putString("location", location);
         args.putString("fromDate", formatter.format(fromDate));
         args.putString("toDate", formatter.format(toDate));
@@ -79,7 +84,7 @@ public class AccommodationListingFragment extends Fragment {
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             location = savedInstanceState.getString("location");
-            SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy.");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 fromDate = formatter.parse(savedInstanceState.getString("fromDate"));
                 toDate = formatter.parse(savedInstanceState.getString("toDate"));
@@ -92,7 +97,7 @@ public class AccommodationListingFragment extends Fragment {
             // Restore value of members from saved state
             Bundle args = getArguments();
             location = args.getString("location");
-            SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy.");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 fromDate = formatter.parse(args.getString("fromDate"));
                 toDate = formatter.parse(args.getString("toDate"));
@@ -121,11 +126,97 @@ public class AccommodationListingFragment extends Fragment {
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity(), R.style.FullScreenBottomSheetDialog);
             View dialogView = getLayoutInflater().inflate(R.layout.bottom_sheet_filter, null);
             bottomSheetDialog.setContentView(dialogView);
+
+            //finding all elements
+            //amenities
+            ArrayList<CheckBox> amenities = new ArrayList<>();
+            CheckBox wifi = bottomSheetDialog.findViewById(R.id.wifi);
+            CheckBox ac = bottomSheetDialog.findViewById(R.id.ac);
+            CheckBox good_location = bottomSheetDialog.findViewById(R.id.location);
+            CheckBox cancellation = bottomSheetDialog.findViewById(R.id.cancellation);
+            amenities.add(wifi);
+            amenities.add(ac);
+            amenities.add(good_location);
+            amenities.add(cancellation);
+            //accommodation types
+            ArrayList<CheckBox> types = new ArrayList<>();
+            CheckBox hotel = bottomSheetDialog.findViewById(R.id.hotel);
+            CheckBox room = bottomSheetDialog.findViewById(R.id.room);
+            CheckBox studio = bottomSheetDialog.findViewById(R.id.studio);
+            CheckBox villa = bottomSheetDialog.findViewById(R.id.villa);
+            types.add(hotel);
+            types.add(room);
+            types.add(studio);
+            types.add(villa);
+            EditText min_price = bottomSheetDialog.findViewById(R.id.min_price);
+            EditText max_price = bottomSheetDialog.findViewById(R.id.max_price);
+
+            bottomSheetDialog.findViewById(R.id.apply).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    bottomSheetDialog.dismiss();
+                }
+            });
+
+            //apply filters on close
+            bottomSheetDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    //find out which ones are checked
+                    ArrayList<Filter> filters = new ArrayList<Filter>();
+                    //each checked amenity goes into filters
+                    for (CheckBox amenity : amenities) {
+                        if (amenity.isChecked()) {
+                            filters.add(new Filter(amenity.getText().toString(), new CheckBoxFilter(true)));
+                        }
+                    }
+                    //each checked room type goes into filters
+                    for (CheckBox type : types) {
+                        if (type.isChecked()) {
+                            filters.add(new Filter(type.getText().toString(), new CheckBoxFilter(true)));
+                        }
+                    }
+                    //prices if entered
+                    String min_price_str = min_price.getText().toString();
+                    String max_price_str = max_price.getText().toString();
+                    if (!min_price_str.matches("")) {
+                        filters.add(new Filter("minPrice", new PriceFilter(Integer.parseInt(min_price_str))));
+                    }
+                    if (!max_price_str.matches("")) {
+                        filters.add(new Filter("maxPrice", new PriceFilter(Integer.parseInt(max_price_str))));
+                    }
+                    //contact backend
+                    accommodations.clear();   //to clear anything left behind
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    //call service and get accommodations that are adequate for search
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    Call<List<AccommodationListing>> call = ClientUtils.accommodationService.searchAndFilter(formatter.format(fromDate), formatter.format(toDate), location, people, filters);
+                    try{
+                        Response<List<AccommodationListing>> response = call.execute();
+                        ArrayList<AccommodationListing> listings = (ArrayList<AccommodationListing>) response.body();
+                        accommodations.addAll(listings);
+                        adapter = new AccommodationListAdapter(getContext(), accommodations);
+                        listView.setAdapter(adapter);
+                    }catch(Exception ex){
+                        System.out.println(formatter.format(fromDate));
+                        System.out.println(formatter.format(toDate));
+                        System.out.println("EXCEPTION WHILE FILTERING ACCOMMODATIONS");
+                        ex.printStackTrace();
+                    }
+                }
+            });
+
             bottomSheetDialog.show();
         });
 
+        EditText location_edit = binding.location;
+        location_edit.setText(location);
+
 
         EditText from = binding.from;
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        from.setText(formatter.format(fromDate));
 
         DatePickerDialog.OnDateSetListener fromDate =new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -144,6 +235,7 @@ public class AccommodationListingFragment extends Fragment {
         });
 
         EditText until = binding.until;
+        until.setText(formatter.format(toDate));
 
         DatePickerDialog.OnDateSetListener toDate =new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -161,11 +253,27 @@ public class AccommodationListingFragment extends Fragment {
             }
         });
 
+        EditText people_edit = binding.people;
+        people_edit.setText(Integer.toString(people));
+
+        binding.search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                location = location_edit.getText().toString();
+                people = Integer.parseInt(people_edit.getText().toString());
+
+                prepareAccommodationList(accommodations);
+
+                adapter = new AccommodationListAdapter(getContext(), accommodations);
+                listView.setAdapter(adapter);
+            }
+        });
+
 
         return root;
     }
     private void updateLabel(EditText editText, Calendar myCalendar){
-        String myFormat="dd.MM.yyyy.";
+        String myFormat="yyyy-MM-dd";
         SimpleDateFormat dateFormat=new SimpleDateFormat(myFormat);
         editText.setText(dateFormat.format(myCalendar.getTime()));
         editText.setTextColor(Color.parseColor("#603c3c3c"));
@@ -174,7 +282,7 @@ public class AccommodationListingFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putString("location", location);
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy.");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String from = formatter.format(fromDate);
         String to = formatter.format(toDate);
         savedInstanceState.putString("fromDate", from);
@@ -192,27 +300,7 @@ public class AccommodationListingFragment extends Fragment {
     }
 
     private void prepareAccommodationList(ArrayList<AccommodationListing> products){
-//        products.add(new AccommodationListing(1L, "Flower Apartment", "Description 1", R.drawable.apartment_image, false, 180, 60, 4.1f));
-//        products.add(new AccommodationListing(2L, "Lovely Apartment", "Description 2", R.drawable.room_image, true, 450, 150, 4.6f));
-//        products.add(new AccommodationListing(3L, "Today Home", "Description 3", R.drawable.apartment_image, false, 110, 20, 5f));
-//        products.add(new AccommodationListing(4L, "Example Hotel", "Description 4", R.drawable.room_image, false, 360, 120, 4.2f));
-//        products.add(new AccommodationListing(1L, "Flower Apartment", "Description 1", R.drawable.apartment_image, false, 180, 60, 4.1f));
-//        products.add(new AccommodationListing(2L, "Lovely Apartment", "Description 2", R.drawable.room_image, true, 450, 150, 4.6f));
-//        products.add(new AccommodationListing(3L, "Today Home", "Description 3", R.drawable.apartment_image, false, 110, 20, 5f));
-//        products.add(new AccommodationListing(4L, "Example Hotel", "Description 4", R.drawable.room_image, false, 360, 120, 4.2f));
-//        products.add(new AccommodationListing(1L, "Flower Apartment", "Description 1", R.drawable.apartment_image, false, 180, 60, 4.1f));
-//        products.add(new AccommodationListing(2L, "Lovely Apartment", "Description 2", R.drawable.room_image, true, 450, 150, 4.6f));
-//        products.add(new AccommodationListing(3L, "Today Home", "Description 3", R.drawable.apartment_image, false, 110, 20, 5f));
-//        products.add(new AccommodationListing(4L, "Example Hotel", "Description 4", R.drawable.room_image, false, 360, 120, 4.2f));
-//        products.add(new AccommodationListing(1L, "Flower Apartment", "Description 1", R.drawable.apartment_image, false, 180, 60, 4.1f));
-//        products.add(new AccommodationListing(2L, "Lovely Apartment", "Description 2", R.drawable.room_image, true, 450, 150, 4.6f));
-//        products.add(new AccommodationListing(3L, "Today Home", "Description 3", R.drawable.apartment_image, false, 110, 20, 5f));
-//        products.add(new AccommodationListing(4L, "Example Hotel", "Description 4", R.drawable.room_image, false, 360, 120, 4.2f));
-//        products.add(new AccommodationListing(1L, "Flower Apartment", "Description 1", R.drawable.apartment_image, false, 180, 60, 4.1f));
-//        products.add(new AccommodationListing(2L, "Lovely Apartment", "Description 2", R.drawable.room_image, true, 450, 150, 4.6f));
-//        products.add(new AccommodationListing(3L, "Today Home", "Description 3", R.drawable.apartment_image, false, 110, 20, 5f));
-//        products.add(new AccommodationListing(4L, "Example Hotel", "Description 4", R.drawable.room_image, false, 360, 120, 4.2f));
-
+        products.clear();   //in case it's not initialization but searching
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
     //call service and get accommodations that are adequate for search
