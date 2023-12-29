@@ -82,7 +82,7 @@ public class OwnerApprovedAccommodationAdapter extends ArrayAdapter<ApproveAccom
             title.setText(accommodation.getTitle());
             description.setText(accommodation.getDescription());
             ratingBar.setRating(accommodation.getRating());
-            image.setImageResource(accommodation.getImage());
+            //image.setImageResource(accommodation.getImage());
             statusLayout.setVisibility(View.GONE);
             card.setOnClickListener(v->{
                 ArrayList<Image> images = new ArrayList<Image>();
@@ -93,10 +93,10 @@ public class OwnerApprovedAccommodationAdapter extends ArrayAdapter<ApproveAccom
                 images.add(new Image(1L, "../../../../../res/drawable/hotel_image.jpg", "", null));
                 images.add(new Image(1L, "../../../../../res/drawable/lisbon_image.jpg", "", null));
                 ArrayList<Amenity> amenities = new ArrayList<Amenity>();
-                amenities.add(new Amenity(1L, "Wi-Fi", R.drawable.icons8_settings_24));
-                amenities.add(new Amenity(2L, "AC", R.drawable.icons8_calendar_32));
-                amenities.add(new Amenity(3L, "popular location", R.drawable.icons8_location_32));
-                amenities.add(new Amenity(4L, "clean", R.drawable.icons8_help_24));
+                amenities.add(new Amenity(1L, "Wi-Fi",  "", null));
+                amenities.add(new Amenity(2L, "AC",  "", null));
+                amenities.add(new Amenity(3L, "popular location", "", null));
+                amenities.add(new Amenity(4L, "clean",  "", null));
                 FragmentTransition.to(AccommodationViewFragment.newInstance(new Accommodation(accommodation.getId(),
                         accommodation.getTitle(), "The units come with parquet floors and feature a fully equipped kitchen with a microwave, a dining area, a flat-screen TV with streaming services, and a private bathroom with walk-in shower and a hair dryer. A toaster, a fridge and stovetop are also available, as well as a coffee machine and a kettle.\n" +
                         "\u2028Eventim Apollo is 2.4 km from the apartment, while South Kensington Underground Station is 3 km from the property. The nearest airport is London Heathrow Airport, 21 km from Central London Luxury Studios Fulham Close to Underground Newly Refurbished.",
@@ -111,10 +111,10 @@ public class OwnerApprovedAccommodationAdapter extends ArrayAdapter<ApproveAccom
                 images.add(new Image(1L, "../../../../../res/drawable/hotel_image.jpg", "", null));
                 images.add(new Image(1L, "../../../../../res/drawable/lisbon_image.jpg", "", null));
                 ArrayList<Amenity> amenities = new ArrayList<Amenity>();
-                amenities.add(new Amenity(1L, "Wi-Fi", R.drawable.icons8_settings_24));
-                amenities.add(new Amenity(2L, "AC", R.drawable.icons8_calendar_32));
-                amenities.add(new Amenity(3L, "popular location", R.drawable.icons8_location_32));
-                amenities.add(new Amenity(4L, "clean", R.drawable.icons8_help_24));
+                amenities.add(new Amenity(1L, "Wi-Fi",  "", null));
+                amenities.add(new Amenity(2L, "AC",  "", null));
+                amenities.add(new Amenity(3L, "popular location",  "", null));
+                amenities.add(new Amenity(4L, "clean",  "", null));
                 FragmentTransition.to(UpdateAccommodationFragment.newInstance(new Accommodation(accommodation.getId(),
                         accommodation.getTitle(), "The units come with parquet floors and feature a fully equipped kitchen with a microwave, a dining area, a flat-screen TV with streaming services, and a private bathroom with walk-in shower and a hair dryer. A toaster, a fridge and stovetop are also available, as well as a coffee machine and a kettle.\n" +
                         "\u2028Eventim Apollo is 2.4 km from the apartment, while South Kensington Underground Station is 3 km from the property. The nearest airport is London Heathrow Airport, 21 km from Central London Luxury Studios Fulham Close to Underground Newly Refurbished.",
