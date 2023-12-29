@@ -198,7 +198,41 @@
                 android:textColor="@color/light_gray"/>
 
             <EditText
-                android:id="@+id/editTextLocation"
+                android:id="@+id/editTextStreet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/edit_text_border"
+                android:drawableStart="@drawable/baseline_signpost_24"
+                android:drawablePadding="20dp"
+                android:hint="@string/street"
+                android:textColor="@color/dark_gray"
+                android:minHeight="48dp"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:textColorHint="@color/dark_gray"/>
+
+            <EditText
+                android:id="@+id/editTextCity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/edit_text_border"
+                android:drawableStart="@drawable/baseline_apartment_24"
+                android:drawablePadding="20dp"
+                android:hint="@string/city"
+                android:textColor="@color/dark_gray"
+                android:minHeight="48dp"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:textColorHint="@color/dark_gray"/>
+
+            <EditText
+                android:id="@+id/editTextLatitude"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
@@ -207,11 +241,82 @@
                 android:background="@drawable/edit_text_border"
                 android:drawableStart="@drawable/baseline_location_on_24"
                 android:drawablePadding="20dp"
-                android:hint="@string/location"
+                android:hint="@string/latitude"
                 android:textColor="@color/dark_gray"
                 android:minHeight="48dp"
                 android:imeOptions="actionNext"
-                android:inputType="textPostalAddress"
+                android:inputType="text"
+                android:textColorHint="@color/dark_gray"/>
+
+            <EditText
+                android:id="@+id/editTextLongitude"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/edit_text_border"
+                android:drawableStart="@drawable/baseline_location_on_24"
+                android:drawablePadding="20dp"
+                android:hint="@string/street"
+                android:textColor="@color/dark_gray"
+                android:minHeight="48dp"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:textColorHint="@color/dark_gray"/>
+
+            <FrameLayout
+                android:id="@+id/mapContainer"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:visibility="gone"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="8dp">
+                <!-- MapFragment will be added dynamically here -->
+            </FrameLayout>
+
+            <Button
+                android:id="@+id/btnShowMap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/show_map"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/round_corner_alternative"/>
+
+            <EditText
+                android:id="@+id/editTextFrom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_border"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:minHeight="48dp"
+                app:drawableStartCompat="@drawable/baseline_calendar_month_24"
+                android:drawablePadding="20dp"
+                android:textColor="@color/dark_gray"
+                android:inputType="date"
+                android:hint="@string/from"
+                android:textColorHint="@color/dark_gray"/>
+
+            <EditText
+                android:id="@+id/editTextUntil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_border"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:minHeight="48dp"
+                android:hint="@string/until"
+                android:drawableStart="@drawable/baseline_calendar_month_24"
+                android:drawablePadding="20dp"
+                android:textColor="@color/dark_gray"
+                android:inputType="date"
                 android:textColorHint="@color/dark_gray"/>
 
             <EditText
@@ -220,7 +325,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:layout_marginEnd="32dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:hint="@string/basic_price"
                 android:background="@drawable/edit_text_border"
                 android:textColor="@color/dark_gray"

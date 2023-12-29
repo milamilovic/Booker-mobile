@@ -95,4 +95,8 @@
     <string name="example_latitude">Example latitude</string>
     <string name="latitude_hint">latitude</string>
     <string name="longitude_hint">longitude</string>
+    <string name="street">Street</string>
+    <string name="city">City</string>
+    <string name="latitude">Latitude</string>
+    <string name="show_map">Show Map</string>
 </resources>

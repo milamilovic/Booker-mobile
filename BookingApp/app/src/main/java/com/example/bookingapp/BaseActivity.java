@@ -1,5 +1,6 @@
 package com.example.bookingapp;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -240,6 +241,7 @@ public class BaseActivity extends AppCompatActivity{
             return true;
         }));
 
+
     };
 
     @Override
@@ -308,8 +310,8 @@ public class BaseActivity extends AppCompatActivity{
         Toast.makeText(this, "Logged in with token: " + token, Toast.LENGTH_SHORT).show();
     }
 
-        private void handleLoggedInUserWithId(int userId) {
-            // Example: Display a message with the user ID
-            Toast.makeText(this, "Logged in with user ID: " + userId, Toast.LENGTH_SHORT).show();
-        }
+    private void handleLoggedInUserWithId(int userId) {
+        // Example: Display a message with the user ID
+        Toast.makeText(this, "Logged in with user ID: " + userId, Toast.LENGTH_SHORT).show();
+    }
 }

@@ -31,6 +31,6 @@ public interface UserService {
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
-    @GET("users/{id}")
+    @GET("users/{id}/user")
     Call<UserDTO> getById(@Path("id") Long id);
 }
