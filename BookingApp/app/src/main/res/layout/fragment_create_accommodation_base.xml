@@ -258,7 +258,7 @@
                 android:background="@drawable/edit_text_border"
                 android:drawableStart="@drawable/baseline_location_on_24"
                 android:drawablePadding="20dp"
-                android:hint="@string/street"
+                android:hint="@string/longitude"
                 android:textColor="@color/dark_gray"
                 android:minHeight="48dp"
                 android:imeOptions="actionNext"
@@ -289,35 +289,37 @@
                 android:id="@+id/editTextFrom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/edit_text_border"
                 android:layout_marginStart="32dp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:minHeight="48dp"
-                app:drawableStartCompat="@drawable/baseline_calendar_month_24"
+                android:background="@drawable/edit_text_border"
+                android:drawableStart="@drawable/baseline_calendar_month_24"
                 android:drawablePadding="20dp"
-                android:textColor="@color/dark_gray"
-                android:inputType="date"
                 android:hint="@string/from"
+                android:textColor="@color/dark_gray"
+                android:minHeight="48dp"
+                android:imeOptions="actionNext"
+                android:inputType="text"
                 android:textColorHint="@color/dark_gray"/>
+
 
             <EditText
                 android:id="@+id/editTextUntil"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/edit_text_border"
                 android:layout_marginStart="32dp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:minHeight="48dp"
-                android:hint="@string/until"
+                android:background="@drawable/edit_text_border"
                 android:drawableStart="@drawable/baseline_calendar_month_24"
                 android:drawablePadding="20dp"
+                android:hint="@string/until"
                 android:textColor="@color/dark_gray"
-                android:inputType="date"
+                android:minHeight="48dp"
+                android:imeOptions="actionNext"
+                android:inputType="text"
                 android:textColorHint="@color/dark_gray"/>
+
 
             <EditText
                 android:id="@+id/basicPrice"
@@ -334,6 +336,27 @@
                 android:drawablePadding="20dp"
                 android:inputType="numberDecimal"
                 android:textColorHint="@color/dark_gray"/>
+
+            <LinearLayout
+                android:id="@+id/priceTypeSpinnerBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/spinner_item_background">
+
+                <Spinner
+                    android:id="@+id/priceTypeSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:minHeight="48dp" />
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/minCapacity"

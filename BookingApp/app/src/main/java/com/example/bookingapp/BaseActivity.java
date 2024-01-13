@@ -28,6 +28,7 @@ import com.example.bookingapp.fragments.ReportFragment;
 import com.example.bookingapp.fragments.ReportedUsersFragment;
 import com.example.bookingapp.fragments.ReservationRequestOwnerFragment;
 import com.example.bookingapp.fragments.OwnerAccommodationFragmentListing;
+import com.example.bookingapp.fragments.UpdateAccommodationDetailsFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class BaseActivity extends AppCompatActivity{
@@ -235,6 +236,14 @@ public class BaseActivity extends AppCompatActivity{
 
         menu.getItem(13).setOnMenuItemClickListener((v-> {
             FragmentTransition.to(CreateAccommodationBaseFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
+
+            drawerLayout.closeDrawer(GravityCompat.START);
+
+            return true;
+        }));
+
+        menu.getItem(14).setOnMenuItemClickListener((v-> {
+            FragmentTransition.to(UpdateAccommodationDetailsFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
 
             drawerLayout.closeDrawer(GravityCompat.START);
 

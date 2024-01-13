@@ -2,7 +2,6 @@ package com.example.bookingapp.fragments;
 
 import static android.app.Activity.RESULT_OK;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ClipData;
 import android.content.Context;
@@ -19,15 +18,14 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -35,20 +33,22 @@ import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
 import com.example.bookingapp.clients.AccommodationService;
 import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.databinding.FragmentCreateAccommodationBaseBinding;
 import com.example.bookingapp.dto.accommodation.AccommodationViewDTO;
+import com.example.bookingapp.dto.accommodation.AddressDTO;
 import com.example.bookingapp.dto.accommodation.CreateAccommodationDTO;
 import com.example.bookingapp.dto.accommodation.CreatePriceDTO;
 import com.example.bookingapp.enums.AccommodationType;
+import com.example.bookingapp.enums.PriceType;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -62,6 +62,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -72,7 +73,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class CreateAccommodationBaseFragment extends Fragment implements MapFragment.OnMapClickListener{
+public class CreateAccommodationBaseFragment extends Fragment implements MapFragment.OnMapMarkerClickListener{
     private static final int PICK_IMAGES_REQUEST = 2;
     private int PICK_IMAGE_MULTIPLE = 1;
     private FragmentCreateAccommodationBaseBinding binding;
@@ -105,6 +106,9 @@ public class CreateAccommodationBaseFragment extends Fragment implements MapFrag
     private List<String> selectedImagePaths = new ArrayList<>();
     private ArrayList<Uri> mArrayUri;
     private int position;
+    final Calendar myCalendar= Calendar.getInstance();
+    private static Date fromDate = new Date();
+    private static Date toDate = new Date();
     private static final String JWT_TOKEN_KEY = "jwt_token";
 
     public static CreateAccommodationBaseFragment newInstance() {
@@ -120,9 +124,8 @@ public class CreateAccommodationBaseFragment extends Fragment implements MapFrag
 
         initializeUIComponents();
         setupAccommodationTypeSpinner();
+        setupPriceTypeSpinner();
         openMap();
-        setupNumberPickers();
-        setupDatePickers();
 
         Button pickImagesButton = binding.addImages;
         pickImagesButton.setOnClickListener(new View.OnClickListener() {
@@ -183,8 +186,40 @@ public class CreateAccommodationBaseFragment extends Fragment implements MapFrag
             }
         });
 
+        DatePickerDialog.OnDateSetListener fromDate =new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH,month);
+                myCalendar.set(Calendar.DAY_OF_MONTH,day);
+                updateEditText(editTextFrom, myCalendar);
+            }
+        };
+        editTextFrom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(getContext(),fromDate,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
 
-        
+
+        DatePickerDialog.OnDateSetListener toDate =new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH,month);
+                myCalendar.set(Calendar.DAY_OF_MONTH,day);
+                updateEditText(editTextUntil, myCalendar);
+            }
+        };
+        editTextUntil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(getContext(),toDate,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+
 
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -226,31 +261,21 @@ public class CreateAccommodationBaseFragment extends Fragment implements MapFrag
                 createAccommodationDTO.setShortDescription(editTextShortDescription.getText().toString());
                 createAccommodationDTO.setMin_capacity(Integer.parseInt(editTextMinCapacity.getText().toString()));
                 createAccommodationDTO.setMax_capacity(Integer.parseInt(editTextMaxCapacity.getText().toString()));
-                String pattern = "yyyy-MM-dd";
-
-
-                // Create a SimpleDateFormat instance with the specified pattern
-                SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
-                Date startDate = new Date();
-                Date endDate = new Date();
-                try {
-                    // Parse the string to obtain a Date object
-                    startDate = dateFormat.parse(editTextFrom.getText().toString());
-                    endDate = dateFormat.parse(editTextUntil.getText().toString());
-                    // Print the parsed Date object
-                    Log.d("REZ", startDate.toString());
-                    Log.d("REZ", endDate.toString());
-                } catch (ParseException e) {
-                    // Handle parsing exception
-                    e.printStackTrace();
-                }
-
-                createAccommodationDTO.setStartDate(startDate);
-                createAccommodationDTO.setEndDate(endDate);
+                createAccommodationDTO.setStartDate(editTextFrom.getText().toString());
+                createAccommodationDTO.setEndDate(editTextUntil.getText().toString());
+                AccommodationType selectedAccommodationType = (AccommodationType) spinner.getSelectedItem();
+                Spinner priceTypeSpinner = binding.priceTypeSpinner;
+                PriceType selectedPriceType = (PriceType) priceTypeSpinner.getSelectedItem();
                 CreatePriceDTO createPriceDTO = new CreatePriceDTO();
-                createPriceDTO.setFromDate(startDate);
-                createPriceDTO.setToDate(endDate);
+                createPriceDTO.setFromDate(editTextFrom.getText().toString());
+                createPriceDTO.setToDate(editTextUntil.getText().toString());
                 createPriceDTO.setCost(Double.parseDouble(editTextBasicPrice.getText().toString()));
+                createAccommodationDTO.setType(selectedAccommodationType);
+                createPriceDTO.setType(selectedPriceType);
+                createAccommodationDTO.setPrice(createPriceDTO);
+
+
+
                 List<String> amenityNames = new ArrayList<>();
                 if (checkBoxWifi.isChecked()) {
                     amenityNames.add("wifi");
@@ -286,6 +311,13 @@ public class CreateAccommodationBaseFragment extends Fragment implements MapFrag
                 }
 
                 createAccommodationDTO.setImages(selectedImagePaths.toArray(new String[0]));
+                AddressDTO address = new AddressDTO();
+                address.setStreet(editTextStreet.getText().toString());
+                address.setCity(editTextCity.getText().toString());
+                address.setLatitude(Double.parseDouble(editTextLatitude.getText().toString()));
+                address.setLongitude(Double.parseDouble(editTextLongitude.getText().toString()));
+                createAccommodationDTO.setAddress(address);
+
                 Call<AccommodationViewDTO> call = apiService.insert(createAccommodationDTO);
                 call.enqueue(new Callback<AccommodationViewDTO>() {
                     @Override
@@ -300,7 +332,6 @@ public class CreateAccommodationBaseFragment extends Fragment implements MapFrag
                             Log.d("REZ","Meesage recieved: "+response.code());
                         }
                     }
-
                     @Override
                     public void onFailure(Call<AccommodationViewDTO> call, Throwable t) {
                         Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
@@ -350,11 +381,11 @@ public class CreateAccommodationBaseFragment extends Fragment implements MapFrag
         editTextBasicPrice = binding.basicPrice;
         editTextMinCapacity = binding.minCapacity;
         editTextMaxCapacity = binding.maxCapacity;
-        editTextFrom = binding.editTextFrom;
-        editTextUntil = binding.editTextUntil;
         btnCreate = binding.btnSubmit;
         btnCancel = binding.btnCancel;
         spinner = binding.spinner;
+        editTextFrom = binding.editTextFrom;
+        editTextUntil = binding.editTextUntil;
     }
 
     private void openImagePicker() {
@@ -488,8 +519,8 @@ public class CreateAccommodationBaseFragment extends Fragment implements MapFrag
     }
 
     private void addMapFragment() {
-        MapFragment mapFragment = new MapFragment();
-        mapFragment.setOnMapClickListener(this);
+        MapFragment mapFragment = new MapFragment(45.2396, 19.8227);
+        mapFragment.setOnMapMarkerClickListener(this);
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.replace(R.id.mapContainer, mapFragment);
         transaction.commit();
@@ -515,60 +546,60 @@ public class CreateAccommodationBaseFragment extends Fragment implements MapFrag
 
 
     @Override
-    public void onMapClick(LatLng latLng) {
-        if (latLng != null) {
-            // Use the getAddressFromLatLng method to get the address details
-            List<String> addressDetails = ((MapFragment) getChildFragmentManager().findFragmentById(R.id.mapContainer)).getAddressFromLatLng(requireContext(), latLng);
-
-            // Update the EditText fields with the address details
-            if (addressDetails.size() == 4) {
-                editTextStreet.setText(addressDetails.get(0));
-                editTextCity.setText(addressDetails.get(1));
-                editTextLatitude.setText(addressDetails.get(2));
-                editTextLongitude.setText(addressDetails.get(3));
-            }
-        }
+    public void onMapMarkerClick(LatLng latLng, String address) {
+        editTextLatitude.setText(String.valueOf(latLng.latitude));
+        editTextLongitude.setText(String.valueOf(latLng.longitude));
+        String[] addressElements = address.split(",");
+        editTextStreet.setText(addressElements[0]);
+        editTextCity.setText(addressElements[1]);
+        Log.d("REZ", "Full Address: " + address);
     }
 
-    private void setupNumberPickers() {
 
-        editTextMinCapacity.setOnClickListener(v -> showNumberPickerDialog(editTextMinCapacity));
-        editTextMaxCapacity.setOnClickListener(v -> showNumberPickerDialog(editTextMaxCapacity));
+    private String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return sdf.format(date);
     }
 
-    private void showNumberPickerDialog(final EditText targetEditText) {
-        NumberPickerDialog numberPickerDialog = new NumberPickerDialog();
-        numberPickerDialog.setValueChangeListener(new NumberPicker.OnValueChangeListener() {
+    private void setupPriceTypeSpinner() {
+        Spinner spinner = binding.priceTypeSpinner;
+        List<PriceType> enumValues = Arrays.asList(PriceType.values());
+
+        ArrayAdapter<PriceType> adapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                enumValues
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                // Handle the selected value, e.g., set it to the EditText
-                targetEditText.setText(String.valueOf(newVal));
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // Get the selected value
+                PriceType selectedPriceType = (PriceType) parentView.getItemAtPosition(position);
+
+                // Do something with the selected value
+                // For example, you can use selectedAccommodationType.name() to get the string representation
+                String selectedValue = selectedPriceType.name();
+                // or use selectedAccommodationType.ordinal() to get the index
+                int selectedIndex = selectedPriceType.ordinal();
+
+                // Print or use the selected value as needed
+                Log.d("SelectedAccommodationType", selectedValue);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Do nothing if nothing is selected
             }
         });
-
-        numberPickerDialog.show(getChildFragmentManager(), "numberPicker");
-
-
     }
 
-    private void setupDatePickers() {
-        editTextFrom.setOnClickListener(v -> showDatePickerDialog(editTextFrom));
-
-        editTextUntil.setOnClickListener(v -> showDatePickerDialog(editTextUntil));
-    }
-
-    private void showDatePickerDialog(EditText targetEditText) {
-        final Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog dialog = new DatePickerDialog(requireContext(),
-                (view, year1, monthOfYear, dayOfMonth) -> {
-                    String date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year1;
-                    targetEditText.setText(date);
-                }, year, month, day);
-        dialog.show();
+    private void updateEditText(EditText editText, Calendar calendar) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String formattedDate = sdf.format(calendar.getTime());
+        editText.setText(formattedDate);
     }
 
 }

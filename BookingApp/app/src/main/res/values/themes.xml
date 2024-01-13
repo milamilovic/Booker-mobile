@@ -24,6 +24,10 @@
         <item name="android:layout_gravity">center</item>
     </style>
 
+
+
+
+
     <style name="Theme.BookingApp" parent="Base.Theme.BookingApp" />
 
 

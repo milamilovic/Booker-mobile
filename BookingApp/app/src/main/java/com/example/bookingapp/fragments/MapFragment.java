@@ -1,43 +1,38 @@
 package com.example.bookingapp.fragments;
 
-import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 
 import com.example.bookingapp.R;
-import com.example.bookingapp.clients.ClientUtils;
-import com.example.bookingapp.model.Accommodation;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
 
 
-
-public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener{
+public class MapFragment extends Fragment {
 
     private MapView mapView;
 
     public double latitude;
     public double longitude;
+
+    private Geocoder geocoder;
 
     public MapFragment(double latitude, double longitude) {
         this.latitude = latitude;
@@ -56,6 +51,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             Bundle args = getArguments();
             latitude = args.getDouble("lat");
@@ -63,6 +59,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         }
 
 
+    }
+
+    public interface OnMapMarkerClickListener {
+        void onMapMarkerClick(LatLng latLng, String address);
+    }
+
+    private OnMapMarkerClickListener onMapMarkerClickListener;
+
+    public void setOnMapMarkerClickListener(OnMapMarkerClickListener listener) {
+        this.onMapMarkerClickListener = listener;
     }
 
     @Override
@@ -81,77 +87,46 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     .title("Address"));
             googleMap.moveCamera(
                     CameraUpdateFactory.newLatLngZoom(place, 12));
+
+            // Set a click listener for the map
+            googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng latLng) {
+                    googleMap.clear();
+                    // Add a marker at the clicked position
+                    Marker marker = googleMap.addMarker(new MarkerOptions()
+                            .position(latLng)
+                            .title("Clicked Location"));
+
+                    getAddressFromLocation(latLng.latitude, latLng.longitude, marker);
+
+                    if (onMapMarkerClickListener != null) {
+                        onMapMarkerClickListener.onMapMarkerClick(latLng, marker.getTitle());
+                    }
+                }
+            });
         });
+
+        geocoder = new Geocoder(requireContext());
         return view;
     }
 
-    public List<String> getAddressFromLatLng(Context context, LatLng latLng) {
-        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-        List<String> addressString = new ArrayList<>();
-
+    private void getAddressFromLocation(double latitude, double longitude, Marker marker) {
         try {
-            List<Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
-            if (!addresses.isEmpty()) {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (addresses != null && addresses.size() > 0) {
                 Address address = addresses.get(0);
-
-                String street = address.getAddressLine(0);
-                String city = address.getLocality();
-                String latitude = String.valueOf(latLng.latitude);
-                String longitude = String.valueOf(latLng.longitude);
-
-                String formattedAddress = String.format("%s, %s, %s, %s", street, city, latitude, longitude);
-                addressString.add(street);
-                addressString.add(city);
-                addressString.add(latitude);
-                addressString.add(longitude);
-                mapView.getMapAsync(googleMap -> {
-                    Log.d("MyTag", "Usao je!!!");
-                    LatLng place = new LatLng(latLng.latitude, latLng.longitude);
-                    googleMap.addMarker(new MarkerOptions()
-                            .position(place)
-                            .title("Address"));
-                    googleMap.moveCamera(
-                            CameraUpdateFactory.newLatLngZoom(place, 12));
-                });
-
-                Toast.makeText(context, "Address: " + formattedAddress, Toast.LENGTH_SHORT).show();
-
-
-                // Do something with the formatted address, such as displaying it in a TextView
+                String fullAddress = address.getAddressLine(0);
+                //String fullAddress = address.getAddressLine(0);
+                Log.d("REZ", "Address: " + fullAddress);
+                marker.setTitle(fullAddress);
             } else {
-                Toast.makeText(context, "Address not found", Toast.LENGTH_SHORT).show();
+                Log.d("REZ", "Unable to get full address");
             }
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
             e.printStackTrace();
-        }
-        return addressString;
-    }
-
-    private OnMapClickListener onMapClickListener;
-
-    public interface OnMapClickListener {
-        void onMapClick(LatLng latLng);
-    }
-
-    @Override
-    public void onMapClick(@NonNull LatLng latLng) {
-        // Notify the callback interface with the clicked LatLng
-        if (onMapClickListener != null) {
-            onMapClickListener.onMapClick(latLng);
+            Log.e("REZ", "Error getting address: " + e.getMessage());
         }
     }
-
-    public void setOnMapClickListener(OnMapClickListener listener) {
-        this.onMapClickListener = listener;
-    }
-
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-
-    }
-
-
-
-
 
 }
