@@ -252,7 +252,8 @@
                         android:text="@string/make_a_reservation"
                         android:textSize="20dp"
                         android:textColor="@color/dark_gray"
-                        android:layout_marginBottom="10dp"/>
+                        android:layout_marginBottom="10dp"
+                        android:id="@+id/reservation_title"/>
 
                     <com.applandeo.materialcalendarview.CalendarView
                         android:id="@+id/calendarView"
