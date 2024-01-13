@@ -1,8 +1,10 @@
 package com.example.bookingapp.fragments;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -43,7 +45,9 @@ import com.example.bookingapp.adapters.AccommodationListAdapter;
 import com.example.bookingapp.adapters.AmenityAdapter;
 import com.example.bookingapp.adapters.ImageAdapter;
 import com.example.bookingapp.clients.ClientUtils;
+import com.example.bookingapp.dto.users.UserDTO;
 import com.example.bookingapp.enums.ReservationRequestStatus;
+import com.example.bookingapp.enums.Role;
 import com.example.bookingapp.model.Accommodation;
 import com.example.bookingapp.model.AccommodationListing;
 import com.example.bookingapp.model.Amenity;
@@ -78,6 +82,7 @@ public class AccommodationViewFragment extends Fragment {
     ListView listView;
 
     private static final String ARG_PARAM = "param";
+    private static final String USER_ID_KEY = "user_id";
     Button showMap;
     public AccommodationViewFragment() {
         // Required empty public constructor
@@ -317,6 +322,69 @@ public class AccommodationViewFragment extends Fragment {
                 dialog.show();
             }
         });
+
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        Long userID = sharedPref.getLong(USER_ID_KEY, 0);
+        if(userID!=0) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            Call<UserDTO> userCall = ClientUtils.userService.getById(userID);
+            try{
+                Response<UserDTO> response = userCall.execute();
+                UserDTO user = (UserDTO) response.body();
+                if(user.getRole()!= Role.GUEST) {
+                    //reservation not available
+                    View reservationButton = view.findViewById(R.id.make_reservation_request);
+                    reservationButton.setVisibility(View.GONE);
+                    View reservation = view.findViewById(R.id.reservation);
+                    reservation.setVisibility(View.GONE);
+                    View reservation_title = view.findViewById(R.id.reservation_title);
+                    reservation_title.setVisibility(View.GONE);
+                    View price = view.findViewById(R.id.price);
+                    price.setVisibility(View.GONE);
+                    View people = view.findViewById(R.id.people);
+                    people.setVisibility(View.GONE);
+                    calendarView.setVisibility(View.GONE);
+                    dates.setVisibility(View.GONE);
+                    View priceButton = view.findViewById(R.id.calculate_price);
+                    priceButton.setVisibility(View.GONE);
+                }
+            }catch(Exception ex){
+                System.out.println("???");
+                //reservation not available
+                View reservationButton = view.findViewById(R.id.make_reservation_request);
+                reservationButton.setVisibility(View.GONE);
+                View reservation = view.findViewById(R.id.reservation);
+                reservation.setVisibility(View.GONE);
+                View reservation_title = view.findViewById(R.id.reservation_title);
+                reservation_title.setVisibility(View.GONE);
+                View price = view.findViewById(R.id.price);
+                price.setVisibility(View.GONE);
+                View people = view.findViewById(R.id.people);
+                people.setVisibility(View.GONE);
+                calendarView.setVisibility(View.GONE);
+                dates.setVisibility(View.GONE);
+                View priceButton = view.findViewById(R.id.calculate_price);
+                priceButton.setVisibility(View.GONE);
+            }
+        } else {
+            System.out.println("Not logged in");
+            //reservation not available
+            View reservationButton = view.findViewById(R.id.make_reservation_request);
+            reservationButton.setVisibility(View.GONE);
+            View reservation = view.findViewById(R.id.reservation);
+            reservation.setVisibility(View.GONE);
+            View reservation_title = view.findViewById(R.id.reservation_title);
+            reservation_title.setVisibility(View.GONE);
+            View price = view.findViewById(R.id.price);
+            price.setVisibility(View.GONE);
+            View people = view.findViewById(R.id.people);
+            people.setVisibility(View.GONE);
+            calendarView.setVisibility(View.GONE);
+            dates.setVisibility(View.GONE);
+            View priceButton = view.findViewById(R.id.calculate_price);
+            priceButton.setVisibility(View.GONE);
+        }
 
         return view;
     }
