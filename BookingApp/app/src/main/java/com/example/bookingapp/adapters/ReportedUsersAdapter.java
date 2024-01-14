@@ -6,9 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,8 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.example.bookingapp.R;
-import com.example.bookingapp.model.AccommodationRequestOwnerDTO;
-import com.example.bookingapp.model.GuestOwnerViewDTO;
 import com.example.bookingapp.model.ReportedUsersListing;
 
 import java.text.SimpleDateFormat;

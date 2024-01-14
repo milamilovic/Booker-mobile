@@ -32,7 +32,7 @@ public interface UserService {
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
-    @GET("users/{id}/user")
+    @GET("users/{id}")
     Call<UserDTO> getById(@Path("id") Long id);
 
     @Headers({
@@ -41,4 +41,11 @@ public interface UserService {
     })
     @PUT("users/activate_profile/{activation_link}")
     Call<UserDTO> activateProfile(@Path("activation_link") String activation_link);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("guests/{id}/cancelled")
+    Call<Integer> getNumOfCancellations(@Path("id") Long id);
 }
