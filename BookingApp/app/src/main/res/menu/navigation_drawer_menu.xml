@@ -59,6 +59,9 @@
     <item
         android:id="@+id/create_accommodation"
         android:title="Create accommodation"/>
+    <item
+        android:id="@+id/update_accommodation_details"
+        android:title="Update accommodation details"/>
 
 
     <item

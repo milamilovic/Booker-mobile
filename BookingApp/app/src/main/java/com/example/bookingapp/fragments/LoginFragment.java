@@ -103,6 +103,7 @@ public class LoginFragment extends Fragment {
                             editor.putString(JWT_TOKEN_KEY, product1.getToken());
                             editor.putLong(USER_ID_KEY, product1.getUserId());
                             editor.apply();
+                            System.out.println(product1.getUserId());
 //                            Call<UserDTO> userDTOCall = ClientUtils.userService.getById(product1.getUserId());
 //                            userDTOCall.enqueue(new Callback<UserDTO>() {
 //                                @Override
@@ -122,6 +123,7 @@ public class LoginFragment extends Fragment {
 //                            });
                             getActivity().getSupportFragmentManager().popBackStack();
                             Toast.makeText(root.getContext(), "Login successful", Toast.LENGTH_SHORT).show();
+                            saveRole();
                             FragmentTransition.to(HomeFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
                         } else {
                             Log.d("REZ","Meesage recieved: "+response.code());
@@ -165,6 +167,32 @@ public class LoginFragment extends Fragment {
             }
         });
         return root;
+    }
+
+    public void saveRole() {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        Long loggedId = sharedPref.getLong(USER_ID_KEY, -1);
+        Call<UserDTO> call = ClientUtils.userService.getById(loggedId);
+
+        call.enqueue(new Callback<UserDTO>() {
+            @Override
+            public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
+                if (response.code() == 200) {
+                    UserDTO userDTO = response.body();
+                    Role role = userDTO.getRole();
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString(USER_ROLE_KEY, String.valueOf(role));
+                    editor.apply();
+                    Log.d("REZ", String.valueOf(role));
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserDTO> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override

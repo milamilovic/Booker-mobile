@@ -9,4 +9,13 @@
         <item name="android:windowMinWidthMinor">100%</item>
     </style>
 
+    <style name="ThemeOverlay.Calendar" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <!-- Add relevant attributes for the calendar overlay theme -->
+        <item name="colorPrimary">@color/light_gray</item>
+        <item name="colorPrimaryVariant">@color/dark_gray</item>
+        <item name="colorOnPrimary">@color/darker_green</item>
+        <!-- Add more attributes as needed -->
+    </style>
+
+
 </resources>

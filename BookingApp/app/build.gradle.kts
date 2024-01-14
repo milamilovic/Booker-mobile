@@ -75,6 +75,8 @@ fun getIpAddress(): String? {
         implementation("io.reactivex.rxjava2:rxandroid:2.0.1")
         implementation("io.reactivex.rxjava2:rxjava:2.1.1")
         implementation("com.squareup.retrofit2:adapter-rxjava2:2.4.0")
+        // for date range picker
+        implementation ("com.google.android.material:material:1.9.0")
 
     }
 

@@ -2,6 +2,7 @@ package com.example.bookingapp.fragments;
 
 
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.Context;
@@ -11,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +32,10 @@ import com.example.bookingapp.BaseActivity;
 import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
 import com.example.bookingapp.clients.ClientUtils;
+import com.example.bookingapp.clients.UserService;
 import com.example.bookingapp.databinding.FragmentRegisterBinding;
 import com.example.bookingapp.dto.users.CreateUserDTO;
+import com.example.bookingapp.dto.users.UserDTO;
 import com.example.bookingapp.enums.Role;
 
 import androidx.fragment.app.Fragment;
@@ -39,6 +43,7 @@ import androidx.fragment.app.Fragment;
 import java.io.IOException;
 
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 
@@ -144,6 +149,33 @@ public class RegisterFragment extends Fragment {
                 FragmentTransition.to(LoginFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
             }
         });
+
+        Uri data = getActivity().getIntent().getData();
+        if (data != null) {
+            String activationLink = data.getLastPathSegment();
+            Log.d("Activation Link: ", activationLink);
+            if (activationLink != null) {
+                Call<UserDTO> call = ClientUtils.userService.activateProfile(activationLink);
+                call.enqueue(new Callback<UserDTO>() {
+                    @Override
+                    public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
+                        Log.d("REZ", "OnResponse entered");
+                        if (response.code() == 200) {
+                            Log.d("REZ", "Message received" + response.code());
+                            Toast.makeText(root.getContext(), "Activation successful", Toast.LENGTH_SHORT).show();
+                            FragmentTransition.to(HomeFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
+                        } else {
+                            Log.d("REZ", "Message received: " + response.code());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserDTO> call, Throwable t) {
+                        Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
+                    }
+                });
+            }
+        }
         return root;
     }
 

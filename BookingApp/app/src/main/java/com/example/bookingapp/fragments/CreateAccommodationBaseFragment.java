@@ -2,9 +2,11 @@ package com.example.bookingapp.fragments;
 
 import static android.app.Activity.RESULT_OK;
 
-import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,50 +14,66 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
+import com.example.bookingapp.clients.AccommodationService;
 import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.databinding.FragmentCreateAccommodationBaseBinding;
 import com.example.bookingapp.dto.accommodation.AccommodationViewDTO;
+import com.example.bookingapp.dto.accommodation.AddressDTO;
 import com.example.bookingapp.dto.accommodation.CreateAccommodationDTO;
+import com.example.bookingapp.dto.accommodation.CreatePriceDTO;
 import com.example.bookingapp.enums.AccommodationType;
+import com.example.bookingapp.enums.PriceType;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class CreateAccommodationBaseFragment extends Fragment {
+public class CreateAccommodationBaseFragment extends Fragment implements MapFragment.OnMapMarkerClickListener{
     private static final int PICK_IMAGES_REQUEST = 2;
     private int PICK_IMAGE_MULTIPLE = 1;
     private FragmentCreateAccommodationBaseBinding binding;
@@ -70,17 +88,28 @@ public class CreateAccommodationBaseFragment extends Fragment {
     private ImageSwitcher imageSwitcher;
     private ImageButton btnNext;
     private Button addImages;
-    private EditText editTextLocation;
+    private EditText editTextStreet;
+    private EditText editTextCity;
+    private EditText editTextLatitude;
+    private EditText editTextLongitude;
     private EditText editTextBasicPrice;
     private EditText editTextMinCapacity;
     private EditText editTextMaxCapacity;
+    private EditText editTextFrom;
+    private EditText editTextUntil;
     private Button btnCreate;
     private Button btnCancel;
+    private Button btnShowMap;
+    private FrameLayout mapContainer;
     private Spinner spinner;
 
     private List<String> selectedImagePaths = new ArrayList<>();
     private ArrayList<Uri> mArrayUri;
     private int position;
+    final Calendar myCalendar= Calendar.getInstance();
+    private static Date fromDate = new Date();
+    private static Date toDate = new Date();
+    private static final String JWT_TOKEN_KEY = "jwt_token";
 
     public static CreateAccommodationBaseFragment newInstance() {
 
@@ -95,6 +124,8 @@ public class CreateAccommodationBaseFragment extends Fragment {
 
         initializeUIComponents();
         setupAccommodationTypeSpinner();
+        setupPriceTypeSpinner();
+        openMap();
 
         Button pickImagesButton = binding.addImages;
         pickImagesButton.setOnClickListener(new View.OnClickListener() {
@@ -155,18 +186,96 @@ public class CreateAccommodationBaseFragment extends Fragment {
             }
         });
 
+        DatePickerDialog.OnDateSetListener fromDate =new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH,month);
+                myCalendar.set(Calendar.DAY_OF_MONTH,day);
+                updateEditText(editTextFrom, myCalendar);
+            }
+        };
+        editTextFrom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(getContext(),fromDate,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
 
-        
+
+        DatePickerDialog.OnDateSetListener toDate =new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH,month);
+                myCalendar.set(Calendar.DAY_OF_MONTH,day);
+                updateEditText(editTextUntil, myCalendar);
+            }
+        };
+        editTextUntil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(getContext(),toDate,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+
 
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                String jwt = sharedPref.getString(JWT_TOKEN_KEY, "");
+                String jwtToken = jwt; // Replace with your actual JWT token
+                String authorizationHeaderValue = "Bearer " + jwtToken;
+
+                // Create a new instance of the OkHttpClient.Builder
+                OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+
+                // Add an interceptor to the OkHttpClient to set the Authorization header
+                clientBuilder.addInterceptor(chain -> {
+                    Request original = chain.request();
+                    Request.Builder requestBuilder = original.newBuilder()
+                            .header("Authorization", authorizationHeaderValue)
+                            .method(original.method(), original.body());
+
+                    Request request = requestBuilder.build();
+                    return chain.proceed(request);
+                });
+
+                // Build the OkHttpClient
+                OkHttpClient client = clientBuilder.build();
+
+                // Create a new Retrofit instance with the modified OkHttpClient
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(ClientUtils.SERVICE_API_PATH) // Replace with your actual base URL
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .client(client)
+                        .build();
+
+                // Create the service interface using Retrofit
+                AccommodationService apiService = retrofit.create(AccommodationService.class);
                 CreateAccommodationDTO createAccommodationDTO = new CreateAccommodationDTO();
                 createAccommodationDTO.setTitle(editTextTitle.getText().toString());
                 createAccommodationDTO.setDescription(editTextDescription.getText().toString());
                 createAccommodationDTO.setShortDescription(editTextShortDescription.getText().toString());
                 createAccommodationDTO.setMin_capacity(Integer.parseInt(editTextMinCapacity.getText().toString()));
                 createAccommodationDTO.setMax_capacity(Integer.parseInt(editTextMaxCapacity.getText().toString()));
+                createAccommodationDTO.setStartDate(editTextFrom.getText().toString());
+                createAccommodationDTO.setEndDate(editTextUntil.getText().toString());
+                AccommodationType selectedAccommodationType = (AccommodationType) spinner.getSelectedItem();
+                Spinner priceTypeSpinner = binding.priceTypeSpinner;
+                PriceType selectedPriceType = (PriceType) priceTypeSpinner.getSelectedItem();
+                CreatePriceDTO createPriceDTO = new CreatePriceDTO();
+                createPriceDTO.setFromDate(editTextFrom.getText().toString());
+                createPriceDTO.setToDate(editTextUntil.getText().toString());
+                createPriceDTO.setCost(Double.parseDouble(editTextBasicPrice.getText().toString()));
+                createAccommodationDTO.setType(selectedAccommodationType);
+                createPriceDTO.setType(selectedPriceType);
+                createAccommodationDTO.setPrice(createPriceDTO);
+
+
+
                 List<String> amenityNames = new ArrayList<>();
                 if (checkBoxWifi.isChecked()) {
                     amenityNames.add("wifi");
@@ -202,7 +311,14 @@ public class CreateAccommodationBaseFragment extends Fragment {
                 }
 
                 createAccommodationDTO.setImages(selectedImagePaths.toArray(new String[0]));
-                Call<AccommodationViewDTO> call = ClientUtils.accommodationService.insert(createAccommodationDTO);
+                AddressDTO address = new AddressDTO();
+                address.setStreet(editTextStreet.getText().toString());
+                address.setCity(editTextCity.getText().toString());
+                address.setLatitude(Double.parseDouble(editTextLatitude.getText().toString()));
+                address.setLongitude(Double.parseDouble(editTextLongitude.getText().toString()));
+                createAccommodationDTO.setAddress(address);
+
+                Call<AccommodationViewDTO> call = apiService.insert(createAccommodationDTO);
                 call.enqueue(new Callback<AccommodationViewDTO>() {
                     @Override
                     public void onResponse(Call<AccommodationViewDTO> call, Response<AccommodationViewDTO> response) {
@@ -216,7 +332,6 @@ public class CreateAccommodationBaseFragment extends Fragment {
                             Log.d("REZ","Meesage recieved: "+response.code());
                         }
                     }
-
                     @Override
                     public void onFailure(Call<AccommodationViewDTO> call, Throwable t) {
                         Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
@@ -257,13 +372,20 @@ public class CreateAccommodationBaseFragment extends Fragment {
         imageSwitcher = binding.imageSwitcher;
         btnNext = binding.btnNext;
         addImages = binding.addImages;
-        editTextLocation = binding.editTextLocation;
+        editTextStreet = binding.editTextStreet;
+        editTextCity = binding.editTextCity;
+        editTextLatitude = binding.editTextLatitude;
+        editTextLongitude = binding.editTextLongitude;
+        btnShowMap = binding.btnShowMap;
+        mapContainer = binding.mapContainer;
         editTextBasicPrice = binding.basicPrice;
         editTextMinCapacity = binding.minCapacity;
         editTextMaxCapacity = binding.maxCapacity;
         btnCreate = binding.btnSubmit;
         btnCancel = binding.btnCancel;
         spinner = binding.spinner;
+        editTextFrom = binding.editTextFrom;
+        editTextUntil = binding.editTextUntil;
     }
 
     private void openImagePicker() {
@@ -396,6 +518,88 @@ public class CreateAccommodationBaseFragment extends Fragment {
         });
     }
 
+    private void addMapFragment() {
+        MapFragment mapFragment = new MapFragment(45.2396, 19.8227);
+        mapFragment.setOnMapMarkerClickListener(this);
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.mapContainer, mapFragment);
+        transaction.commit();
+    }
 
+    private void openMap() {
+        btnShowMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Toggle the visibility of the MapFragment container
+                if (mapContainer.getVisibility() == View.VISIBLE) {
+                    mapContainer.setVisibility(View.GONE);
+                } else {
+                    mapContainer.setVisibility(View.VISIBLE);
+                    // If the MapFragment is not added yet, add it dynamically
+                    if (mapContainer.getChildCount() == 0) {
+                        addMapFragment();
+                    }
+                }
+            }
+        });
+    }
+
+
+    @Override
+    public void onMapMarkerClick(LatLng latLng, String address) {
+        editTextLatitude.setText(String.valueOf(latLng.latitude));
+        editTextLongitude.setText(String.valueOf(latLng.longitude));
+        String[] addressElements = address.split(",");
+        editTextStreet.setText(addressElements[0]);
+        editTextCity.setText(addressElements[1]);
+        Log.d("REZ", "Full Address: " + address);
+    }
+
+
+    private String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return sdf.format(date);
+    }
+
+    private void setupPriceTypeSpinner() {
+        Spinner spinner = binding.priceTypeSpinner;
+        List<PriceType> enumValues = Arrays.asList(PriceType.values());
+
+        ArrayAdapter<PriceType> adapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                enumValues
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // Get the selected value
+                PriceType selectedPriceType = (PriceType) parentView.getItemAtPosition(position);
+
+                // Do something with the selected value
+                // For example, you can use selectedAccommodationType.name() to get the string representation
+                String selectedValue = selectedPriceType.name();
+                // or use selectedAccommodationType.ordinal() to get the index
+                int selectedIndex = selectedPriceType.ordinal();
+
+                // Print or use the selected value as needed
+                Log.d("SelectedAccommodationType", selectedValue);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Do nothing if nothing is selected
+            }
+        });
+    }
+
+    private void updateEditText(EditText editText, Calendar calendar) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String formattedDate = sdf.format(calendar.getTime());
+        editText.setText(formattedDate);
+    }
 
 }
