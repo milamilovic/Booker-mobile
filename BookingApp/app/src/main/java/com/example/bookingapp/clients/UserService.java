@@ -62,6 +62,7 @@ public interface UserService {
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
+
     @PUT("guests/{guestId}")
     Call<GuestDTO> updateGuest(@Path("guestId") Long guestId, @Body GuestDTO guest);
 
@@ -78,4 +79,8 @@ public interface UserService {
     })
     @PUT("admins/{adminId}")
     Call<UserDTO> updateAdmin(@Path("adminId") Long adminId, @Body UserDTO user);
+
+    @GET("guests/{id}/cancelled")
+    Call<Integer> getNumOfCancellations(@Path("id") Long id);
+
 }

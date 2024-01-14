@@ -1,41 +1,55 @@
 package com.example.bookingapp.fragments;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.bookingapp.R;
 import com.example.bookingapp.adapters.ReservationRequestGuestAdapter;
 import com.example.bookingapp.adapters.ReservationRequestOwnerAdapter;
+import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.databinding.FragmentReservationRequestOwnerBinding;
-import com.example.bookingapp.databinding.FragmentReservationRequestsGuestBinding;
-import com.example.bookingapp.model.AccommodationRequestOwnerDTO;
-import com.example.bookingapp.model.AccommodationRequestOwnerDTO;
+import com.example.bookingapp.model.AccommodationRequestDTO;
+import com.example.bookingapp.model.CheckBoxFilter;
+import com.example.bookingapp.model.Filter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 
 public class ReservationRequestOwnerFragment extends Fragment {
 
 
-    public static ArrayList<AccommodationRequestOwnerDTO> requests = new ArrayList<AccommodationRequestOwnerDTO>();
+    public static ArrayList<AccommodationRequestDTO> requests = new ArrayList<AccommodationRequestDTO>();
     private FragmentReservationRequestOwnerBinding binding;
     private ReservationRequestOwnerAdapter adapter;
     final Calendar myCalendar= Calendar.getInstance();
 
     private static final String ARG_PARAM = "param";
+
+    private static final String USER_ID_KEY = "user_id";
+    private static final String SEARCH_NOT_NAME = "noNameSearching";
+    private static final String SEARCH_NOT_DATE = "1111-01-01";
 
     ListView listView;
 
@@ -88,6 +102,116 @@ public class ReservationRequestOwnerFragment extends Fragment {
             }
         });
 
+        root.findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //search parameters
+                EditText accNameEdit = root.findViewById(R.id.name_search);
+                EditText dateEdit = root.findViewById(R.id.date_search);
+                String accName = accNameEdit.getText().toString();
+                String dateString = dateEdit.getText().toString();
+                if(accName.equals("") && dateString.equals("")) {
+                    Toast.makeText(root.getContext(), "you need to input something into at least one of the fields!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(accName.equals("")) {
+                    accName = SEARCH_NOT_NAME;
+                }
+
+                if(dateString.equals("")) {
+                    dateString = SEARCH_NOT_DATE;
+                }
+                //filters
+                CheckBox waitingCheckBox = root.findViewById(R.id.waiting);
+                CheckBox deniedCheckBox = root.findViewById(R.id.denied);
+                CheckBox acceptedCheckBox = root.findViewById(R.id.accepted);
+                ArrayList<Filter> filters = new ArrayList<>();
+                if(waitingCheckBox.isChecked()) {
+                    filters.add(new Filter("waiting", new CheckBoxFilter(true)));
+                }
+                if(deniedCheckBox.isChecked()) {
+                    filters.add(new Filter("denied", new CheckBoxFilter(true)));
+                }
+                if(acceptedCheckBox.isChecked()) {
+                    filters.add(new Filter("accepted", new CheckBoxFilter(true)));
+                }
+                if(filters.size()!=0) {
+                    requests.clear();
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                    Long userID = sharedPref.getLong(USER_ID_KEY, 0);
+                    Call<List<AccommodationRequestDTO>> call = ClientUtils.reservationRequestService.searchAndFilterOwner(userID, dateString, accName, filters);
+                    try{
+                        Response<List<AccommodationRequestDTO>> response = call.execute();
+                        List<AccommodationRequestDTO> listings = response.body();
+                        requests.addAll(listings);
+                        adapter = new ReservationRequestOwnerAdapter(getContext(), requests);
+                        listView.setAdapter(adapter);
+                    }catch(Exception ex){
+                        System.out.println("EXCEPTION WHILE SEARCHING AND FILTERING RESERVATION REQUESTS");
+                        ex.printStackTrace();
+                    }
+                } else {
+                    requests.clear();
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                    Long userID = sharedPref.getLong(USER_ID_KEY, 0);
+                    Call<List<AccommodationRequestDTO>> call = ClientUtils.reservationRequestService.searchOwner(userID, dateString, accName);
+                    try{
+                        Response<List<AccommodationRequestDTO>> response = call.execute();
+                        List<AccommodationRequestDTO> listings = response.body();
+                        requests.addAll(listings);
+                        adapter = new ReservationRequestOwnerAdapter(getContext(), requests);
+                        listView.setAdapter(adapter);
+                    }catch(Exception ex){
+                        System.out.println("EXCEPTION WHILE SEARCHING RESERVATION REQUESTS");
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        root.findViewById(R.id.filter).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckBox waitingCheckBox = root.findViewById(R.id.waiting);
+                CheckBox deniedCheckBox = root.findViewById(R.id.denied);
+                CheckBox acceptedCheckBox = root.findViewById(R.id.accepted);
+                ArrayList<Filter> filters = new ArrayList<>();
+                if(waitingCheckBox.isChecked()) {
+                    filters.add(new Filter("waiting", new CheckBoxFilter(true)));
+                }
+                if(deniedCheckBox.isChecked()) {
+                    filters.add(new Filter("denied", new CheckBoxFilter(true)));
+                }
+                if(acceptedCheckBox.isChecked()) {
+                    filters.add(new Filter("accepted", new CheckBoxFilter(true)));
+                }
+                if(filters.size()!=0) {
+                    requests.clear();
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                    Long userID = sharedPref.getLong(USER_ID_KEY, 0);
+                    Call<List<AccommodationRequestDTO>> call = ClientUtils.reservationRequestService.filterOwner(userID, filters);
+                    try{
+                        Response<List<AccommodationRequestDTO>> response = call.execute();
+                        List<AccommodationRequestDTO> listings = response.body();
+                        requests.addAll(listings);
+                        adapter = new ReservationRequestOwnerAdapter(getContext(), requests);
+                        listView.setAdapter(adapter);
+                    }catch(Exception ex){
+                        System.out.println("EXCEPTION WHILE FILTERING RESERVATION REQUESTS");
+                        ex.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(root.getContext(), "you need to check at least one filter to apply filters! P.S. to search AND filter click search", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         return root;
     }
 
@@ -97,36 +221,26 @@ public class ReservationRequestOwnerFragment extends Fragment {
         binding = null;
     }
 
-    private void prepareRequestsList(ArrayList<AccommodationRequestOwnerDTO> requests){
-        SimpleDateFormat formater = new SimpleDateFormat("dd.MM.yyyy.");
-        try {
-            requests.add(new AccommodationRequestOwnerDTO(1L, "Flower Apartment", R.drawable.apartment_image, 180, 60, 4.1f, "waiting", formater.parse("12.12.2023."), formater.parse("14.12.2023."), 4, 1L));
-            requests.add(new AccommodationRequestOwnerDTO(2L, "Lovely Apartment", R.drawable.room_image, 450, 150, 4.6f, "approved", formater.parse("08.02.2024."), formater.parse("10.02.2024."), 2, 2L));
-            requests.add(new AccommodationRequestOwnerDTO(3L, "Today Home", R.drawable.apartment_image, 110, 20, 5f, "denied", formater.parse("01.12.2023."), formater.parse("04.12.2023."), 1, 3L));
-            requests.add(new AccommodationRequestOwnerDTO(4L, "Example Hotel", R.drawable.room_image, 360, 120, 4.2f, "waiting", formater.parse("25.12.2023."), formater.parse("28.12.2023."), 5, 4L));
-            requests.add(new AccommodationRequestOwnerDTO(1L, "Flower Apartment", R.drawable.apartment_image, 180, 60, 4.1f, "waiting", formater.parse("12.12.2023."), formater.parse("14.12.2023."), 4, 1L));
-            requests.add(new AccommodationRequestOwnerDTO(2L, "Lovely Apartment", R.drawable.room_image, 450, 150, 4.6f, "approved", formater.parse("08.02.2024."), formater.parse("10.02.2024."), 2, 2L));
-            requests.add(new AccommodationRequestOwnerDTO(3L, "Today Home", R.drawable.apartment_image, 110, 20, 5f, "denied", formater.parse("01.12.2023."), formater.parse("04.12.2023."), 1, 3L));
-            requests.add(new AccommodationRequestOwnerDTO(4L, "Example Hotel", R.drawable.room_image, 360, 120, 4.2f, "waiting", formater.parse("25.12.2023."), formater.parse("28.12.2023."), 5, 4L));
-            requests.add(new AccommodationRequestOwnerDTO(1L, "Flower Apartment", R.drawable.apartment_image, 180, 60, 4.1f, "waiting", formater.parse("12.12.2023."), formater.parse("14.12.2023."), 4, 1L));
-            requests.add(new AccommodationRequestOwnerDTO(2L, "Lovely Apartment", R.drawable.room_image, 450, 150, 4.6f, "approved", formater.parse("08.02.2024."), formater.parse("10.02.2024."), 2, 2L));
-            requests.add(new AccommodationRequestOwnerDTO(3L, "Today Home", R.drawable.apartment_image, 110, 20, 5f, "denied", formater.parse("01.12.2023."), formater.parse("04.12.2023."), 1, 3L));
-            requests.add(new AccommodationRequestOwnerDTO(4L, "Example Hotel", R.drawable.room_image, 360, 120, 4.2f, "waiting", formater.parse("25.12.2023."), formater.parse("28.12.2023."), 5, 4L));
-            requests.add(new AccommodationRequestOwnerDTO(1L, "Flower Apartment", R.drawable.apartment_image, 180, 60, 4.1f, "waiting", formater.parse("12.12.2023."), formater.parse("14.12.2023."), 4, 1L));
-            requests.add(new AccommodationRequestOwnerDTO(2L, "Lovely Apartment", R.drawable.room_image, 450, 150, 4.6f, "approved", formater.parse("08.02.2024."), formater.parse("10.02.2024."), 2, 2L));
-            requests.add(new AccommodationRequestOwnerDTO(3L, "Today Home", R.drawable.apartment_image, 110, 20, 5f, "denied", formater.parse("01.12.2023."), formater.parse("04.12.2023."), 1, 3L));
-            requests.add(new AccommodationRequestOwnerDTO(4L, "Example Hotel", R.drawable.room_image, 360, 120, 4.2f, "waiting", formater.parse("25.12.2023."), formater.parse("28.12.2023."), 5, 4L));
-            requests.add(new AccommodationRequestOwnerDTO(1L, "Flower Apartment", R.drawable.apartment_image, 180, 60, 4.1f, "waiting", formater.parse("12.12.2023."), formater.parse("14.12.2023."), 4, 1L));
-            requests.add(new AccommodationRequestOwnerDTO(2L, "Lovely Apartment", R.drawable.room_image, 450, 150, 4.6f, "approved", formater.parse("08.02.2024."), formater.parse("10.02.2024."), 2, 2L));
-            requests.add(new AccommodationRequestOwnerDTO(3L, "Today Home", R.drawable.apartment_image, 110, 20, 5f, "denied", formater.parse("01.12.2023."), formater.parse("04.12.2023."), 1, 3L));
-            requests.add(new AccommodationRequestOwnerDTO(4L, "Example Hotel", R.drawable.room_image, 360, 120, 4.2f, "waiting", formater.parse("25.12.2023."), formater.parse("28.12.2023."), 5, 4L));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
+    private void prepareRequestsList(ArrayList<AccommodationRequestDTO> requests){
+        requests.clear();   //in case it's not initialization but searching
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        //call service and get accommodations that are adequate for search
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        Long userID = sharedPref.getLong(USER_ID_KEY, 0);
+        Call<List<AccommodationRequestDTO>> accommodations = ClientUtils.reservationRequestService.findOwnersReservationRequests(userID);
+        try{
+            Response<List<AccommodationRequestDTO>> response = accommodations.execute();
+            ArrayList<AccommodationRequestDTO> listings = (ArrayList<AccommodationRequestDTO>) response.body();
+            for(AccommodationRequestDTO a : listings) {
+                requests.add(a);
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();
         }
-
     }
     private void updateLabel(EditText editText, Calendar myCalendar){
-        String myFormat="dd.MM.yyyy.";
+        String myFormat="yyyy-MM-dd";
         SimpleDateFormat dateFormat=new SimpleDateFormat(myFormat);
         editText.setText(dateFormat.format(myCalendar.getTime()));
         editText.setTextColor(Color.parseColor("#603c3c3c"));
