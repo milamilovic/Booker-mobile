@@ -102,7 +102,71 @@ public class ReservationRequestsGuestFragment extends Fragment {
         root.findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO
+                //search parameters
+                EditText accNameEdit = root.findViewById(R.id.name_search);
+                EditText dateEdit = root.findViewById(R.id.date_search);
+                String accName = accNameEdit.getText().toString();
+                String dateString = dateEdit.getText().toString();
+                if(accName.equals("") && dateString.equals("")) {
+                    Toast.makeText(root.getContext(), "you need to input something into at least one of the fields!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(accName.equals("")) {
+                    accName = SEARCH_NOT_NAME;
+                }
+
+                if(dateString.equals("")) {
+                    dateString = SEARCH_NOT_DATE;
+                }
+                //filters
+                CheckBox waitingCheckBox = root.findViewById(R.id.waiting);
+                CheckBox deniedCheckBox = root.findViewById(R.id.denied);
+                CheckBox acceptedCheckBox = root.findViewById(R.id.accepted);
+                ArrayList<Filter> filters = new ArrayList<>();
+                if(waitingCheckBox.isChecked()) {
+                    filters.add(new Filter("waiting", new CheckBoxFilter(true)));
+                }
+                if(deniedCheckBox.isChecked()) {
+                    filters.add(new Filter("denied", new CheckBoxFilter(true)));
+                }
+                if(acceptedCheckBox.isChecked()) {
+                    filters.add(new Filter("accepted", new CheckBoxFilter(true)));
+                }
+                if(filters.size()!=0) {
+                    requests.clear();
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                    Long userID = sharedPref.getLong(USER_ID_KEY, 0);
+                    Call<List<AccommodationRequestDTO>> call = ClientUtils.reservationRequestService.searchAndFilterGuest(userID, dateString, accName, filters);
+                    try{
+                        Response<List<AccommodationRequestDTO>> response = call.execute();
+                        List<AccommodationRequestDTO> listings = response.body();
+                        requests.addAll(listings);
+                        adapter = new ReservationRequestGuestAdapter(getContext(), requests);
+                        listView.setAdapter(adapter);
+                    }catch(Exception ex){
+                        System.out.println("EXCEPTION WHILE SEARCHING AND FILTERING RESERVATION REQUESTS");
+                        ex.printStackTrace();
+                    }
+                } else {
+                    requests.clear();
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                    Long userID = sharedPref.getLong(USER_ID_KEY, 0);
+                    Call<List<AccommodationRequestDTO>> call = ClientUtils.reservationRequestService.searchGuest(userID, dateString, accName);
+                    try{
+                        Response<List<AccommodationRequestDTO>> response = call.execute();
+                        List<AccommodationRequestDTO> listings = response.body();
+                        requests.addAll(listings);
+                        adapter = new ReservationRequestGuestAdapter(getContext(), requests);
+                        listView.setAdapter(adapter);
+                    }catch(Exception ex){
+                        System.out.println("EXCEPTION WHILE SEARCHING RESERVATION REQUESTS");
+                        ex.printStackTrace();
+                    }
+                }
             }
         });
 
