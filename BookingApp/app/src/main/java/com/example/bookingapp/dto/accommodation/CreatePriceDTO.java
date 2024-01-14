@@ -6,14 +6,14 @@ import java.util.Date;
 
 public class CreatePriceDTO {
     private double cost;
-    private Date fromDate;
-    private Date toDate;
+    private String fromDate;
+    private String toDate;
     private PriceType type;
 
     public CreatePriceDTO() {
     }
 
-    public CreatePriceDTO(double cost, Date fromDate, Date toDate, PriceType type) {
+    public CreatePriceDTO(double cost, String fromDate, String toDate, PriceType type) {
         this.cost = cost;
         this.fromDate = fromDate;
         this.toDate = toDate;
@@ -28,19 +28,19 @@ public class CreatePriceDTO {
         this.cost = cost;
     }
 
-    public Date getFromDate() {
+    public String getFromDate() {
         return fromDate;
     }
 
-    public void setFromDate(Date fromDate) {
+    public void setFromDate(String fromDate) {
         this.fromDate = fromDate;
     }
 
-    public Date getToDate() {
+    public String getToDate() {
         return toDate;
     }
 
-    public void setToDate(Date toDate) {
+    public void setToDate(String toDate) {
         this.toDate = toDate;
     }
 
