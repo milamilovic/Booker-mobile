@@ -1,5 +1,7 @@
 package com.example.bookingapp;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -27,6 +29,7 @@ import com.example.bookingapp.fragments.ReportFragment;
 import com.example.bookingapp.fragments.ReportedUsersFragment;
 import com.example.bookingapp.fragments.ReservationRequestOwnerFragment;
 import com.example.bookingapp.fragments.OwnerAccommodationFragmentListing;
+import com.example.bookingapp.fragments.UpdateAccommodationDetailsFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class BaseActivity extends AppCompatActivity{
@@ -224,7 +227,9 @@ public class BaseActivity extends AppCompatActivity{
             //startActivity(i);
 
 
-            FragmentTransition.to(RegisterFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
+            Intent intent = new Intent(BaseActivity.this, RegisterScreen.class);
+            startActivity(intent);
+            finish();  // Optional: finish the current activity if needed
 
             // Close the drawer after selecting an option
             drawerLayout.closeDrawer(GravityCompat.START);
@@ -239,6 +244,15 @@ public class BaseActivity extends AppCompatActivity{
 
             return true;
         }));
+
+        menu.getItem(14).setOnMenuItemClickListener((v-> {
+            FragmentTransition.to(UpdateAccommodationDetailsFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
+
+            drawerLayout.closeDrawer(GravityCompat.START);
+
+            return true;
+        }));
+
 
     };
 
@@ -308,8 +322,8 @@ public class BaseActivity extends AppCompatActivity{
         Toast.makeText(this, "Logged in with token: " + token, Toast.LENGTH_SHORT).show();
     }
 
-        private void handleLoggedInUserWithId(int userId) {
-            // Example: Display a message with the user ID
-            Toast.makeText(this, "Logged in with user ID: " + userId, Toast.LENGTH_SHORT).show();
-        }
+    private void handleLoggedInUserWithId(int userId) {
+        // Example: Display a message with the user ID
+        Toast.makeText(this, "Logged in with user ID: " + userId, Toast.LENGTH_SHORT).show();
+    }
 }

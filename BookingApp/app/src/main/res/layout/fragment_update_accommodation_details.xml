@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.UpdateAccommodationDetailsFragment"
+    tools:ignore="HardcodedText"
+    android:id="@+id/container"
+    android:paddingLeft="@dimen/horizontal_fragment_margin"
+    android:paddingTop="@dimen/vertical_fragment_margin"
+    android:paddingRight="@dimen/horizontal_fragment_margin"
+    android:paddingBottom="@dimen/vertical_fragment_margin"
+    android:background="@drawable/phone_background_1">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/greenBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/round_corner_green_background"
+            android:minWidth="500dp"
+            android:orientation="vertical"
+            android:gravity="start"
+            android:layout_gravity="top">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center_horizontal"
+                android:contentDescription="@string/background_description"
+                android:src="@drawable/booker_favicon_color"/>
+
+
+            <EditText
+                android:id="@+id/editTextFrom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/edit_text_border"
+                android:drawableStart="@drawable/baseline_calendar_month_24"
+                android:drawablePadding="20dp"
+                android:hint="@string/from"
+                android:textColor="@color/dark_gray"
+                android:minHeight="48dp"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:textColorHint="@color/dark_gray"/>
+
+
+            <EditText
+                android:id="@+id/editTextUntil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/edit_text_border"
+                android:drawableStart="@drawable/baseline_calendar_month_24"
+                android:drawablePadding="20dp"
+                android:hint="@string/until"
+                android:textColor="@color/dark_gray"
+                android:minHeight="48dp"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:textColorHint="@color/dark_gray"/>
+            <EditText
+                android:id="@+id/basicPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="8dp"
+                android:hint="@string/basic_price"
+                android:background="@drawable/edit_text_border"
+                android:textColor="@color/dark_gray"
+                android:minHeight="48dp"
+                android:drawableStart="@drawable/baseline_attach_money_24"
+                android:drawablePadding="20dp"
+                android:inputType="numberDecimal"
+                android:textColorHint="@color/dark_gray"/>
+
+            <LinearLayout
+                android:id="@+id/priceTypeSpinnerBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/spinner_item_background">
+
+                <Spinner
+                    android:id="@+id/priceTypeSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:minHeight="48dp"/>
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/deadline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="16dp"
+                android:hint="@string/cancellation_deadline"
+                android:background="@drawable/edit_text_border"
+                android:textColor="@color/dark_gray"
+                android:minHeight="48dp"
+                android:drawableStart="@drawable/free_cancellation"
+                android:drawablePadding="20dp"
+                android:inputType="numberDecimal"
+                android:textColorHint="@color/dark_gray"/>
+
+            <!-- Inside the ConstraintLayout with id "buttonPanel" -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/buttonPanel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp">
+
+                <Button
+                    android:id="@+id/btnSubmit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/submit"
+                    android:background="@drawable/round_corner_alternative"
+                    android:textColor="@color/light_gray"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
+
+                <Button
+                    android:id="@+id/btnCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/round_corner_alternative"
+                    android:textColor="@color/light_gray"
+                    android:text="@string/action_cancel"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+
+</LinearLayout>

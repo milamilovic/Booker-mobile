@@ -4,6 +4,7 @@ import android.widget.CheckBox;
 
 import com.example.bookingapp.dto.accommodation.AccommodationViewDTO;
 import com.example.bookingapp.dto.accommodation.CreateAccommodationDTO;
+import com.example.bookingapp.dto.accommodation.UpdateAvailabilityDTO;
 import com.example.bookingapp.dto.users.LoginUserDTO;
 import com.example.bookingapp.dto.users.Token;
 import com.example.bookingapp.model.Accommodation;
@@ -56,6 +57,13 @@ public interface AccommodationService {
     })
     @POST("accommodations/create_accommodation")
     Call<AccommodationViewDTO> insert(@Body CreateAccommodationDTO createAccommodationDTO);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @PUT("accommodations/update_availability/{id}")
+    Call<AccommodationViewDTO> updateAvailability(@Path("id") Long id, @Body UpdateAvailabilityDTO updateAvailabilityDTO);
    @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"

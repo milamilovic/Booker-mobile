@@ -13,8 +13,8 @@ public class CreateAccommodationDTO {
     private String[] amenities;
     private String[] images;
     private AccommodationType type;
-    private Date startDate;
-    private Date endDate;
+    private String startDate;
+    private String endDate;
     private CreatePriceDTO price;
     private int min_capacity;
     private int max_capacity;
@@ -22,7 +22,7 @@ public class CreateAccommodationDTO {
     public CreateAccommodationDTO() {
     }
 
-    public CreateAccommodationDTO(Long id, String title, String description, String shortDescription, AddressDTO address, String[] amenities, String[] images, AccommodationType type, Date startDate, Date endDate, CreatePriceDTO price, int min_capacity, int max_capacity) {
+    public CreateAccommodationDTO(Long id, String title, String description, String shortDescription, AddressDTO address, String[] amenities, String[] images, AccommodationType type, String startDate, String endDate, CreatePriceDTO price, int min_capacity, int max_capacity) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -102,19 +102,19 @@ public class CreateAccommodationDTO {
         this.type = type;
     }
 
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
