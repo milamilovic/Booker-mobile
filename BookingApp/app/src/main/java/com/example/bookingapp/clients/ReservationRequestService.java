@@ -50,4 +50,8 @@ public interface ReservationRequestService {
                                                     @Path("searchDate") String searchDate,
                                                     @Path("accName") String accName,
                                                     @Body ArrayList<Filter> createAccommodationDTO);
+
+    @Headers("Content-Type: application/json")
+    @GET("requests/owner/{ownerId}")
+    Call<List<AccommodationRequestDTO>> findOwnersReservationRequests(@Path("ownerId") Long ownerId);
 }

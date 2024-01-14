@@ -1,11 +1,14 @@
 package com.example.bookingapp.fragments;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,28 +17,31 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.example.bookingapp.R;
-import com.example.bookingapp.adapters.ReservationRequestGuestAdapter;
 import com.example.bookingapp.adapters.ReservationRequestOwnerAdapter;
+import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.databinding.FragmentReservationRequestOwnerBinding;
-import com.example.bookingapp.databinding.FragmentReservationRequestsGuestBinding;
-import com.example.bookingapp.model.AccommodationRequestOwnerDTO;
-import com.example.bookingapp.model.AccommodationRequestOwnerDTO;
+import com.example.bookingapp.model.AccommodationRequestDTO;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 
 public class ReservationRequestOwnerFragment extends Fragment {
 
 
-    public static ArrayList<AccommodationRequestOwnerDTO> requests = new ArrayList<AccommodationRequestOwnerDTO>();
+    public static ArrayList<AccommodationRequestDTO> requests = new ArrayList<AccommodationRequestDTO>();
     private FragmentReservationRequestOwnerBinding binding;
     private ReservationRequestOwnerAdapter adapter;
     final Calendar myCalendar= Calendar.getInstance();
 
     private static final String ARG_PARAM = "param";
+    private static final String USER_ID_KEY = "user_id";
 
     ListView listView;
 
@@ -97,36 +103,26 @@ public class ReservationRequestOwnerFragment extends Fragment {
         binding = null;
     }
 
-    private void prepareRequestsList(ArrayList<AccommodationRequestOwnerDTO> requests){
-        SimpleDateFormat formater = new SimpleDateFormat("dd.MM.yyyy.");
-        try {
-            requests.add(new AccommodationRequestOwnerDTO(1L, "Flower Apartment", R.drawable.apartment_image, 180, 60, 4.1f, "waiting", formater.parse("12.12.2023."), formater.parse("14.12.2023."), 4, 1L));
-            requests.add(new AccommodationRequestOwnerDTO(2L, "Lovely Apartment", R.drawable.room_image, 450, 150, 4.6f, "approved", formater.parse("08.02.2024."), formater.parse("10.02.2024."), 2, 2L));
-            requests.add(new AccommodationRequestOwnerDTO(3L, "Today Home", R.drawable.apartment_image, 110, 20, 5f, "denied", formater.parse("01.12.2023."), formater.parse("04.12.2023."), 1, 3L));
-            requests.add(new AccommodationRequestOwnerDTO(4L, "Example Hotel", R.drawable.room_image, 360, 120, 4.2f, "waiting", formater.parse("25.12.2023."), formater.parse("28.12.2023."), 5, 4L));
-            requests.add(new AccommodationRequestOwnerDTO(1L, "Flower Apartment", R.drawable.apartment_image, 180, 60, 4.1f, "waiting", formater.parse("12.12.2023."), formater.parse("14.12.2023."), 4, 1L));
-            requests.add(new AccommodationRequestOwnerDTO(2L, "Lovely Apartment", R.drawable.room_image, 450, 150, 4.6f, "approved", formater.parse("08.02.2024."), formater.parse("10.02.2024."), 2, 2L));
-            requests.add(new AccommodationRequestOwnerDTO(3L, "Today Home", R.drawable.apartment_image, 110, 20, 5f, "denied", formater.parse("01.12.2023."), formater.parse("04.12.2023."), 1, 3L));
-            requests.add(new AccommodationRequestOwnerDTO(4L, "Example Hotel", R.drawable.room_image, 360, 120, 4.2f, "waiting", formater.parse("25.12.2023."), formater.parse("28.12.2023."), 5, 4L));
-            requests.add(new AccommodationRequestOwnerDTO(1L, "Flower Apartment", R.drawable.apartment_image, 180, 60, 4.1f, "waiting", formater.parse("12.12.2023."), formater.parse("14.12.2023."), 4, 1L));
-            requests.add(new AccommodationRequestOwnerDTO(2L, "Lovely Apartment", R.drawable.room_image, 450, 150, 4.6f, "approved", formater.parse("08.02.2024."), formater.parse("10.02.2024."), 2, 2L));
-            requests.add(new AccommodationRequestOwnerDTO(3L, "Today Home", R.drawable.apartment_image, 110, 20, 5f, "denied", formater.parse("01.12.2023."), formater.parse("04.12.2023."), 1, 3L));
-            requests.add(new AccommodationRequestOwnerDTO(4L, "Example Hotel", R.drawable.room_image, 360, 120, 4.2f, "waiting", formater.parse("25.12.2023."), formater.parse("28.12.2023."), 5, 4L));
-            requests.add(new AccommodationRequestOwnerDTO(1L, "Flower Apartment", R.drawable.apartment_image, 180, 60, 4.1f, "waiting", formater.parse("12.12.2023."), formater.parse("14.12.2023."), 4, 1L));
-            requests.add(new AccommodationRequestOwnerDTO(2L, "Lovely Apartment", R.drawable.room_image, 450, 150, 4.6f, "approved", formater.parse("08.02.2024."), formater.parse("10.02.2024."), 2, 2L));
-            requests.add(new AccommodationRequestOwnerDTO(3L, "Today Home", R.drawable.apartment_image, 110, 20, 5f, "denied", formater.parse("01.12.2023."), formater.parse("04.12.2023."), 1, 3L));
-            requests.add(new AccommodationRequestOwnerDTO(4L, "Example Hotel", R.drawable.room_image, 360, 120, 4.2f, "waiting", formater.parse("25.12.2023."), formater.parse("28.12.2023."), 5, 4L));
-            requests.add(new AccommodationRequestOwnerDTO(1L, "Flower Apartment", R.drawable.apartment_image, 180, 60, 4.1f, "waiting", formater.parse("12.12.2023."), formater.parse("14.12.2023."), 4, 1L));
-            requests.add(new AccommodationRequestOwnerDTO(2L, "Lovely Apartment", R.drawable.room_image, 450, 150, 4.6f, "approved", formater.parse("08.02.2024."), formater.parse("10.02.2024."), 2, 2L));
-            requests.add(new AccommodationRequestOwnerDTO(3L, "Today Home", R.drawable.apartment_image, 110, 20, 5f, "denied", formater.parse("01.12.2023."), formater.parse("04.12.2023."), 1, 3L));
-            requests.add(new AccommodationRequestOwnerDTO(4L, "Example Hotel", R.drawable.room_image, 360, 120, 4.2f, "waiting", formater.parse("25.12.2023."), formater.parse("28.12.2023."), 5, 4L));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
+    private void prepareRequestsList(ArrayList<AccommodationRequestDTO> requests){
+        requests.clear();   //in case it's not initialization but searching
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        //call service and get accommodations that are adequate for search
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        Long userID = sharedPref.getLong(USER_ID_KEY, 0);
+        Call<List<AccommodationRequestDTO>> accommodations = ClientUtils.reservationRequestService.findOwnersReservationRequests(userID);
+        try{
+            Response<List<AccommodationRequestDTO>> response = accommodations.execute();
+            ArrayList<AccommodationRequestDTO> listings = (ArrayList<AccommodationRequestDTO>) response.body();
+            for(AccommodationRequestDTO a : listings) {
+                requests.add(a);
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();
         }
-
     }
     private void updateLabel(EditText editText, Calendar myCalendar){
-        String myFormat="dd.MM.yyyy.";
+        String myFormat="yyyy-MM-dd";
         SimpleDateFormat dateFormat=new SimpleDateFormat(myFormat);
         editText.setText(dateFormat.format(myCalendar.getTime()));
         editText.setTextColor(Color.parseColor("#603c3c3c"));

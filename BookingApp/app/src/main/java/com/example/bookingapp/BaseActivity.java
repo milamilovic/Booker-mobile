@@ -153,6 +153,7 @@ public class BaseActivity extends AppCompatActivity{
         menu.getItem(5).setOnMenuItemClickListener((v -> {
             SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
             Long userID = sharedPref.getLong(USER_ID_KEY, 0);
+            System.out.println(userID);
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
             Call<UserDTO> userCall = ClientUtils.userService.getById(userID);
@@ -274,6 +275,18 @@ public class BaseActivity extends AppCompatActivity{
 
         menu.getItem(14).setOnMenuItemClickListener((v-> {
             FragmentTransition.to(UpdateAccommodationDetailsFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
+
+            drawerLayout.closeDrawer(GravityCompat.START);
+
+            return true;
+        }));
+
+        menu.getItem(15).setOnMenuItemClickListener((v-> {
+            SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.remove(USER_ID_KEY);
+            editor.commit();
+            FragmentTransition.to(LoginFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
 
             drawerLayout.closeDrawer(GravityCompat.START);
 
