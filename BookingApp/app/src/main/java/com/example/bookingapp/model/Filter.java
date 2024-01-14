@@ -5,4 +5,9 @@ public class Filter {
     Object value;
 
     public Filter() {}
+
+    public Filter(String name, Object value) {
+        this.name = name;
+        this.value = value;
+    }
 }

@@ -1,5 +1,7 @@
 package com.example.bookingapp.clients;
 
+import android.widget.CheckBox;
+
 import com.example.bookingapp.dto.accommodation.AccommodationViewDTO;
 import com.example.bookingapp.dto.accommodation.CreateAccommodationDTO;
 import com.example.bookingapp.dto.accommodation.UpdateAvailabilityDTO;
@@ -38,17 +40,6 @@ public interface AccommodationService {
                                             @Path("location") String location,
                                             @Path("people") int people);
 
-    @Headers({
-            "User-Agent: Mobile-Android",
-            "Content-Type:application/json"
-    })
-    @POST("accommodations/search/{startDate}/{endDate}/{location}/{people}/filter")
-    Call<List<AccommodationListing>> userLogin(@Path("startDate") String startDate,
-                                  @Path("endDate") String endDate,
-                                  @Path("location") String location,
-                                  @Path("people") int people,
-                                  @Body ArrayList<Filter> filters);
-
     @Headers("Content-Type: application/json")
     @GET("prices/{id}/{firstDateString}/{secondDateString}/{people}")
     Call<Double> getPrice(@Path("id") Long id,
@@ -80,7 +71,7 @@ public interface AccommodationService {
     @POST("requests")
     Call<ReservationRequest> makeRequest(@Body ReservationRequest request);
     
-  @Headers({
+    @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
@@ -95,4 +86,19 @@ public interface AccommodationService {
     @Headers("Content-Type: application/json")
     @GET("accommodations/owner/{ownerId}")
     Call<List<ApproveAccommodationListing>> findAllForOwner(@Path("ownerId")Long ownerId);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @PUT("accommodations/update/{accommodationId}")
+    Call<String> updateAccommodation(@Path("accommodationId")Long accommodationId, @Body Accommodation accommodation);
+
+    @Headers("Content-Type: application/json")
+    @POST("accommodations/search/{startDate}/{endDate}/{location}/{people}/filter")
+    Call<List<AccommodationListing>> searchAndFilter(@Path("startDate") String startDate,
+                                                     @Path("endDate") String endDate,
+                                                     @Path("location") String location,
+                                                     @Path("people") int people,
+                                                     @Body ArrayList<Filter> filters);
 }

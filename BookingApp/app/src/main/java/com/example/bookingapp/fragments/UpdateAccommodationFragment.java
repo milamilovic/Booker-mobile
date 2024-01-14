@@ -5,8 +5,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,11 +21,18 @@ import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
 import com.example.bookingapp.adapters.AmenityAdapter;
 import com.example.bookingapp.adapters.ImageAdapter;
+import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.model.Accommodation;
+import com.example.bookingapp.model.Address;
 import com.example.bookingapp.model.Amenity;
+import com.example.bookingapp.model.Availability;
 import com.example.bookingapp.model.Image;
+import com.example.bookingapp.model.Price;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -111,6 +120,7 @@ public class UpdateAccommodationFragment extends Fragment {
             }
         });
 
+
         updateAvailability = view.findViewById(R.id.price_availability_button);
         updateAvailability.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,6 +132,24 @@ public class UpdateAccommodationFragment extends Fragment {
                 FragmentTransition.to(UpdateAccommodationDetailsFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
             }
         });
+        Button save = view.findViewById(R.id.save_update_button);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+                Call<String> stringCall = ClientUtils.accommodationService.updateAccommodation(accommodation.getId(), accommodation);
+                try {
+                    Response<String> response = stringCall.execute();
+                    System.out.println(response.body());
+                } catch (Exception ex) {
+                    System.out.println("EXCEPTION WHILE APPROVING ACCOMMODATION");
+                    ex.printStackTrace();
+                }
+                FragmentTransition.to(HomeFragment.newInstance(), (FragmentActivity) getContext(), true, R.id.fragment_placeholder);
+            }
+        });
+
         return view;
     }
 
