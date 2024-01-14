@@ -1,7 +1,9 @@
 package com.example.bookingapp.clients;
 
 import com.example.bookingapp.dto.users.CreateUserDTO;
+import com.example.bookingapp.dto.users.GuestDTO;
 import com.example.bookingapp.dto.users.LoginUserDTO;
+import com.example.bookingapp.dto.users.OwnerDTO;
 import com.example.bookingapp.dto.users.Token;
 import com.example.bookingapp.dto.users.UserDTO;
 
@@ -39,6 +41,20 @@ public interface UserService {
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
+    @GET("guests/{guestId}")
+    Call<GuestDTO> getGuestById(@Path("guestId") Long guestId);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("owners/{ownerId}")
+    Call<OwnerDTO> getOwnerById(@Path("ownerId") Long ownerId);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
     @PUT("users/activate_profile/{activation_link}")
     Call<UserDTO> activateProfile(@Path("activation_link") String activation_link);
 
@@ -46,6 +62,25 @@ public interface UserService {
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
+
+    @PUT("guests/{guestId}")
+    Call<GuestDTO> updateGuest(@Path("guestId") Long guestId, @Body GuestDTO guest);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @PUT("owners/{ownerId}")
+    Call<OwnerDTO> updateOwner(@Path("ownerId") Long owner_Id, @Body OwnerDTO owner);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @PUT("admins/{adminId}")
+    Call<UserDTO> updateAdmin(@Path("adminId") Long adminId, @Body UserDTO user);
+
     @GET("guests/{id}/cancelled")
     Call<Integer> getNumOfCancellations(@Path("id") Long id);
+
 }

@@ -123,12 +123,32 @@ public class BaseActivity extends AppCompatActivity{
         }));
 
         menu.getItem(1).setOnMenuItemClickListener((v -> {
-            FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
-                    .beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .replace(R.id.fragment_placeholder, MyProfileFragment.newInstance("Fragment 1", "Ovo je fragment 1"));
-            transaction.addToBackStack(null);
-            transaction.commit();
+            SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+            Long userID = sharedPref.getLong(USER_ID_KEY, 0);
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            Call<UserDTO> userCall = ClientUtils.userService.getById(userID);
+            try {
+                Response<UserDTO> response = userCall.execute();
+                UserDTO user = (UserDTO) response.body();
+                if (user.getRole() == Role.GUEST || user.getRole() == Role.ADMIN) {
+                    FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                            .beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .replace(R.id.fragment_placeholder, MyProfileFragment.newInstance(user));
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                } else if (user.getRole() == Role.OWNER) {
+                    FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                            .beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .replace(R.id.fragment_placeholder, OwnerMyProfileFragment.newInstance(user));
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+            }catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
             // Close the drawer after selecting an option
             drawerLayout.closeDrawer(GravityCompat.START);
