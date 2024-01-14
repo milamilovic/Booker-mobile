@@ -1,18 +1,34 @@
 package com.example.bookingapp;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.bookingapp.clients.ClientUtils;
+import com.example.bookingapp.dto.users.GuestDTO;
+import com.example.bookingapp.dto.users.OwnerDTO;
+import com.example.bookingapp.dto.users.UserDTO;
+import com.example.bookingapp.enums.Role;
+import com.example.bookingapp.fragments.HomeFragment;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,33 +37,24 @@ import android.widget.Toast;
  */
 public class OwnerMyProfileFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static Long id;
+    private UserDTO user;
+    private OwnerDTO owner;
+    private static final String USER_ID_KEY = "user_id";
 
     public OwnerMyProfileFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment OwnerProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static OwnerMyProfileFragment newInstance(String param1, String param2) {
+    public OwnerMyProfileFragment(UserDTO user){
+        this.user = user;
+    }
+
+
+    public static OwnerMyProfileFragment newInstance(UserDTO user) {
         OwnerMyProfileFragment fragment = new OwnerMyProfileFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putLong("id", user.getId());
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,8 +63,19 @@ public class OwnerMyProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            Bundle args = getArguments();
+            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+            id = sharedPref.getLong(USER_ID_KEY, 0);
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            Call<OwnerDTO> call = ClientUtils.userService.getOwnerById(id);
+            try{
+                Response<OwnerDTO> response = call.execute();
+                owner = (OwnerDTO) response.body();
+            }catch(Exception ex){
+                System.out.println("EXCEPTION WHILE GETTING OWNER");
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -66,8 +84,70 @@ public class OwnerMyProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_owner_my_profile, container, false);
+
+        // TODO load profile picture path
+        /*ImageView bigProfilePic = view.findViewById(R.id.profile_pic);
+        bigProfilePic.setImageURI(Uri.parse(user.getProfilePicture().getPath_mobile()));
+
+        ImageView miniProfilePic = view.findViewById(R.id.mini_profile_pic);
+        miniProfilePic.setImageURI(Uri.parse(user.getProfilePicture().getPath_mobile()));
+        System.out.println(Uri.parse(user.getProfilePicture().getPath_mobile()));*/
+
+        EditText name = view.findViewById(R.id.name);
+        name.setText(owner.getName() + " " + owner.getSurname());
+
+        TextView role = view.findViewById(R.id.role);
+        role.setText(owner.getRole().toString());
+
+        EditText email = view.findViewById(R.id.email_profile);
+        email.setText(owner.getEmail());
+
+        EditText address = view.findViewById(R.id.address_profile);
+        address.setText(owner.getAddress());
+
+        EditText phone = view.findViewById(R.id.phone_profile);
+        phone.setText(owner.getPhone());
+
+        EditText password = view.findViewById(R.id.password_profile_field);
+        EditText confirm_password = view.findViewById(R.id.password_profile_confirm_field);
+
         RatingBar rb = view.findViewById(R.id.owner_rate);
         rb.setRating(4.1f);
+
+        Button apply_changes_btn = view.findViewById(R.id.apply_profile_changes_button);
+        apply_changes_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                owner.setName(name.getText().toString().split(" ")[0]);
+                owner.setSurname(name.getText().toString().split(" ")[1]);
+                owner.setEmail(email.getText().toString());
+                owner.setAddress(address.getText().toString());
+                owner.setPhone(phone.getText().toString());
+                if (!password.getText().toString().isEmpty() && !confirm_password.getText().toString().isEmpty() &&
+                        password.getText().toString().equals(confirm_password.getText().toString())) {
+                    owner.setPassword(password.getText().toString());
+                    System.out.println("Ovo je sifra " + password.getText().toString());
+                } else if (!password.getText().toString().isEmpty() && !confirm_password.getText().toString().isEmpty() &&
+                        !password.getText().toString().equals(confirm_password.getText().toString())) {
+                    Toast.makeText(getActivity(), "Password and confirm password must be the same!", Toast.LENGTH_SHORT).show();
+                } else if ((password.getText().toString().isEmpty() && !confirm_password.getText().toString().isEmpty()) ||
+                        (!password.getText().toString().isEmpty() && confirm_password.getText().toString().isEmpty())) {
+                    Toast.makeText(getActivity(), "Password and confirm password must be the same!", Toast.LENGTH_SHORT).show();
+                } else if (password.getText().toString().isEmpty() && confirm_password.getText().toString().isEmpty()) {
+                }
+
+                Call<OwnerDTO> stringCall = ClientUtils.userService.updateOwner(owner.getId(), owner);
+                try {
+                    Response<OwnerDTO> response = stringCall.execute();
+                    System.out.println(response.body());
+                } catch (Exception ex) {
+                    System.out.println("EXCEPTION WHILE UPDATING OWNER DATA");
+                    ex.printStackTrace();
+                }
+                FragmentTransition.to(HomeFragment.newInstance(), (FragmentActivity) getContext(), true, R.id.fragment_placeholder);
+
+            }
+        });
 
         Button delete_btn = view.findViewById(R.id.delete_profile_button);
         delete_btn.setOnClickListener(new View.OnClickListener() {

@@ -155,7 +155,7 @@ public class AccommodationViewFragment extends Fragment {
 
         TextView ownerViewProfile = view.findViewById(R.id.view_profile);
         ownerViewProfile.setOnClickListener(v -> {
-            FragmentTransition.to(OwnerProfileFragment.newInstance("profil", "vlasnikov profil"), getActivity(), false, R.id.fragment_placeholder);
+            FragmentTransition.to(OwnerProfileFragment.newInstance(accommodation.getOwner_id()), getActivity(), false, R.id.fragment_placeholder);
         });
 
         adapter.setOnItemClickListener(new ImageAdapter.OnItemClickListener() {
