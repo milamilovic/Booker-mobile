@@ -74,6 +74,7 @@
             android:orientation="horizontal"
             android:gravity="center">
             <CheckBox
+                android:id="@+id/waiting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="waiting"
@@ -81,13 +82,15 @@
                 android:layout_marginRight="15dp"
                 android:buttonTint="@color/transparent_80_dark_gray"/>
             <CheckBox
+                android:id="@+id/accepted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="approved"
+                android:text="accepted"
                 android:textColor="@color/transparent_80_dark_gray"
                 android:layout_marginRight="15dp"
                 android:buttonTint="@color/transparent_80_dark_gray"/>
             <CheckBox
+                android:id="@+id/denied"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="denied"

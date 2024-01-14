@@ -12,16 +12,21 @@ import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.bookingapp.R;
+import com.example.bookingapp.adapters.AccommodationListAdapter;
 import com.example.bookingapp.adapters.ReservationRequestGuestAdapter;
 import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.databinding.FragmentReservationRequestsGuestBinding;
 import com.example.bookingapp.model.AccommodationListing;
 import com.example.bookingapp.model.AccommodationRequestDTO;
+import com.example.bookingapp.model.CheckBoxFilter;
+import com.example.bookingapp.model.Filter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,6 +41,8 @@ public class ReservationRequestsGuestFragment extends Fragment {
 
 
     private static final String USER_ID_KEY = "user_id";
+    private static final String SEARCH_NOT_NAME = "noNameSearching";
+    private static final String SEARCH_NOT_DATE = "1111-01-01";
     public static ArrayList<AccommodationRequestDTO> requests = new ArrayList<AccommodationRequestDTO>();
     private FragmentReservationRequestsGuestBinding binding;
     private ReservationRequestGuestAdapter adapter;
@@ -92,10 +99,56 @@ public class ReservationRequestsGuestFragment extends Fragment {
             }
         });
 
+        root.findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO
+            }
+        });
+
+        root.findViewById(R.id.filter).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckBox waitingCheckBox = root.findViewById(R.id.waiting);
+                CheckBox deniedCheckBox = root.findViewById(R.id.denied);
+                CheckBox acceptedCheckBox = root.findViewById(R.id.accepted);
+                ArrayList<Filter> filters = new ArrayList<>();
+                if(waitingCheckBox.isChecked()) {
+                    filters.add(new Filter("waiting", new CheckBoxFilter(true)));
+                }
+                if(deniedCheckBox.isChecked()) {
+                    filters.add(new Filter("denied", new CheckBoxFilter(true)));
+                }
+                if(acceptedCheckBox.isChecked()) {
+                    filters.add(new Filter("accepted", new CheckBoxFilter(true)));
+                }
+                if(filters.size()!=0) {
+                    requests.clear();
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                    Long userID = sharedPref.getLong(USER_ID_KEY, 0);
+                    Call<List<AccommodationRequestDTO>> call = ClientUtils.reservationRequestService.filterGuest(userID, filters);
+                    try{
+                        Response<List<AccommodationRequestDTO>> response = call.execute();
+                        List<AccommodationRequestDTO> listings = response.body();
+                        requests.addAll(listings);
+                        adapter = new ReservationRequestGuestAdapter(getContext(), requests);
+                        listView.setAdapter(adapter);
+                    }catch(Exception ex){
+                        System.out.println("EXCEPTION WHILE FILTERING RESERVATION REQUESTS");
+                        ex.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(root.getContext(), "you need to check at least one filter to apply filters! P.S. to search AND filter click search", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         return root;
     }
     private void updateLabel(EditText editText, Calendar myCalendar){
-        String myFormat="dd.MM.yyyy.";
+        String myFormat="yyyy-MM-dd";
         SimpleDateFormat dateFormat=new SimpleDateFormat(myFormat);
         editText.setText(dateFormat.format(myCalendar.getTime()));
         editText.setTextColor(Color.parseColor("#603c3c3c"));

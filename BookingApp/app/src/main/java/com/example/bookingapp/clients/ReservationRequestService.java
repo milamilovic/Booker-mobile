@@ -1,6 +1,9 @@
 package com.example.bookingapp.clients;
 
+import com.example.bookingapp.dto.accommodation.AccommodationViewDTO;
+import com.example.bookingapp.dto.accommodation.CreateAccommodationDTO;
 import com.example.bookingapp.model.AccommodationRequestDTO;
+import com.example.bookingapp.model.Filter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,4 +26,28 @@ public interface ReservationRequestService {
     @Headers("Content-Type: application/json")
     @DELETE("requests/guest/{guestId}/cancel-request/{requestId}")
     Call<Void> cancel(@Path("guestId") Long guestId, @Path("requestId") Long requestId);
+
+    @Headers("Content-Type: application/json")
+    @GET("requests/guest/{guestId}/search/{searchDate}/{accName}")
+    Call<List<AccommodationRequestDTO>> searchGuest(@Path("guestId") Long guestId,
+                                                    @Path("searchDate") String searchDate,
+                                                    @Path("accName") String accName);
+
+    @Headers({
+        "User-Agent: Mobile-Android",
+                "Content-Type:application/json"
+    })
+    @POST("requests/guest/{guestId}/filter")
+    Call<List<AccommodationRequestDTO>> filterGuest(@Path("guestId") Long guestId,
+                                           @Body ArrayList<Filter> createAccommodationDTO);
+
+    @Headers({
+        "User-Agent: Mobile-Android",
+                "Content-Type:application/json"
+    })
+    @POST("requests/guest/{guestId}/search/{searchDate}/{accName}/filter")
+    Call<List<AccommodationRequestDTO>> searchAndFilterGuest(@Path("guestId") Long guestId,
+                                                    @Path("searchDate") String searchDate,
+                                                    @Path("accName") String accName,
+                                                    @Body ArrayList<Filter> createAccommodationDTO);
 }
