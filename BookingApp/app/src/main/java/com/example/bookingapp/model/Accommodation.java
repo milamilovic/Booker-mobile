@@ -24,10 +24,12 @@ public class Accommodation implements Parcelable {
     private int min_capacity;
     private int max_capacity;
     private boolean approved;
+    private boolean manual_accepting;
 
     public Accommodation(Long id, String title, String description, List<Image> images, List<Availability> availabilities,
                          List<Price> prices, List<Object> comments, List<Object> ratings, Long ownerId,
-                         ArrayList<Amenity> amenities, int max_capacity, int min_capacity, boolean approved, Address address) {
+                         ArrayList<Amenity> amenities, int max_capacity, int min_capacity, boolean approved,
+                         Address address, boolean manual) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -42,6 +44,7 @@ public class Accommodation implements Parcelable {
         this.amenities = amenities;
         this.approved = approved;
         this.address = address;
+        this.manual_accepting = manual;
     }
 
     public Accommodation() {
@@ -61,6 +64,7 @@ public class Accommodation implements Parcelable {
         min_capacity = in.readInt();
         max_capacity = in.readInt();
         amenities = in.readArrayList(Amenity.class.getClassLoader());
+        manual_accepting = (in.readInt() == 1);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             approved = in.readBoolean();
         }
@@ -183,6 +187,14 @@ public class Accommodation implements Parcelable {
         this.amenities = amenities;
     }
 
+    public boolean isManual_accepting() {
+        return manual_accepting;
+    }
+
+    public void setManual_accepting(boolean manual_accepting) {
+        this.manual_accepting = manual_accepting;
+    }
+
     @Override
     public String toString() {
         return "AccommodationListing{" +
@@ -212,6 +224,11 @@ public class Accommodation implements Parcelable {
         dest.writeInt(min_capacity);
         dest.writeInt(max_capacity);
         dest.writeList(amenities);
+        if(manual_accepting) {
+            dest.writeInt(1);
+        } else {
+            dest.writeInt(0);
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             dest.writeBoolean(approved);
         }
