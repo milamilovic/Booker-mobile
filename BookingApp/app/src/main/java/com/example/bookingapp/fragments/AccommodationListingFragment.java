@@ -303,7 +303,7 @@ public class AccommodationListingFragment extends Fragment {
         products.clear();   //in case it's not initialization but searching
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-    //call service and get accommodations that are adequate for search
+        //call service and get accommodations that are adequate for search
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Call<List<AccommodationListing>> accommodations = ClientUtils.accommodationService.search(formatter.format(fromDate), formatter.format(toDate), location, people);
         try{

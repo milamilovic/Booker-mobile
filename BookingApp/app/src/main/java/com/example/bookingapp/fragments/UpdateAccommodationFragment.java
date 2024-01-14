@@ -120,6 +120,18 @@ public class UpdateAccommodationFragment extends Fragment {
             }
         });
 
+
+        updateAvailability = view.findViewById(R.id.price_availability_button);
+        updateAvailability.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putLong(ACCOMMODATION_ID, accommodation.getId());
+                editor.apply();
+                FragmentTransition.to(UpdateAccommodationDetailsFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
+            }
+        });
         Button save = view.findViewById(R.id.save_update_button);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,18 +150,6 @@ public class UpdateAccommodationFragment extends Fragment {
             }
         });
 
-
-        updateAvailability = view.findViewById(R.id.price_availability_button);
-        updateAvailability.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putLong(ACCOMMODATION_ID, accommodation.getId());
-                editor.apply();
-                FragmentTransition.to(UpdateAccommodationDetailsFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
-            }
-        });
         return view;
     }
 

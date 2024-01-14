@@ -1,6 +1,8 @@
 package com.example.bookingapp.adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,21 +16,25 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
 
-import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
-import com.example.bookingapp.fragments.AccommodationViewFragment;
+import com.example.bookingapp.clients.ClientUtils;
+import com.example.bookingapp.dto.users.UserDTO;
+import com.example.bookingapp.enums.ReservationRequestStatus;
+import com.example.bookingapp.enums.Role;
 import com.example.bookingapp.model.Accommodation;
-import com.example.bookingapp.model.AccommodationRequestOwnerDTO;
-import com.example.bookingapp.model.Amenity;
+import com.example.bookingapp.model.AccommodationRequestDTO;
 import com.example.bookingapp.model.GuestOwnerViewDTO;
 
 import java.util.ArrayList;
+import java.util.Date;
 
-public class ReservationRequestOwnerAdapter  extends ArrayAdapter<AccommodationRequestOwnerDTO> {
+import retrofit2.Call;
+import retrofit2.Response;
 
-    private ArrayList<AccommodationRequestOwnerDTO> requests;
+public class ReservationRequestOwnerAdapter  extends ArrayAdapter<AccommodationRequestDTO> {
+
+    private ArrayList<AccommodationRequestDTO> requests;
     Context context;
 
     public ReservationRequestOwnerAdapter(@NonNull Context context, int resource) {
@@ -36,7 +42,7 @@ public class ReservationRequestOwnerAdapter  extends ArrayAdapter<AccommodationR
         this.context = context;
     }
 
-    public ReservationRequestOwnerAdapter(Context context, ArrayList<AccommodationRequestOwnerDTO> requests){
+    public ReservationRequestOwnerAdapter(Context context, ArrayList<AccommodationRequestDTO> requests){
         super(context, R.layout.reservation_request_owner_card, requests);
         this.requests = requests;
         this.context = context;
@@ -54,7 +60,7 @@ public class ReservationRequestOwnerAdapter  extends ArrayAdapter<AccommodationR
      * */
     @Nullable
     @Override
-    public AccommodationRequestOwnerDTO getItem(int position) {
+    public AccommodationRequestDTO getItem(int position) {
         return requests.get(position);
     }
 
@@ -81,10 +87,22 @@ public class ReservationRequestOwnerAdapter  extends ArrayAdapter<AccommodationR
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        AccommodationRequestOwnerDTO request = getItem(position);
+        AccommodationRequestDTO request = getItem(position);
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.reservation_request_owner_card,
                     parent, false);
+        }
+        //getting accommodation
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        Call<Accommodation> acc = ClientUtils.accommodationService.findAccommodation(request.getAccommodationId());
+        Accommodation accommodation = null;
+        try{
+            Response<Accommodation> response = acc.execute();
+            accommodation = (Accommodation) response.body();
+        }catch(Exception ex){
+            System.out.println("EXCEPTION WHILE GETTING ACCOMMODATION");
+            ex.printStackTrace();
         }
         LinearLayout card = convertView.findViewById(R.id.reservation_request_owner_card);
         ImageView image = convertView.findViewById(R.id.accommodation_image);
@@ -92,26 +110,24 @@ public class ReservationRequestOwnerAdapter  extends ArrayAdapter<AccommodationR
         TextView status = convertView.findViewById(R.id.reservation_request_status);
         TextView dates = convertView.findViewById(R.id.reservation_request_dates);
         TextView totalPrice = convertView.findViewById(R.id.price_total);
-        TextView pricePerDay = convertView.findViewById(R.id.price_per_day);
         RatingBar ratingBar = convertView.findViewById(R.id.rating);
         Button approve = convertView.findViewById(R.id.approve);
         Button deny = convertView.findViewById(R.id.deny);
-        ImageView profile_image = convertView.findViewById(R.id.profile_image);
         TextView name = convertView.findViewById(R.id.name);
         TextView cancellations = convertView.findViewById(R.id.cancellations);
 
 
         if(request != null){
-            image.setImageResource(request.getImage());
-            title.setText(request.getTitle());
+            title.setText(accommodation.getTitle());
             status.setText(request.getStatusFormated());
-            totalPrice.setText(request.getTotalPrice() + "$");
-            pricePerDay.setText(request.getPricePerDay() + "$/day");
+            totalPrice.setText(request.getPrice() + "$");
             dates.setText(request.getDateRange());
             if(!canReservationBeApproved(request)) {
-                approve.setBackgroundResource(R.drawable.round_corner_disabled_button);
-                deny.setBackgroundResource(R.drawable.round_corner_disabled_button);
+                approve.setVisibility(View.GONE);
+                deny.setVisibility(View.GONE);
             } else {
+                approve.setVisibility(View.VISIBLE);
+                deny.setVisibility(View.VISIBLE);
                 approve.setOnClickListener(v -> {
                     Toast.makeText(context, "Reservation request approved!", Toast.LENGTH_SHORT).show();
                 });
@@ -119,18 +135,33 @@ public class ReservationRequestOwnerAdapter  extends ArrayAdapter<AccommodationR
                     Toast.makeText(context, "Reservation request denied!", Toast.LENGTH_SHORT).show();
                 });
             }
-            GuestOwnerViewDTO guest = request.getGuest(request.getGuestId());
-            profile_image.setImageResource(guest.getImage());
+            UserDTO guest = null;
+            StrictMode.setThreadPolicy(policy);
+            Call<UserDTO> userCall = ClientUtils.userService.getById(request.getGuestId());
+            try{
+                Response<UserDTO> response = userCall.execute();
+                guest = (UserDTO) response.body();
+            }catch(Exception ex){
+            }
             name.setText(guest.getName());
-            cancellations.setText("Number of cancellations: " + guest.getNumOfCancellations());
+            int numOfCancellations = 0;
+            StrictMode.setThreadPolicy(policy);
+            Call<Integer> cancellationCall = ClientUtils.userService.getNumOfCancellations(request.getGuestId());
+            try{
+                Response<Integer> response2 = cancellationCall.execute();
+                numOfCancellations = response2.body();
+            }catch(Exception ex){
+            }
+            cancellations.setText("Number of cancellations: " + numOfCancellations);
         }
 
         return convertView;
     }
 
-    private boolean canReservationBeApproved(AccommodationRequestOwnerDTO request) {
-        //TODO: update this function so that it checks if cancellation period passed
-        return request.getGuestId()!=1L;
+    private boolean canReservationBeApproved(AccommodationRequestDTO request) {
+        if(request.getFromDate().compareTo(new Date()) <= 0) return false;
+        System.out.println("THIS RESERVATION DOES NOT HAVE A PASSED DATE AND STATUS IS: "  + request.getStatus());
+        return request.getStatus() == ReservationRequestStatus.WAITING;
     }
 
 }
