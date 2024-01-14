@@ -12,15 +12,20 @@ import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.bookingapp.R;
+import com.example.bookingapp.adapters.ReservationRequestGuestAdapter;
 import com.example.bookingapp.adapters.ReservationRequestOwnerAdapter;
 import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.databinding.FragmentReservationRequestOwnerBinding;
 import com.example.bookingapp.model.AccommodationRequestDTO;
+import com.example.bookingapp.model.CheckBoxFilter;
+import com.example.bookingapp.model.Filter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,7 +46,10 @@ public class ReservationRequestOwnerFragment extends Fragment {
     final Calendar myCalendar= Calendar.getInstance();
 
     private static final String ARG_PARAM = "param";
+
     private static final String USER_ID_KEY = "user_id";
+    private static final String SEARCH_NOT_NAME = "noNameSearching";
+    private static final String SEARCH_NOT_DATE = "1111-01-01";
 
     ListView listView;
 
@@ -91,6 +99,116 @@ public class ReservationRequestOwnerFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 new DatePickerDialog(getContext(),datePicker,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        root.findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //search parameters
+                EditText accNameEdit = root.findViewById(R.id.name_search);
+                EditText dateEdit = root.findViewById(R.id.date_search);
+                String accName = accNameEdit.getText().toString();
+                String dateString = dateEdit.getText().toString();
+                if(accName.equals("") && dateString.equals("")) {
+                    Toast.makeText(root.getContext(), "you need to input something into at least one of the fields!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(accName.equals("")) {
+                    accName = SEARCH_NOT_NAME;
+                }
+
+                if(dateString.equals("")) {
+                    dateString = SEARCH_NOT_DATE;
+                }
+                //filters
+                CheckBox waitingCheckBox = root.findViewById(R.id.waiting);
+                CheckBox deniedCheckBox = root.findViewById(R.id.denied);
+                CheckBox acceptedCheckBox = root.findViewById(R.id.accepted);
+                ArrayList<Filter> filters = new ArrayList<>();
+                if(waitingCheckBox.isChecked()) {
+                    filters.add(new Filter("waiting", new CheckBoxFilter(true)));
+                }
+                if(deniedCheckBox.isChecked()) {
+                    filters.add(new Filter("denied", new CheckBoxFilter(true)));
+                }
+                if(acceptedCheckBox.isChecked()) {
+                    filters.add(new Filter("accepted", new CheckBoxFilter(true)));
+                }
+                if(filters.size()!=0) {
+                    requests.clear();
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                    Long userID = sharedPref.getLong(USER_ID_KEY, 0);
+                    Call<List<AccommodationRequestDTO>> call = ClientUtils.reservationRequestService.searchAndFilterOwner(userID, dateString, accName, filters);
+                    try{
+                        Response<List<AccommodationRequestDTO>> response = call.execute();
+                        List<AccommodationRequestDTO> listings = response.body();
+                        requests.addAll(listings);
+                        adapter = new ReservationRequestOwnerAdapter(getContext(), requests);
+                        listView.setAdapter(adapter);
+                    }catch(Exception ex){
+                        System.out.println("EXCEPTION WHILE SEARCHING AND FILTERING RESERVATION REQUESTS");
+                        ex.printStackTrace();
+                    }
+                } else {
+                    requests.clear();
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                    Long userID = sharedPref.getLong(USER_ID_KEY, 0);
+                    Call<List<AccommodationRequestDTO>> call = ClientUtils.reservationRequestService.searchOwner(userID, dateString, accName);
+                    try{
+                        Response<List<AccommodationRequestDTO>> response = call.execute();
+                        List<AccommodationRequestDTO> listings = response.body();
+                        requests.addAll(listings);
+                        adapter = new ReservationRequestOwnerAdapter(getContext(), requests);
+                        listView.setAdapter(adapter);
+                    }catch(Exception ex){
+                        System.out.println("EXCEPTION WHILE SEARCHING RESERVATION REQUESTS");
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        root.findViewById(R.id.filter).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckBox waitingCheckBox = root.findViewById(R.id.waiting);
+                CheckBox deniedCheckBox = root.findViewById(R.id.denied);
+                CheckBox acceptedCheckBox = root.findViewById(R.id.accepted);
+                ArrayList<Filter> filters = new ArrayList<>();
+                if(waitingCheckBox.isChecked()) {
+                    filters.add(new Filter("waiting", new CheckBoxFilter(true)));
+                }
+                if(deniedCheckBox.isChecked()) {
+                    filters.add(new Filter("denied", new CheckBoxFilter(true)));
+                }
+                if(acceptedCheckBox.isChecked()) {
+                    filters.add(new Filter("accepted", new CheckBoxFilter(true)));
+                }
+                if(filters.size()!=0) {
+                    requests.clear();
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                    Long userID = sharedPref.getLong(USER_ID_KEY, 0);
+                    Call<List<AccommodationRequestDTO>> call = ClientUtils.reservationRequestService.filterOwner(userID, filters);
+                    try{
+                        Response<List<AccommodationRequestDTO>> response = call.execute();
+                        List<AccommodationRequestDTO> listings = response.body();
+                        requests.addAll(listings);
+                        adapter = new ReservationRequestOwnerAdapter(getContext(), requests);
+                        listView.setAdapter(adapter);
+                    }catch(Exception ex){
+                        System.out.println("EXCEPTION WHILE FILTERING RESERVATION REQUESTS");
+                        ex.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(root.getContext(), "you need to check at least one filter to apply filters! P.S. to search AND filter click search", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

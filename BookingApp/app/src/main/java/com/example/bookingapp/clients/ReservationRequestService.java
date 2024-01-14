@@ -54,4 +54,28 @@ public interface ReservationRequestService {
     @Headers("Content-Type: application/json")
     @GET("requests/owner/{ownerId}")
     Call<List<AccommodationRequestDTO>> findOwnersReservationRequests(@Path("ownerId") Long ownerId);
+
+    @Headers("Content-Type: application/json")
+    @GET("requests/owner/{ownerId}/search/{searchDate}/{accName}")
+    Call<List<AccommodationRequestDTO>> searchOwner(@Path("ownerId") Long ownerId,
+                                                    @Path("searchDate") String searchDate,
+                                                    @Path("accName") String accName);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @POST("requests/owner/{ownerId}/filter")
+    Call<List<AccommodationRequestDTO>> filterOwner(@Path("ownerId") Long ownerId,
+                                                    @Body ArrayList<Filter> createAccommodationDTO);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @POST("requests/owner/{ownerId}/search/{searchDate}/{accName}/filter")
+    Call<List<AccommodationRequestDTO>> searchAndFilterOwner(@Path("ownerId") Long ownerId,
+                                                             @Path("searchDate") String searchDate,
+                                                             @Path("accName") String accName,
+                                                             @Body ArrayList<Filter> createAccommodationDTO);
 }
