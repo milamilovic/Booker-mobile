@@ -2,12 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-
-
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
@@ -21,13 +19,18 @@
         android:theme="@style/Theme.BookingApp"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <service
+            android:name=".clients.ReservationRequestService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".RegisterScreen"
             android:exported="false" />
         <activity
             android:name=".BaseActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".SplashScreen"
             android:exported="true">
@@ -40,8 +43,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAszR_C2FZWvKHLAxarpRq-GqveV2fBsno"/>
-
+            android:value="AIzaSyAszR_C2FZWvKHLAxarpRq-GqveV2fBsno" />
     </application>
 
 </manifest>

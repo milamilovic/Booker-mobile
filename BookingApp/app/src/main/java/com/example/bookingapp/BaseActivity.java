@@ -1,7 +1,9 @@
 package com.example.bookingapp;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +19,9 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.bookingapp.clients.ClientUtils;
+import com.example.bookingapp.dto.users.UserDTO;
+import com.example.bookingapp.enums.Role;
 import com.example.bookingapp.fragments.ApproveAccommodationFragment;
 import com.example.bookingapp.fragments.CreateAccommodationBaseFragment;
 import com.example.bookingapp.fragments.FavouriteAccommodationsFragment;
@@ -27,13 +32,20 @@ import com.example.bookingapp.fragments.ReportFragment;
 import com.example.bookingapp.fragments.ReportedUsersFragment;
 import com.example.bookingapp.fragments.ReservationRequestOwnerFragment;
 import com.example.bookingapp.fragments.OwnerAccommodationFragmentListing;
+import com.example.bookingapp.fragments.ReservationRequestsGuestFragment;
 import com.google.android.material.navigation.NavigationView;
+
+import java.io.IOException;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class BaseActivity extends AppCompatActivity{
     ActionBarDrawerToggle actionBarDrawerToggle;
     Toolbar toolbar;
     DrawerLayout drawerLayout;
 
+    private static final String USER_ID_KEY = "user_id";
 
 
 
@@ -137,16 +149,32 @@ public class BaseActivity extends AppCompatActivity{
         }));
 
         menu.getItem(5).setOnMenuItemClickListener((v -> {
-//            FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//                    .replace(R.id.fragment_placeholder, ReservationRequestsGuestFragment.newInstance());
-            FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+            SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+            Long userID = sharedPref.getLong(USER_ID_KEY, 0);
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            Call<UserDTO> userCall = ClientUtils.userService.getById(userID);
+            try{
+                Response<UserDTO> response = userCall.execute();
+                UserDTO user = (UserDTO) response.body();
+                if(user.getRole()== Role.GUEST) {
+                    FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .replace(R.id.fragment_placeholder, ReservationRequestOwnerFragment.newInstance());
-            transaction.addToBackStack("requests");
-            transaction.commit();
+                    .replace(R.id.fragment_placeholder, ReservationRequestsGuestFragment.newInstance());
+                    transaction.addToBackStack("requests");
+                    transaction.commit();
+                } else if(user.getRole()==Role.OWNER) {
+                    FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                            .beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .replace(R.id.fragment_placeholder, ReservationRequestOwnerFragment.newInstance());
+                    transaction.addToBackStack("requests");
+                    transaction.commit();
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
             // Close the drawer after selecting an option
             drawerLayout.closeDrawer(GravityCompat.START);

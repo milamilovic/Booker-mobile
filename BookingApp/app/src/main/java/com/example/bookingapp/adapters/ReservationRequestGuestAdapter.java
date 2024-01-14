@@ -3,6 +3,7 @@ package com.example.bookingapp.adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,17 +21,24 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
+import com.example.bookingapp.clients.AccommodationRating;
+import com.example.bookingapp.clients.ClientUtils;
+import com.example.bookingapp.enums.ReservationRequestStatus;
 import com.example.bookingapp.fragments.AccommodationViewFragment;
 import com.example.bookingapp.fragments.ReservationRequestsGuestFragment;
 import com.example.bookingapp.model.Accommodation;
-import com.example.bookingapp.model.AccommodationRequestGuestDTO;
-import com.example.bookingapp.model.Amenity;
+import com.example.bookingapp.model.AccommodationRequestDTO;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-public class ReservationRequestGuestAdapter  extends ArrayAdapter<AccommodationRequestGuestDTO> {
+import retrofit2.Call;
+import retrofit2.Response;
 
-    private ArrayList<AccommodationRequestGuestDTO> requests;
+public class ReservationRequestGuestAdapter  extends ArrayAdapter<AccommodationRequestDTO> {
+
+    private ArrayList<AccommodationRequestDTO> requests;
     Context context;
 
     public ReservationRequestGuestAdapter(@NonNull Context context, int resource) {
@@ -38,7 +46,7 @@ public class ReservationRequestGuestAdapter  extends ArrayAdapter<AccommodationR
         this.context = context;
     }
 
-    public ReservationRequestGuestAdapter(Context context, ArrayList<AccommodationRequestGuestDTO> requests){
+    public ReservationRequestGuestAdapter(Context context, ArrayList<AccommodationRequestDTO> requests){
         super(context, R.layout.reservation_request_guest_card, requests);
         this.requests = requests;
         this.context = context;
@@ -56,7 +64,7 @@ public class ReservationRequestGuestAdapter  extends ArrayAdapter<AccommodationR
      * */
     @Nullable
     @Override
-    public AccommodationRequestGuestDTO getItem(int position) {
+    public AccommodationRequestDTO getItem(int position) {
         return requests.get(position);
     }
 
@@ -83,32 +91,56 @@ public class ReservationRequestGuestAdapter  extends ArrayAdapter<AccommodationR
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        AccommodationRequestGuestDTO request = getItem(position);
+        AccommodationRequestDTO request = getItem(position);
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.reservation_request_guest_card,
                     parent, false);
         }
+        //getting accommodation
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        Call<Accommodation> acc = ClientUtils.accommodationService.findAccommodation(request.getAccommodationId());
+        Accommodation accommodation = null;
+        try{
+            Response<Accommodation> response = acc.execute();
+            accommodation = (Accommodation) response.body();
+        }catch(Exception ex){
+            System.out.println("EXCEPTION WHILE GETTING ACCOMMODATION");
+            ex.printStackTrace();
+        }
+        
         LinearLayout card = convertView.findViewById(R.id.reservation_request_guest_card);
         ImageView image = convertView.findViewById(R.id.accommodation_image);
         TextView title = convertView.findViewById(R.id.title);
         TextView status = convertView.findViewById(R.id.reservation_request_status);
         TextView dates = convertView.findViewById(R.id.reservation_request_dates);
         TextView totalPrice = convertView.findViewById(R.id.price_total);
-        TextView pricePerDay = convertView.findViewById(R.id.price_per_day);
         RatingBar ratingBar = convertView.findViewById(R.id.rating);
         Button cancelButton = convertView.findViewById(R.id.cancel);
 
         if(request != null){
-            image.setImageResource(request.getImage());
-            title.setText(request.getTitle());
+            title.setText(accommodation.getTitle());
             status.setText(request.getStatusFormated());
-            totalPrice.setText(request.getTotalPrice() + "$");
-            pricePerDay.setText(request.getPricePerDay() + "$/day");
-            ratingBar.setRating(request.getRating());
+            totalPrice.setText(request.getPrice() + "$");
+            StrictMode.setThreadPolicy(policy);
+            Call<List<AccommodationRating>> call = ClientUtils.accommodationService.getRatings(request.getAccommodationId());
+            try{
+                Response<List<AccommodationRating>> response = call.execute();
+                List<AccommodationRating> ratings = (List<AccommodationRating>) response.body();
+                float rating_float = 0;
+                for(AccommodationRating a : ratings) {
+                    rating_float += a.getRate();
+                }
+                ratingBar.setRating(rating_float);
+            }catch(Exception ex){
+                System.out.println("EXCEPTION WHILE GETTING RATINGS");
+                ex.printStackTrace();
+            }
             dates.setText(request.getDateRange());
             if(!canReservationBeCanceled(request)) {
-                cancelButton.setBackgroundResource(R.drawable.round_corner_disabled_button);
+                cancelButton.setVisibility(View.GONE);
             } else {
+                cancelButton.setVisibility(View.VISIBLE);
                 cancelButton.setOnClickListener(v -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext()
                     ).setNegativeButton("Go back",
@@ -120,8 +152,17 @@ public class ReservationRequestGuestAdapter  extends ArrayAdapter<AccommodationR
                             }).setPositiveButton("I'm sure!", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(context, "Reservation request canceled!", Toast.LENGTH_SHORT).show();
                             //TODO: cancel and refresh
+                            StrictMode.setThreadPolicy(policy);
+                            Call<Void> call = ClientUtils.reservationRequestService.cancel(request.getGuestId(), request.getId());
+                            try{
+                                Response<Void> response = call.execute();
+                                Toast.makeText(context, "Reservation request canceled!", Toast.LENGTH_SHORT).show();
+                                FragmentTransition.to(ReservationRequestsGuestFragment.newInstance(), (FragmentActivity) context, true, R.id.fragment_placeholder);
+                            }catch(Exception ex){
+                                System.out.println("EXCEPTION WHILE CANCELLING REQUEST");
+                                ex.printStackTrace();
+                            }
                         }
                     });
                     builder.setMessage("Are you sure you want to cancel your reservation request?");
@@ -134,9 +175,10 @@ public class ReservationRequestGuestAdapter  extends ArrayAdapter<AccommodationR
         return convertView;
     }
 
-    private boolean canReservationBeCanceled(AccommodationRequestGuestDTO request) {
-        //TODO: update this function so that it checks if cancellation period passed
-        return request.getStatus().equals("waiting");
+    private boolean canReservationBeCanceled(AccommodationRequestDTO request) {
+        if(request.getFromDate().compareTo(new Date()) <= 0) return false;
+        System.out.println("THIS RESERVATION DOES NOT HAVE A PASSED DATE AND STATUS IS: "  + request.getStatus());
+        return request.getStatus() == ReservationRequestStatus.WAITING;
     }
 
 }

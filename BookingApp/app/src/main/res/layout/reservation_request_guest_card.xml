@@ -63,13 +63,6 @@
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:layout_gravity="center"/>
-                <TextView
-                    android:id="@+id/price_per_day"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="120$/day"
-                    android:textSize="10sp"
-                    android:textStyle="bold"/>
             </LinearLayout>
         </RelativeLayout>
 
@@ -99,22 +92,32 @@
                 android:textSize="12sp"
                 android:layout_below="@+id/reservation_request_dates"/>
 
-
-            <Button
-                android:id="@+id/cancel"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:background="@drawable/round_corner"
-                android:backgroundTint="@color/transparent_80_dark_gray"
-                android:enabled="true"
-                android:text="Cancel request"
-                android:textAllCaps="false"
-                android:textColor="@color/light_gray"
-                android:textSize="12dp"
-                android:layout_marginTop="5dp"
+                android:layout_below="@+id/reservation_request_status"
                 android:layout_marginLeft="5dp"
-                android:layout_below="@+id/reservation_request_status"/>
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="0dp"
+                android:background="@drawable/round_corner"
+                android:backgroundTint="@color/light_gray"
+                android:padding="0dp">
 
+                <Button
+                    android:id="@+id/cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/reservation_request_status"
+                    android:background="@drawable/round_corner"
+                    android:backgroundTint="@color/transparent_40_dark_gray"
+                    android:enabled="true"
+                    android:text="Cancel request"
+                    android:textAllCaps="false"
+                    android:textColor="@color/light_gray"
+                    android:textSize="12dp" />
+
+            </LinearLayout>
             <RatingBar
                 android:id="@+id/rating"
                 style="?android:attr/ratingBarStyleSmall"
