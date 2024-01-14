@@ -1,6 +1,7 @@
 package com.example.bookingapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -226,7 +227,9 @@ public class BaseActivity extends AppCompatActivity{
             //startActivity(i);
 
 
-            FragmentTransition.to(RegisterFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
+            Intent intent = new Intent(BaseActivity.this, RegisterScreen.class);
+            startActivity(intent);
+            finish();  // Optional: finish the current activity if needed
 
             // Close the drawer after selecting an option
             drawerLayout.closeDrawer(GravityCompat.START);

@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.bookingapp.R;
 import com.example.bookingapp.clients.AccommodationService;
@@ -29,6 +30,7 @@ import com.example.bookingapp.dto.accommodation.AccommodationViewDTO;
 import com.example.bookingapp.dto.accommodation.CreateAccommodationDTO;
 import com.example.bookingapp.dto.accommodation.CreatePriceDTO;
 import com.example.bookingapp.dto.accommodation.UpdateAvailabilityDTO;
+import com.example.bookingapp.dto.users.Token;
 import com.example.bookingapp.enums.PriceType;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
@@ -43,6 +45,8 @@ import java.util.Locale;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -61,6 +65,7 @@ public class UpdateAccommodationDetailsFragment extends Fragment {
     private static Date fromDate = new Date();
     private static Date toDate = new Date();
     private static final String JWT_TOKEN_KEY = "jwt_token";
+    private static final String ACCOMMODATION_ID = "accommodation_id";
 
     public static UpdateAccommodationDetailsFragment newInstance() {
         return new UpdateAccommodationDetailsFragment();
@@ -79,6 +84,7 @@ public class UpdateAccommodationDetailsFragment extends Fragment {
             public void onClick(View v) {
                 SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
                 String jwt = sharedPref.getString(JWT_TOKEN_KEY, "");
+                Long accommodationId = sharedPref.getLong(ACCOMMODATION_ID, 0);
                 String jwtToken = jwt; // Replace with your actual JWT token
                 String authorizationHeaderValue = "Bearer " + jwtToken;
 
@@ -117,9 +123,33 @@ public class UpdateAccommodationDetailsFragment extends Fragment {
                 createPriceDTO.setToDate(editTextUntil.getText().toString());
                 createPriceDTO.setCost(Double.parseDouble(basicPrice.getText().toString()));
                 Spinner priceTypeSpinner = binding.priceTypeSpinner;
-                PriceType selectedPriceType = (PriceType) priceTypeSpinner.getSelectedItem();
+                int selectedPriceTypePosition = priceTypeSpinner.getSelectedItemPosition();
+                PriceType selectedPriceType = PriceType.values()[selectedPriceTypePosition];
                 createPriceDTO.setType(selectedPriceType);
-                updateAvailabilityDTO.setCreatePriceDTO(createPriceDTO);
+                updateAvailabilityDTO.setPrice(createPriceDTO);
+                Log.d("REZ", createPriceDTO.toString());
+
+                Call<AccommodationViewDTO> call = ClientUtils.accommodationService.updateAvailability(accommodationId, updateAvailabilityDTO);
+                call.enqueue(new Callback<AccommodationViewDTO>() {
+                    @Override
+                    public void onResponse(Call<AccommodationViewDTO> call, Response<AccommodationViewDTO> response) {
+                        if (response.code() == 200) {
+                            Log.d("REZ", "Availability update successful!");
+                            Toast.makeText(getContext(), "Availability update successful!", Toast.LENGTH_SHORT).show();
+                            getActivity().getSupportFragmentManager().popBackStack();
+                        } else if (response.code() == 400) {
+                            Log.d("REZ", "Validation failed!");
+                            Toast.makeText(getContext(), "Validation failed!", Toast.LENGTH_SHORT);
+                        } else {
+                            Log.d("REZ", "Message received: " + response.code());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<AccommodationViewDTO> call, Throwable t) {
+                        Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
+                    }
+                });
 
 
             }

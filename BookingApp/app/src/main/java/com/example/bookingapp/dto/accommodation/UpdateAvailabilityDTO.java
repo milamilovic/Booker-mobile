@@ -3,16 +3,16 @@ package com.example.bookingapp.dto.accommodation;
 public class UpdateAvailabilityDTO {
     public String startDate;
     public String endDate;
-    public CreatePriceDTO createPriceDTO;
+    public CreatePriceDTO price;
     public int deadline;
 
     public UpdateAvailabilityDTO() {
     }
 
-    public UpdateAvailabilityDTO(String startDate, String endDate, CreatePriceDTO createPriceDTO, int deadline) {
+    public UpdateAvailabilityDTO(String startDate, String endDate, CreatePriceDTO price, int deadline) {
         this.startDate = startDate;
         this.endDate = endDate;
-        this.createPriceDTO = createPriceDTO;
+        this.price = price;
         this.deadline = deadline;
     }
 
@@ -32,12 +32,12 @@ public class UpdateAvailabilityDTO {
         this.endDate = endDate;
     }
 
-    public CreatePriceDTO getCreatePriceDTO() {
-        return createPriceDTO;
+    public CreatePriceDTO getPrice() {
+        return price;
     }
 
-    public void setCreatePriceDTO(CreatePriceDTO createPriceDTO) {
-        this.createPriceDTO = createPriceDTO;
+    public void setPrice(CreatePriceDTO price) {
+        this.price = price;
     }
 
     public int getDeadline() {

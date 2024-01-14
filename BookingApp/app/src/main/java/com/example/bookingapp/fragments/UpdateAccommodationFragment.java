@@ -1,5 +1,7 @@
 package com.example.bookingapp.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -37,6 +39,9 @@ public class UpdateAccommodationFragment extends Fragment {
 
     private static final String ARG_PARAM = "param";
     Button showMap;
+    Button updateAvailability;
+
+    private static final String ACCOMMODATION_ID = "accommodation_id";
 
     public UpdateAccommodationFragment() {
         // Required empty public constructor
@@ -103,6 +108,18 @@ public class UpdateAccommodationFragment extends Fragment {
                         break;
                 }
                 return false;
+            }
+        });
+
+        updateAvailability = view.findViewById(R.id.price_availability_button);
+        updateAvailability.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putLong(ACCOMMODATION_ID, accommodation.getId());
+                editor.apply();
+                FragmentTransition.to(UpdateAccommodationDetailsFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
             }
         });
         return view;
