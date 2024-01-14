@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 public class User implements Parcelable {
+    private Long id;
     private String name;
     private String surname;
     private String email;
@@ -13,11 +14,20 @@ public class User implements Parcelable {
     private String phone;
 
     protected User(Parcel in) {
+        id = in.readLong();
         name = in.readString();
         surname = in.readString();
         email = in.readString();
         address = in.readString();
         phone = in.readString();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -60,7 +70,8 @@ public class User implements Parcelable {
         this.phone = phone;
     }
 
-    public User(String name, String surname, String email, String address, String phone) {
+    public User(Long id, String name, String surname, String email, String address, String phone) {
+        this.id = id;
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -105,6 +116,7 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeLong(id);
         dest.writeString(name);
         dest.writeString(surname);
         dest.writeString(email);
