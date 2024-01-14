@@ -20,13 +20,13 @@ public class Accommodation implements Parcelable {
     private List<Price> prices;
     private List<Object> comments;
     private List<Object> ratings;
-    private Long ownerId;
+    private Long owner_id;
     private int min_capacity;
     private int max_capacity;
     private boolean approved;
 
     public Accommodation(Long id, String title, String description, List<Image> images, List<Availability> availabilities,
-                         List<Price> prices, List<Object> comments, List<Object> ratings, Long ownerId,
+                         List<Price> prices, List<Object> comments, List<Object> ratings, Long owner_id,
                          ArrayList<Amenity> amenities, int max_capacity, int min_capacity, boolean approved, Address address) {
         this.id = id;
         this.title = title;
@@ -36,7 +36,7 @@ public class Accommodation implements Parcelable {
         this.prices = prices;
         this.comments = comments;
         this.ratings = ratings;
-        this.ownerId = ownerId;
+        this.owner_id = owner_id;
         this.max_capacity = max_capacity;
         this.min_capacity = min_capacity;
         this.amenities = amenities;
@@ -57,7 +57,7 @@ public class Accommodation implements Parcelable {
         comments = in.readArrayList(Object.class.getClassLoader());
         ratings = in.readArrayList(Object.class.getClassLoader());
         address = in.readParcelable(Address.class.getClassLoader());
-        ownerId = in.readLong();
+        owner_id = in.readLong();
         min_capacity = in.readInt();
         max_capacity = in.readInt();
         amenities = in.readArrayList(Amenity.class.getClassLoader());
@@ -140,15 +140,13 @@ public class Accommodation implements Parcelable {
         this.max_capacity = pricePerDay;
     }
 
-
-    public Long getOwnerId() {
-        return ownerId;
+    public Long getOwner_id() {
+        return owner_id;
     }
 
-    public void setOwnerId(Long id) {
-        this.ownerId = id;
+    public void setOwner_id(Long owner_id) {
+        this.owner_id = owner_id;
     }
-
 
     public List<Object> getComments() {
         return comments;
@@ -208,7 +206,7 @@ public class Accommodation implements Parcelable {
         dest.writeList(comments);
         dest.writeList(ratings);
         dest.writeParcelable(address, 5);
-        dest.writeLong(ownerId);
+        dest.writeLong(owner_id);
         dest.writeInt(min_capacity);
         dest.writeInt(max_capacity);
         dest.writeList(amenities);

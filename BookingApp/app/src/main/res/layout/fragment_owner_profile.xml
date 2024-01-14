@@ -276,6 +276,15 @@
                                         android:textColorHint="@color/transparent_60_dark_gray"
                                         android:textSize="15sp"
                                         android:textColor="@color/dark_gray" />
+
+                                    <RatingBar
+                                        android:id="@+id/ratingBar"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:numStars="5"
+                                        android:rating="0"
+                                        android:stepSize="1.0"
+                                        style="@style/RatingBar" />
                                 </LinearLayout>
                             </androidx.cardview.widget.CardView>
 

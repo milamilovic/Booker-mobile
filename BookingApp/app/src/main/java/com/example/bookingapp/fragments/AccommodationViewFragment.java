@@ -83,6 +83,8 @@ public class AccommodationViewFragment extends Fragment {
 
     private static final String ARG_PARAM = "param";
     private static final String USER_ID_KEY = "user_id";
+    private static final String OWNER_ID_KEY = "owner_id";
+    private static final String ACCOMMODATION_ID_KEY = "accommodation_id";
     Button showMap;
     public AccommodationViewFragment() {
         // Required empty public constructor
@@ -325,6 +327,9 @@ public class AccommodationViewFragment extends Fragment {
 
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         Long userID = sharedPref.getLong(USER_ID_KEY, 0);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putLong(OWNER_ID_KEY, accommodation.getOwner_id());
+        editor.apply();
         if(userID!=0) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
@@ -385,6 +390,9 @@ public class AccommodationViewFragment extends Fragment {
             View priceButton = view.findViewById(R.id.calculate_price);
             priceButton.setVisibility(View.GONE);
         }
+
+
+
 
         return view;
     }
