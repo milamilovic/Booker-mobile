@@ -142,7 +142,7 @@ public class BaseActivity extends AppCompatActivity{
                     FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
                             .beginTransaction()
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                            .replace(R.id.fragment_placeholder, MyProfileFragment.newInstance(null));
+                            .replace(R.id.fragment_placeholder, OwnerMyProfileFragment.newInstance(user));
                     transaction.addToBackStack(null);
                     transaction.commit();
                 }

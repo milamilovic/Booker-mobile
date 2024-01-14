@@ -48,6 +48,13 @@ public interface UserService {
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
+    @GET("owners/{ownerId}")
+    Call<OwnerDTO> getOwnerById(@Path("ownerId") Long ownerId);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
     @PUT("users/activate_profile/{activation_link}")
     Call<UserDTO> activateProfile(@Path("activation_link") String activation_link);
 
