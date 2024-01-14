@@ -152,9 +152,11 @@ public class UpdateAccommodationFragment extends Fragment {
         });
 
         ToggleButton toggle = view.findViewById(R.id.requestAcceptingToggle);
+        toggle.setChecked(!accommodation.isManual_accepting());
         toggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println("CLICKED MANUAL: " + !toggle.isChecked());
                 accommodation.setManual_accepting(!toggle.isChecked());
             }
         });

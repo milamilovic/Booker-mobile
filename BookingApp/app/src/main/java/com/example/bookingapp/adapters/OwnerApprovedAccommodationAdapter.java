@@ -98,8 +98,7 @@ public class OwnerApprovedAccommodationAdapter extends ArrayAdapter<ApproveAccom
                 amenities.add(new Amenity(3L, "popular location", "", null));
                 amenities.add(new Amenity(4L, "clean",  "", null));
                 FragmentTransition.to(AccommodationViewFragment.newInstance(new Accommodation(accommodation.getId(),
-                        accommodation.getTitle(), "The units come with parquet floors and feature a fully equipped kitchen with a microwave, a dining area, a flat-screen TV with streaming services, and a private bathroom with walk-in shower and a hair dryer. A toaster, a fridge and stovetop are also available, as well as a coffee machine and a kettle.\n" +
-                        "\u2028Eventim Apollo is 2.4 km from the apartment, while South Kensington Underground Station is 3 km from the property. The nearest airport is London Heathrow Airport, 21 km from Central London Luxury Studios Fulham Close to Underground Newly Refurbished.",
+                        accommodation.getTitle(), "The units come with parquet floors and feature a fully equipped kitchen with a microwave, a dining area, a flat-screen TV with streaming services, and a private bathroom with walk-in shower and a hair dryer.",
                         images, new ArrayList<Availability>(), new ArrayList<Price>(), new ArrayList<Object>(), new ArrayList<Object>(), 2L, amenities, 1, 5, true, new Address(1L, "Ulica 111", "London", 12.21, 15.55, null), false)), (FragmentActivity) context, true, R.id.fragment_placeholder);
             });
             update.setOnClickListener(v->{
@@ -116,8 +115,7 @@ public class OwnerApprovedAccommodationAdapter extends ArrayAdapter<ApproveAccom
                 amenities.add(new Amenity(3L, "popular location",  "", null));
                 amenities.add(new Amenity(4L, "clean",  "", null));
                 FragmentTransition.to(UpdateAccommodationFragment.newInstance(new Accommodation(accommodation.getId(),
-                        accommodation.getTitle(), "The units come with parquet floors and feature a fully equipped kitchen with a microwave, a dining area, a flat-screen TV with streaming services, and a private bathroom with walk-in shower and a hair dryer. A toaster, a fridge and stovetop are also available, as well as a coffee machine and a kettle.\n" +
-                        "\u2028Eventim Apollo is 2.4 km from the apartment, while South Kensington Underground Station is 3 km from the property. The nearest airport is London Heathrow Airport, 21 km from Central London Luxury Studios Fulham Close to Underground Newly Refurbished.",
+                        accommodation.getTitle(), "The units come with parquet floors and feature a fully equipped kitchen with a microwave, a dining area, a flat-screen TV with streaming services, and a private bathroom with walk-in shower and a hair dryer.",
                         images, new ArrayList<Availability>(), new ArrayList<Price>(), new ArrayList<Object>(), new ArrayList<Object>(), 2L, amenities, 1, 5, true, new Address(1L, "Ulica 111", "London", 12.21, 15.55, null), false)), (FragmentActivity) context, true, R.id.fragment_placeholder);
             });
         }
