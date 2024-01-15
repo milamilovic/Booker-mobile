@@ -78,27 +78,44 @@
                     android:minHeight="48dp"
                     android:layout_marginBottom="20dp"/>
 
-                <com.db.williamchart.view.BarChartView
-                    android:layout_marginTop="100dp"
-                    android:layout_height="100dp"
-                    android:layout_width="match_parent"
-                    app:chart_spacing="70dp"
-                    app:chart_barsColor="@color/transparent_80_grayish_green"
-                    app:chart_barsBackgroundColor="@color/transparent"
-                    app:chart_barsRadius="5dp"
-                    android:id="@+id/interval_chart_reservations"
-                />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Profit chart: "
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/dark_gray"
+                    />
 
                 <com.db.williamchart.view.BarChartView
-                    android:layout_marginTop="240dp"
+                    android:layout_marginTop="150dp"
                     android:layout_height="100dp"
                     android:layout_width="match_parent"
                     app:chart_spacing="70dp"
                     app:chart_barsColor="@color/transparent_80_grayish_green"
                     app:chart_barsBackgroundColor="@color/transparent"
-                    app:chart_barsRadius="5dp"
+                    app:chart_barsRadius="3dp"
                     android:id="@+id/interval_chart_profit"
                     />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reservations chart: "
+                    android:layout_marginTop="170dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/dark_gray"
+                    />
+
+                <com.db.williamchart.view.BarChartView
+                    android:layout_marginTop="120dp"
+                    android:layout_height="100dp"
+                    android:layout_width="match_parent"
+                    app:chart_spacing="70dp"
+                    app:chart_barsColor="@color/transparent_80_grayish_green"
+                    app:chart_barsBackgroundColor="@color/transparent"
+                    app:chart_barsRadius="3dp"
+                    android:id="@+id/interval_chart_reservations"
+                />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -147,26 +164,43 @@
                     android:layout_marginTop="20dp"
                     />
 
-                <com.db.williamchart.view.BarChartView
-                    android:layout_marginTop="100dp"
-                    android:layout_height="100dp"
-                    android:layout_width="match_parent"
-                    app:chart_spacing="70dp"
-                    app:chart_barsColor="@color/transparent_80_grayish_green"
-                    app:chart_barsBackgroundColor="@color/transparent"
-                    app:chart_barsRadius="5dp"
-                    android:id="@+id/accommodation_chart_reservations"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Profit chart: "
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/dark_gray"
                     />
 
                 <com.db.williamchart.view.BarChartView
-                    android:layout_marginTop="240dp"
+                    android:layout_marginTop="200dp"
                     android:layout_height="100dp"
                     android:layout_width="match_parent"
-                    app:chart_spacing="70dp"
+                    app:chart_spacing="40dp"
                     app:chart_barsColor="@color/transparent_80_grayish_green"
                     app:chart_barsBackgroundColor="@color/transparent"
-                    app:chart_barsRadius="5dp"
+                    app:chart_barsRadius="3dp"
                     android:id="@+id/accommodation_chart_profit"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="170dp"
+                    android:text="Reservations chart: "
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/dark_gray"
+                    />
+
+                <com.db.williamchart.view.BarChartView
+                    android:layout_marginTop="120dp"
+                    android:layout_height="100dp"
+                    android:layout_width="match_parent"
+                    app:chart_spacing="40dp"
+                    app:chart_barsColor="@color/transparent_80_grayish_green"
+                    app:chart_barsBackgroundColor="@color/transparent"
+                    app:chart_barsRadius="3dp"
+                    android:id="@+id/accommodation_chart_reservations"
                     />
 
                 <LinearLayout
@@ -188,6 +222,7 @@
                         android:background="@drawable/round_corner_alternative"
                         android:backgroundTint="@color/transparent_60_dark_gray"
                         android:enabled="true"
+                        android:layout_marginBottom="30dp"
                         android:text="Generate PDF"
                         android:textColor="@color/white"
                         android:textColorHint="@color/transparent_60_dark_gray"/>

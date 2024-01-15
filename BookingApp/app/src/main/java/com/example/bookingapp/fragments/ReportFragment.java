@@ -1,11 +1,14 @@
 package com.example.bookingapp.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
+import android.os.StrictMode;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,49 +24,34 @@ import com.db.williamchart.view.BarChartView;
 import com.example.bookingapp.BaseActivity;
 import com.example.bookingapp.R;
 import com.example.bookingapp.SplashScreen;
+import com.example.bookingapp.clients.ClientUtils;
+import com.example.bookingapp.dto.users.UserDTO;
+import com.example.bookingapp.enums.Role;
+import com.example.bookingapp.model.AccommodationListing;
+import com.example.bookingapp.model.AccommodationName;
+import com.example.bookingapp.model.ReportDataUnit;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Response;
+
 public class ReportFragment extends Fragment {
+    private static final String USER_ID_KEY = "user_id";
 
-    private static final LinkedHashMap<String, Float> data = new LinkedHashMap<String, Float>() {{
-        put("jan", (float) 100);
-        put("feb", (float) 80);
-        put("mar", (float) 120);
-        put("apr", (float) 110);
-        put("may", (float) 130);
-        put("jun", (float) 105);
-    }};
+    private static LinkedHashMap<String, Float> intervalPrices = null;
 
-    private static final LinkedHashMap<String, Float> data2 = new LinkedHashMap<String, Float>() {{
-        put("jan", (float) 100);
-        put("feb", (float) 80);
-        put("mar", (float) 120);
-        put("apr", (float) 110);
-        put("may", (float) 130);
-        put("jun", (float) 105);
-    }};
+    private static LinkedHashMap<String, Float> intervalReservations = null;
 
-    private static final LinkedHashMap<String, Float> data3 = new LinkedHashMap<String, Float>() {{
-        put("jan", (float) 100);
-        put("feb", (float) 80);
-        put("mar", (float) 120);
-        put("apr", (float) 110);
-        put("may", (float) 130);
-        put("jun", (float) 105);
-    }};
+    private static LinkedHashMap<String, Float> accommodationPrices = null;
 
-    private static final LinkedHashMap<String, Float> data4 = new LinkedHashMap<String, Float>() {{
-        put("jan", (float) 100);
-        put("feb", (float) 80);
-        put("mar", (float) 120);
-        put("apr", (float) 110);
-        put("may", (float) 130);
-        put("jun", (float) 105);
-    }};
+    private static LinkedHashMap<String, Float> accommodationReservations = null;
+    Spinner accommodations;
 
     public ReportFragment() {
     }
@@ -97,43 +85,24 @@ public class ReportFragment extends Fragment {
         View v = dropdown.getSelectedView();
         ((TextView)v).setTextColor(getResources().getColor(R.color.dark_gray));
 
-        BarChartView intervalChartPrices = returnView.findViewById(R.id.interval_chart_reservations);
-        intervalChartPrices.getAnimation().setDuration(1200L);
-        intervalChartPrices.animate(data);
-
-        intervalChartPrices.setLabelsSize(20f);
-        intervalChartPrices.setScaleY(3f);
-        intervalChartPrices.setAxis(AxisType.X);
-
-        BarChartView intervalChartProfit = returnView.findViewById(R.id.interval_chart_profit);
-        intervalChartProfit.getAnimation().setDuration(1200L);
-        intervalChartProfit.animate(data2);
-
-        intervalChartProfit.setLabelsSize(20f);
-        intervalChartProfit.setScaleY(3f);
-        intervalChartProfit.setAxis(AxisType.X);
-
-        //we show interval report initially
-
-        BarChartView accommodationChartPrices = returnView.findViewById(R.id.accommodation_chart_reservations);
-        accommodationChartPrices.getAnimation().setDuration(1200L);
-        accommodationChartPrices.animate(data3);
-
-        accommodationChartPrices.setLabelsSize(20f);
-        accommodationChartPrices.setScaleY(3f);
-        accommodationChartPrices.setAxis(AxisType.X);
-
-        BarChartView accommodationChartProfit = returnView.findViewById(R.id.accommodation_chart_profit);
-        accommodationChartProfit.getAnimation().setDuration(1200L);
-        accommodationChartProfit.animate(data4);
-
-        accommodationChartProfit.setLabelsSize(20f);
-        accommodationChartProfit.setScaleY(3f);
-        accommodationChartProfit.setAxis(AxisType.X);
-
-
-        Spinner accommodations = returnView.findViewById(R.id.spinner_accommodation);
-        String[] acc = new String[]{"Flower apartment", "Modern Hotel"};
+        accommodations = returnView.findViewById(R.id.spinner_accommodation);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        ArrayList<AccommodationName> accommodationNames = null;
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        Long userID = sharedPref.getLong(USER_ID_KEY, 0);
+        Call<List<AccommodationName>> call = ClientUtils.accommodationService.getAccNames(userID);
+        try{
+            Response<List<AccommodationName>> response = call.execute();
+            accommodationNames = (ArrayList<AccommodationName>) response.body();
+        }catch(Exception ex){
+            System.out.println("EXCEPTION WHILE GETTING ACCOMMODATION NAMES");
+            ex.printStackTrace();
+        }
+        String[] acc = new String[accommodationNames.size()];
+        for(int i = 0; i < accommodationNames.size(); i++) {
+            acc[i] = accommodationNames.get(i).getTitle();
+        }
         ArrayAdapter<String> adapter_acc = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, acc);
         accommodations.setAdapter(adapter_acc);
         accommodations.setSelection(0, true);
@@ -156,6 +125,44 @@ public class ReportFragment extends Fragment {
         });
 
         accommodations.setSelection(0);
+        initializeData();
+
+        BarChartView intervalChartPrices = returnView.findViewById(R.id.interval_chart_reservations);
+        intervalChartPrices.getAnimation().setDuration(1200L);
+        intervalChartPrices.animate(intervalPrices);
+
+        intervalChartPrices.setLabelsSize(20f);
+        intervalChartPrices.setScaleY(3f);
+        intervalChartPrices.setAxis(AxisType.XY);
+
+        BarChartView intervalChartReservations = returnView.findViewById(R.id.interval_chart_profit);
+        intervalChartReservations.getAnimation().setDuration(1200L);
+        intervalChartReservations.animate(intervalReservations);
+
+        intervalChartReservations.setLabelsSize(20f);
+        intervalChartReservations.setScaleY(3f);
+        intervalChartReservations.setAxis(AxisType.XY);
+
+        //we show interval report initially
+
+        BarChartView accommodationChartPrices = returnView.findViewById(R.id.accommodation_chart_reservations);
+        accommodationChartPrices.getAnimation().setDuration(1200L);
+        accommodationChartPrices.animate(accommodationPrices);
+
+        accommodationChartPrices.setLabelsSize(20f);
+        accommodationChartPrices.setScaleY(3f);
+        accommodationChartPrices.setScaleX(0.5f);
+        accommodationChartPrices.setAxis(AxisType.XY);
+
+        BarChartView accommodationChartReservations = returnView.findViewById(R.id.accommodation_chart_profit);
+        accommodationChartReservations.getAnimation().setDuration(1200L);
+        accommodationChartReservations.animate(accommodationReservations);
+
+        accommodationChartReservations.setLabelsSize(20f);
+        accommodationChartReservations.setScaleY(3f);
+        accommodationChartPrices.setScaleX(1f);
+        accommodationChartReservations.setAxis(AxisType.XY);
+
 
         //we show interval report initially
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
@@ -189,6 +196,72 @@ public class ReportFragment extends Fragment {
             }
         }, 100);
         return returnView;
+    }
+
+    private void initializeData() {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        Long userID = sharedPref.getLong(USER_ID_KEY, 0);
+
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            ArrayList<ReportDataUnit> data = null;
+            Call<List<ReportDataUnit>> call = ClientUtils.accommodationService.getIntervalReport(userID, "2023-01-01", "2024-01-01");
+            try{
+                Response<List<ReportDataUnit>> response = call.execute();
+                data = (ArrayList<ReportDataUnit>) response.body();
+            }catch(Exception ex){
+                System.out.println("ERROR WHILE GETTING DATA FOR INTERVAL REPORT");
+            }
+
+        ArrayList<ReportDataUnit> finalData = data;
+        intervalPrices = new LinkedHashMap<String, Float>() {{
+            for(int i = 0; i< finalData.size(); i++) {
+                //put("jan", (float) 100);
+                put(finalData.get(i).getName(), (float) finalData.get(i).getProfit());
+            }
+
+        }};
+        intervalReservations = new LinkedHashMap<String, Float>() {{
+            for(int i = 0; i< finalData.size(); i++) {
+                //put("jan", (float) 100);
+                put(finalData.get(i).getName(), (float) finalData.get(i).getReservations());
+            }
+        }};
+
+
+            String accName = (String) this.accommodations.getItemAtPosition(0);
+            Long accId = 0L;
+            StrictMode.setThreadPolicy(policy);
+            Call<Long> call3 = ClientUtils.accommodationService.getAccId(accName);
+            try{
+                Response<Long> response3 = call3.execute();
+                accId = (Long) response3.body();
+            }catch(Exception ex){
+                System.out.println("ERROR WHILE GETTING ACCOMMODATION ID");
+            }
+            StrictMode.setThreadPolicy(policy);
+            ArrayList<ReportDataUnit> data2 = null;
+            Call<List<ReportDataUnit>> call2 = ClientUtils.accommodationService.getAccReport(userID, 2023, accId);
+            try{
+                Response<List<ReportDataUnit>> response2 = call2.execute();
+                data2 = (ArrayList<ReportDataUnit>) response2.body();
+            }catch(Exception ex){
+                System.out.println("ERROR WHILE GETTING DATA FOR ACCOMMODATION REPORT");
+            }
+
+        ArrayList<ReportDataUnit> finalData2 = data2;
+        accommodationPrices = new LinkedHashMap<String, Float>() {{
+            for(int i = 0; i< finalData2.size(); i++) {
+                //put("jan", (float) 100);
+                put(finalData2.get(i).getName(), (float) finalData2.get(i).getProfit());
+            }
+        }};
+        accommodationReservations = new LinkedHashMap<String, Float>() {{
+            for(int i = 0; i< finalData2.size(); i++) {
+                //put("jan", (float) 100);
+                put(finalData2.get(i).getName(), (float) finalData2.get(i).getReservations());
+            }
+        }};
     }
 
 

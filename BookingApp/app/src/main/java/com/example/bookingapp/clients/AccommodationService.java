@@ -9,9 +9,11 @@ import com.example.bookingapp.dto.users.LoginUserDTO;
 import com.example.bookingapp.dto.users.Token;
 import com.example.bookingapp.model.Accommodation;
 import com.example.bookingapp.model.AccommodationListing;
+import com.example.bookingapp.model.AccommodationName;
 import com.example.bookingapp.model.ApproveAccommodationListing;
 import com.example.bookingapp.model.FavouriteAccommodationListing;
 import com.example.bookingapp.model.Filter;
+import com.example.bookingapp.model.ReportDataUnit;
 import com.example.bookingapp.model.ReservationRequest;
 
 import java.util.ArrayList;
@@ -124,4 +126,24 @@ public interface AccommodationService {
     @Headers("Content-Type: application/json")
     @GET("guests/{guestId}/favouriteAccommodations/all")
     Call<List<FavouriteAccommodationListing>> findFavourite(@Path("guestId")Long guestId);
+
+    @Headers("Content-Type: application/json")
+    @GET("accommodations/owner/{ownerId}/accommodationNames")
+    Call<List<AccommodationName>> getAccNames(@Path("ownerId")Long ownerId);
+
+    @Headers("Content-Type: application/json")
+    @GET("accommodations/name/{accName}")
+    Call<Long> getAccId(@Path("accName")String accName);
+
+    @Headers("Content-Type: application/json")
+    @GET("report/owner/{ownerId}/accommodation/{year}/{accommodation}")
+    Call<List<ReportDataUnit>> getAccReport(@Path("ownerId")Long ownerId,
+                                            @Path("year")int year,
+                                            @Path("accommodation")Long accommodation);
+
+    @Headers("Content-Type: application/json")
+    @GET("report/owner/{ownerId}/interval/{from}/{to}")
+    Call<List<ReportDataUnit>> getIntervalReport(@Path("ownerId")Long ownerId,
+                                                    @Path("from")String from,
+                                                    @Path("to")String to);
 }
