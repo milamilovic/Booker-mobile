@@ -58,6 +58,7 @@ public class OwnerProfileFragment extends ListFragment {
     private static final String JWT_TOKEN_KEY = "jwt_token";
     private static final String USER_ID_KEY = "user_id";
     private static final String OWNER_ID_KEY = "owner_id";
+    List<OwnerCommentDTO> ownerComments = new ArrayList<>();
 
     public OwnerProfileFragment() {
         // Required empty public constructor
@@ -73,7 +74,6 @@ public class OwnerProfileFragment extends ListFragment {
         OwnerProfileFragment fragment = new OwnerProfileFragment(id);
         Bundle args = new Bundle();
         args.putLong("id", id);
-        args.putLong("loggedId", loggedId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -117,7 +117,8 @@ public class OwnerProfileFragment extends ListFragment {
         TextView phone = view.findViewById(R.id.phone_profile);
         phone.setText(owner.getPhone());
         RatingBar rb = view.findViewById(R.id.owner_rate);
-        rb.setRating(4.1f);
+        float rating = calculateAverageRating();
+        rb.setRating(rating);
         RatingBar ratingBar = view.findViewById(R.id.ratingBar);
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
@@ -261,6 +262,7 @@ public class OwnerProfileFragment extends ListFragment {
                 if (response.code() == 200) {
                     Log.d("REZ", "Message received");
                     System.out.println(response.body());
+                    ownerComments = response.body();
 
                     // Update the comments list with the data from the response
                     comments.clear();
@@ -288,5 +290,17 @@ public class OwnerProfileFragment extends ListFragment {
             }
         });
 
+
+
+    }
+
+    public float calculateAverageRating() {
+        int ratingNum = ownerComments.size();
+        float totalRating = 0;
+        for (OwnerCommentDTO ownerCommentDTO : ownerComments) {
+            totalRating += ownerCommentDTO.getRating();
+        }
+
+        return totalRating / ratingNum;
     }
 }
