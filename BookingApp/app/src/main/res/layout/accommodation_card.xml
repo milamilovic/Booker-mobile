@@ -33,6 +33,7 @@
         </androidx.cardview.widget.CardView>
 
         <RelativeLayout
+            android:id="@+id/favourite_circle"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@drawable/round_corner"
@@ -42,7 +43,7 @@
             android:layout_marginTop="2dp">
 
             <ImageButton
-                android:id="@+id/favorite"
+                android:id="@+id/favourite"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginTop="3dp"

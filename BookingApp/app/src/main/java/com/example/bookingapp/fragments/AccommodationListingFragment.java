@@ -1,6 +1,7 @@
 package com.example.bookingapp.fragments;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -106,7 +107,7 @@ public class AccommodationListingFragment extends Fragment {
             }
             people = args.getInt("people");
             accommodations = getArguments().getParcelableArrayList(ARG_PARAM);
-            adapter = new AccommodationListAdapter(getActivity(), accommodations);
+            adapter = new AccommodationListAdapter(getActivity(), accommodations, getActivity().getPreferences(Context.MODE_PRIVATE));
         }
     }
 
@@ -118,7 +119,7 @@ public class AccommodationListingFragment extends Fragment {
         accommodations = new ArrayList<>();
         prepareAccommodationList(accommodations);
         listView = root.findViewById(R.id.list);
-        adapter = new AccommodationListAdapter(getContext(), accommodations);
+        adapter = new AccommodationListAdapter(getContext(), accommodations, getActivity().getPreferences(Context.MODE_PRIVATE));
         listView.setAdapter(adapter);
 
         Button btnFilters = binding.filter;
@@ -196,7 +197,7 @@ public class AccommodationListingFragment extends Fragment {
                         Response<List<AccommodationListing>> response = call.execute();
                         ArrayList<AccommodationListing> listings = (ArrayList<AccommodationListing>) response.body();
                         accommodations.addAll(listings);
-                        adapter = new AccommodationListAdapter(getContext(), accommodations);
+                        adapter = new AccommodationListAdapter(getContext(), accommodations, getActivity().getPreferences(Context.MODE_PRIVATE));
                         listView.setAdapter(adapter);
                     }catch(Exception ex){
                         System.out.println(formatter.format(fromDate));
@@ -264,7 +265,7 @@ public class AccommodationListingFragment extends Fragment {
 
                 prepareAccommodationList(accommodations);
 
-                adapter = new AccommodationListAdapter(getContext(), accommodations);
+                adapter = new AccommodationListAdapter(getContext(), accommodations, getActivity().getPreferences(Context.MODE_PRIVATE));
                 listView.setAdapter(adapter);
             }
         });
