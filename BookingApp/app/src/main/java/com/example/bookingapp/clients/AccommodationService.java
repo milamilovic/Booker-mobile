@@ -10,6 +10,7 @@ import com.example.bookingapp.dto.users.Token;
 import com.example.bookingapp.model.Accommodation;
 import com.example.bookingapp.model.AccommodationListing;
 import com.example.bookingapp.model.ApproveAccommodationListing;
+import com.example.bookingapp.model.FavouriteAccommodationListing;
 import com.example.bookingapp.model.Filter;
 import com.example.bookingapp.model.ReservationRequest;
 
@@ -110,7 +111,7 @@ public interface AccommodationService {
             "Content-Type:application/json"
     })
     @PUT("guests/favouriteAccommodations/add/{guestId}/{accommodationId}")
-    Call<Boolean> addToFav(@Path("accommodationId")Long accommodationId, @Path("guestId") Long guestId);
+    Call<Boolean> addToFav(@Path("guestId") Long guestId, @Path("accommodationId")Long accommodationId);
 
 
     @Headers({
@@ -118,5 +119,9 @@ public interface AccommodationService {
             "Content-Type:application/json"
     })
     @PUT("guests/favouriteAccommodations/remove/{guestId}/{accommodationId}")
-    Call<Boolean> removeFromFav(@Path("accommodationId")Long accommodationId, @Path("guestId") Long guestId);
+    Call<Boolean> removeFromFav(@Path("guestId") Long guestId, @Path("accommodationId")Long accommodationId);
+
+    @Headers("Content-Type: application/json")
+    @GET("guests/{guestId}/favouriteAccommodations/all")
+    Call<List<FavouriteAccommodationListing>> findFavourite(@Path("guestId")Long guestId);
 }
