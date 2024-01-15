@@ -1,6 +1,7 @@
 package com.example.bookingapp.adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.StrictMode;
@@ -12,6 +13,8 @@ import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
 import com.example.bookingapp.clients.AccommodationRating;
 import com.example.bookingapp.clients.ClientUtils;
+import com.example.bookingapp.dto.users.UserDTO;
+import com.example.bookingapp.enums.Role;
 import com.example.bookingapp.fragments.AccommodationViewFragment;
 import com.example.bookingapp.model.Accommodation;
 import com.example.bookingapp.model.AccommodationListing;
@@ -44,6 +47,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,17 +56,20 @@ import retrofit2.Response;
 public class AccommodationListAdapter extends ArrayAdapter<AccommodationListing> {
 
     private ArrayList<AccommodationListing> aAccommodationListings;
+    private static final String USER_ID_KEY = "user_id";
     Context context;
+    SharedPreferences sharedPreferences;
 
     public AccommodationListAdapter(@NonNull Context context, int resource) {
         super(context, resource);
         this.context = context;
     }
 
-    public AccommodationListAdapter(Context context, ArrayList<AccommodationListing> AccommodationListings){
+    public AccommodationListAdapter(Context context, ArrayList<AccommodationListing> AccommodationListings, SharedPreferences sharedPreferences){
         super(context, R.layout.accommodation_card, AccommodationListings);
         this.aAccommodationListings = AccommodationListings;
         this.context = context;
+        this.sharedPreferences = sharedPreferences;
     }
     /*
      * Ova metoda vraca ukupan broj elemenata u listi koje treba prikazati
@@ -139,12 +146,65 @@ public class AccommodationListAdapter extends ArrayAdapter<AccommodationListing>
                 System.out.println("EXCEPTION WHILE GETTING RATINGS");
                 ex.printStackTrace();
             }
-            //TODO: SET FAVOURITE
-//            if(AccommodationListing.getFavorite()) {
-//                favorite.setImageResource(R.drawable.icons8_heart_30_selected_favourite);
-//            } else {
-//                favorite.setImageResource(R.drawable.icons8_heart_30_not_selected_favourite);
-//            }
+            //favourite accommodations
+            ImageButton favourite = convertView.findViewById(R.id.favourite);
+            Long userID = sharedPreferences.getLong(USER_ID_KEY, 0);
+            AtomicBoolean isFavourite = new AtomicBoolean(false);
+            StrictMode.setThreadPolicy(policy);
+            Call<Boolean> userCall = ClientUtils.accommodationService.isGuestsFavouriteAccommodation(userID, AccommodationListing.getId());
+            try {
+                Response<Boolean> response1 = userCall.execute();
+                isFavourite.set(response1.body());
+            } catch (Exception ex) {
+            }
+            if(isFavourite.get()) {
+                favourite.setImageResource(R.drawable.icons8_heart_30_selected_favourite);
+            } else {
+                favourite.setImageResource(R.drawable.icons8_heart_30_not_selected_favourite);
+            }
+            convertView.findViewById(R.id.favourite).setOnClickListener(v -> {
+                StrictMode.setThreadPolicy(policy);
+                Call<Boolean> userCall3 = ClientUtils.accommodationService.isGuestsFavouriteAccommodation(userID, AccommodationListing.getId());
+                try {
+                    Response<Boolean> response1 = userCall3.execute();
+                    isFavourite.set(response1.body());
+                    if(isFavourite.get()) {
+                        Call<Boolean> userCall4 =ClientUtils.accommodationService.removeFromFav(userID, AccommodationListing.getId());
+                        try {
+                            userCall4.execute();
+                            favourite.setImageResource(R.drawable.icons8_heart_30_not_selected_favourite);
+                        } catch (Exception ex) {
+                        }
+                    } else {
+                        Call<Boolean> userCall4 =ClientUtils.accommodationService.addToFav(userID, AccommodationListing.getId());
+                        try {
+                            userCall4.execute();
+                            favourite.setImageResource(R.drawable.icons8_heart_30_selected_favourite);
+                        } catch (Exception ex) {
+                        }
+                    }
+                } catch (Exception ex) {
+                }
+            });
+            if(userID==0) {
+                convertView.findViewById(R.id.favourite_circle).setVisibility(View.GONE);
+                convertView.findViewById(R.id.favourite).setVisibility(View.GONE);
+            } else {
+                StrictMode.setThreadPolicy(policy);
+                Call<UserDTO> userCall2 = ClientUtils.userService.getById(userID);
+                try {
+                    Response<UserDTO> response = userCall2.execute();
+                    UserDTO user = (UserDTO) response.body();
+                    if (user.getRole() == Role.GUEST) {
+                        convertView.findViewById(R.id.favourite_circle).setVisibility(View.VISIBLE);
+                        convertView.findViewById(R.id.favourite).setVisibility(View.VISIBLE);
+                    } else {
+                        convertView.findViewById(R.id.favourite_circle).setVisibility(View.GONE);
+                        convertView.findViewById(R.id.favourite).setVisibility(View.GONE);
+                    }
+                } catch (Exception ex) {
+                }
+            }
             card.setOnClickListener(v -> {
                 StrictMode.setThreadPolicy(policy);
                 Call<Accommodation> accommodation = ClientUtils.accommodationService.findAccommodation(AccommodationListing.getId());

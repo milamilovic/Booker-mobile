@@ -24,10 +24,12 @@ public class AccommodationViewDTO {
     private int min_capacity;
     private int max_capacity;
 
+    private boolean manual_accepting;
+
     public AccommodationViewDTO() {
     }
 
-    public AccommodationViewDTO(Long id, String title, String description, Address address, List<Amenity> amenities, List<Image> images, List<AvailabilityDTO> availabilities, List<Price> prices, List<AccommodationRating> ratings, List<AccommodationComment> comments, Long owner_id, int min_capacity, int max_capacity) {
+    public AccommodationViewDTO(Long id, String title, String description, Address address, List<Amenity> amenities, List<Image> images, List<AvailabilityDTO> availabilities, List<Price> prices, List<AccommodationRating> ratings, List<AccommodationComment> comments, Long owner_id, int min_capacity, int max_capacity, boolean manual) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -41,6 +43,7 @@ public class AccommodationViewDTO {
         this.owner_id = owner_id;
         this.min_capacity = min_capacity;
         this.max_capacity = max_capacity;
+        this.manual_accepting = manual;
     }
 
     public Long getId() {
@@ -145,5 +148,13 @@ public class AccommodationViewDTO {
 
     public void setMax_capacity(int max_capacity) {
         this.max_capacity = max_capacity;
+    }
+
+    public void setManual_accepting(boolean manual_accepting) {
+        this.manual_accepting = manual_accepting;
+    }
+
+    public boolean isManual_accepting() {
+        return manual_accepting;
     }
 }

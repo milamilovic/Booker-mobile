@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.ToggleButton;
 
 import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
@@ -147,6 +148,16 @@ public class UpdateAccommodationFragment extends Fragment {
                     ex.printStackTrace();
                 }
                 FragmentTransition.to(HomeFragment.newInstance(), (FragmentActivity) getContext(), true, R.id.fragment_placeholder);
+            }
+        });
+
+        ToggleButton toggle = view.findViewById(R.id.requestAcceptingToggle);
+        toggle.setChecked(!accommodation.isManual_accepting());
+        toggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("CLICKED MANUAL: " + !toggle.isChecked());
+                accommodation.setManual_accepting(!toggle.isChecked());
             }
         });
 

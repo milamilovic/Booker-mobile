@@ -10,6 +10,7 @@ import com.example.bookingapp.dto.users.Token;
 import com.example.bookingapp.model.Accommodation;
 import com.example.bookingapp.model.AccommodationListing;
 import com.example.bookingapp.model.ApproveAccommodationListing;
+import com.example.bookingapp.model.FavouriteAccommodationListing;
 import com.example.bookingapp.model.Filter;
 import com.example.bookingapp.model.ReservationRequest;
 
@@ -101,4 +102,26 @@ public interface AccommodationService {
                                                      @Path("location") String location,
                                                      @Path("people") int people,
                                                      @Body ArrayList<Filter> filters);
+    @Headers("Content-Type: application/json")
+    @GET("guests/favourites/check/{guestId}/{accId}")
+    Call<Boolean> isGuestsFavouriteAccommodation(@Path("guestId")Long guestId, @Path("accId")Long accId);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @PUT("guests/favouriteAccommodations/add/{guestId}/{accommodationId}")
+    Call<Boolean> addToFav(@Path("guestId") Long guestId, @Path("accommodationId")Long accommodationId);
+
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @PUT("guests/favouriteAccommodations/remove/{guestId}/{accommodationId}")
+    Call<Boolean> removeFromFav(@Path("guestId") Long guestId, @Path("accommodationId")Long accommodationId);
+
+    @Headers("Content-Type: application/json")
+    @GET("guests/{guestId}/favouriteAccommodations/all")
+    Call<List<FavouriteAccommodationListing>> findFavourite(@Path("guestId")Long guestId);
 }

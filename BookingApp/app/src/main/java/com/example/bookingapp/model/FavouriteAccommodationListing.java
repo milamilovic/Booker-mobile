@@ -6,26 +6,22 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 public class FavouriteAccommodationListing   implements Parcelable {
-    private Long id;
-    private String title;
-    private String description;
-    private int image;
-    private boolean favourite;
-    private int totalPrice;
-    private int pricePerDay;
-    private float rating;
-    private String address;
+    Long id;
+    String title;
+    String shortDescription;
+    Image image;
+    Double avgPrice;
+    float avgRating;
+    Address address;
 
-    public FavouriteAccommodationListing(Long id, String title, String description, int image, boolean favourite,
-                                int totalPrice, int  pricePerDay, float rating, String address) {
+    public FavouriteAccommodationListing(Long id, String title, String description, Image image,
+                                double totalPrice, float rating, Address address) {
         this.id = id;
         this.title = title;
-        this.description = description;
+        this.shortDescription = description;
         this.image = image;
-        this.favourite = favourite;
-        this.totalPrice = totalPrice;
-        this.pricePerDay = pricePerDay;
-        this.rating = rating;
+        this.avgPrice = totalPrice;
+        this.avgRating = rating;
         this.address = address;
     }
 
@@ -35,13 +31,11 @@ public class FavouriteAccommodationListing   implements Parcelable {
     protected FavouriteAccommodationListing(Parcel in) {
         id = in.readLong();
         title = in.readString();
-        description = in.readString();
-        image = in.readInt();
-        favourite = in.readInt() == 1;
-        totalPrice = in.readInt();
-        pricePerDay = in.readInt();
-        rating = in.readFloat();
-        address = in.readString();
+        shortDescription = in.readString();
+        image = in.readParcelable(Image.class.getClassLoader());
+        avgPrice = in.readDouble();
+        avgRating = in.readFloat();
+        address = in.readParcelable(Address.class.getClassLoader());
     }
 
     public Long getId() {
@@ -60,70 +54,46 @@ public class FavouriteAccommodationListing   implements Parcelable {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
+    public String getShortDescription() {
+        return shortDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setShortDescription(String description) {
+        this.shortDescription = description;
     }
 
-    public int getImage() {
+    public Image getImage() {
         return image;
     }
 
-    public void setImage(int image) {
+    public void setImage(Image image) {
         this.image = image;
     }
 
-    public int getTotalPrice() {
-        return totalPrice;
+    public double getAvgPrice() {
+        return avgPrice;
     }
 
-    public void setTotalPrice(int totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setAvgPrice(double totalPrice) {
+        this.avgPrice = totalPrice;
     }
 
-    public int getPricePerDay() {
-        return pricePerDay;
+    public float getAvgRating() {
+        return avgRating;
     }
 
-    public void setPricePerDay(int pricePerDay) {
-        this.pricePerDay = pricePerDay;
+    public void setAvgRating(float rating) {
+        this.avgRating = rating;
     }
 
+    public void setAddress(Address address) { this.address = address; }
 
-    public boolean getFavorite() {
-        return favourite;
-    }
-
-    public void setFavourite(boolean isFavorite) {
-        this.favourite = isFavorite;
-    }
-
-
-    public float getRating() {
-        return rating;
-    }
-
-    public void setRating(float rating) {
-        this.rating = rating;
-    }
-
-    public void setAddress(String address) { this.address = address; }
-
-    public String getAddress() { return address; }
+    public Address getAddress() { return address; }
 
     @Override
     public String toString() {
         return "AccommodationListing{" +
                 "title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", image='" + image + '\'' +
-                ", is favourite for user='" + favourite + '\'' +
-                ", total price='" + totalPrice + '\'' +
-                ", price per day='" + pricePerDay + '\'' +
-                ", rating='" + rating + '\'' +
                 ", address='" + address + '\'' +
                 '}';
     }
@@ -137,13 +107,11 @@ public class FavouriteAccommodationListing   implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeLong(id);
         dest.writeString(title);
-        dest.writeString(description);
-        dest.writeInt(image);
-        dest.writeInt(favourite ? 1 : 0);
-        dest.writeInt(totalPrice);
-        dest.writeInt(pricePerDay);
-        dest.writeFloat(rating);
-        dest.writeString(address);
+        dest.writeString(shortDescription);
+        dest.writeParcelable(image, 4);
+        dest.writeDouble(avgPrice);
+        dest.writeFloat(avgRating);
+        dest.writeParcelable(address, 5);
     }
 
     public static final Creator<FavouriteAccommodationListing> CREATOR = new Creator<FavouriteAccommodationListing>() {
