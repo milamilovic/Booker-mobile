@@ -220,6 +220,36 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="@string/way_of_accepting_requests"
+                        android:textSize="20sp"
+                        android:textColor="@color/dark_gray"
+                        android:layout_marginBottom="5dp"/>
+
+
+                    <ToggleButton
+                        android:id="@+id/requestAcceptingToggle"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:layout_centerHorizontal="true"
+                        android:textOff="Manual"
+                        android:textOn="Automatic"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/round_corner"
+                    android:backgroundTint="@color/transparent_60_grayish_green"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:text="@string/amenities_bold"
                         android:textSize="20sp"
                         android:textColor="@color/dark_gray"/>
