@@ -8,6 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.ListFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.os.StrictMode;
@@ -21,11 +24,11 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.bookingapp.adapters.OwnerCommentAdapter;
 import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.clients.OwnerCommentService;
 import com.example.bookingapp.dto.commentsAndRatings.CreateOwnerCommentDTO;
 import com.example.bookingapp.dto.commentsAndRatings.OwnerCommentDTO;
-import com.example.bookingapp.fragments.AccommodationViewFragment;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -35,20 +38,22 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import com.example.bookingapp.dto.users.OwnerDTO;
-import com.example.bookingapp.dto.users.UserDTO;
 
-import retrofit2.Call;
-import retrofit2.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link OwnerProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class OwnerProfileFragment extends Fragment {
+public class OwnerProfileFragment extends ListFragment {
 
     private static Long id;
+    private static Long loggedId;
     private OwnerDTO owner;
+    private ArrayList<OwnerCommentDTO> comments = new ArrayList<>();
+    private OwnerCommentAdapter adapter;
 
     private static final String JWT_TOKEN_KEY = "jwt_token";
     private static final String USER_ID_KEY = "user_id";
@@ -58,6 +63,8 @@ public class OwnerProfileFragment extends Fragment {
         // Required empty public constructor
     }
 
+
+
     public OwnerProfileFragment(Long id) {
         this.id = id;
     }
@@ -66,6 +73,7 @@ public class OwnerProfileFragment extends Fragment {
         OwnerProfileFragment fragment = new OwnerProfileFragment(id);
         Bundle args = new Bundle();
         args.putLong("id", id);
+        args.putLong("loggedId", loggedId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -86,6 +94,8 @@ public class OwnerProfileFragment extends Fragment {
             }
         }
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -169,9 +179,13 @@ public class OwnerProfileFragment extends Fragment {
                     @Override
                     public void onResponse(Call<OwnerCommentDTO> call, Response<OwnerCommentDTO> response) {
                         if (response.code() == 201) {
+//                            adapter.clear();
+                            getCommentsFromClient();
+                            // Notify the adapter about the data change
+//                            adapter.updateCommentsList(comments);
                             Log.d("REZ", "Owner comment successfully created!");
-                            Toast.makeText(getContext(), "Success! Your comment will become visible after admin's approval!", Toast.LENGTH_LONG).show();
-                            getActivity().getSupportFragmentManager().popBackStack();
+                            Toast.makeText(getContext(), "Owner comment successfully added!", Toast.LENGTH_LONG).show();
+
                         } else if (response.code() == 400) {
                             Log.d("REZ", "Validation violated!");
                             Toast.makeText(getContext(), "Validation violated!", Toast.LENGTH_SHORT).show();
@@ -189,6 +203,7 @@ public class OwnerProfileFragment extends Fragment {
 
             }
         });
+
         return view;
     }
 
@@ -222,7 +237,56 @@ public class OwnerProfileFragment extends Fragment {
                 popupMenu.show();
             }
         });
+        getCommentsFromClient();
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getCommentsFromClient();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    private void getCommentsFromClient() {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        Long ownerId = sharedPref.getLong(OWNER_ID_KEY, 0);
+        Call<List<OwnerCommentDTO>> call = ClientUtils.ownerCommentService.getAllForOwner(id);
+        call.enqueue(new Callback<List<OwnerCommentDTO>>() {
+            @Override
+            public void onResponse(Call<List<OwnerCommentDTO>> call, Response<List<OwnerCommentDTO>> response) {
+                if (response.code() == 200) {
+                    Log.d("REZ", "Message received");
+                    System.out.println(response.body());
+
+                    // Update the comments list with the data from the response
+                    comments.clear();
+                    comments.addAll(response.body());
+
+                    // Initialize or update the adapter with the correct data
+                    if (adapter == null) {
+                        adapter = new OwnerCommentAdapter(getActivity(), getActivity().getSupportFragmentManager(), comments);
+                        setListAdapter(adapter);
+                    } else {
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    for (OwnerCommentDTO commentDTO : response.body()) {
+                        System.out.println(commentDTO.toString());
+                    }
+                } else {
+                    Log.d("REZ", "Message received: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<OwnerCommentDTO>> call, Throwable t) {
+                Log.d("REZ", t.getMessage() != null ? t.getMessage() : "error");
+            }
+        });
 
     }
 }

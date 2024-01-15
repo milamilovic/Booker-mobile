@@ -130,4 +130,22 @@ public class OwnerCommentDTO {
     public void setApproved(boolean approved) {
         this.approved = approved;
     }
+
+    @Override
+    public String toString() {
+        return "OwnerCommentDTO{" +
+                "id=" + id +
+                ", ownerId=" + ownerId +
+                ", guestId=" + guestId +
+                ", guestName='" + guestName + '\'' +
+                ", guestSurname='" + guestSurname + '\'' +
+                ", guestProfilePicture=" + guestProfilePicture +
+                ", content='" + content + '\'' +
+                ", rating=" + rating +
+                ", date=" + date +
+                ", reported=" + reported +
+                ", deleted=" + deleted +
+                ", approved=" + approved +
+                '}';
+    }
 }
