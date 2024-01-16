@@ -1,5 +1,7 @@
 package com.example.bookingapp;
 
+import static com.example.bookingapp.clients.ClientUtils.retrofit;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,9 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.ListFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.os.StrictMode;
@@ -20,11 +19,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.bookingapp.adapters.OwnerCommentAdapter;
 import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.clients.OwnerCommentService;
 import com.example.bookingapp.dto.commentsAndRatings.CreateOwnerCommentDTO;
@@ -38,27 +37,33 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import com.example.bookingapp.dto.users.OwnerDTO;
+import com.example.bookingapp.enums.Role;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link OwnerProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class OwnerProfileFragment extends ListFragment {
+public class OwnerProfileFragment extends Fragment {
 
     private static Long id;
     private static Long loggedId;
     private OwnerDTO owner;
     private ArrayList<OwnerCommentDTO> comments = new ArrayList<>();
-    private OwnerCommentAdapter adapter;
 
     private static final String JWT_TOKEN_KEY = "jwt_token";
     private static final String USER_ID_KEY = "user_id";
     private static final String OWNER_ID_KEY = "owner_id";
+    private static final String USER_ROLE_KEY = "user_role";
+    private LinearLayout parentLayout;
     List<OwnerCommentDTO> ownerComments = new ArrayList<>();
+    private float total = 0;
+    private float average = 0;
 
     public OwnerProfileFragment() {
         // Required empty public constructor
@@ -102,6 +107,9 @@ public class OwnerProfileFragment extends ListFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_owner_profile, container, false);
+        parentLayout = view.findViewById(R.id.comment_section);
+        parentLayout.removeAllViews();
+        fetchOwnerCommentsFromServer();
         TextView name = view.findViewById(R.id.name);
         name.setText(owner.getName() + " " + owner.getSurname());
 
@@ -117,9 +125,9 @@ public class OwnerProfileFragment extends ListFragment {
         TextView phone = view.findViewById(R.id.phone_profile);
         phone.setText(owner.getPhone());
         RatingBar rb = view.findViewById(R.id.owner_rate);
-        float rating = calculateAverageRating();
-        rb.setRating(rating);
+//        float rating = calculateAverageRating();
         RatingBar ratingBar = view.findViewById(R.id.ratingBar);
+        TextView ratingText =view.findViewById(R.id.rating_text);
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
@@ -181,9 +189,11 @@ public class OwnerProfileFragment extends ListFragment {
                     public void onResponse(Call<OwnerCommentDTO> call, Response<OwnerCommentDTO> response) {
                         if (response.code() == 201) {
 //                            adapter.clear();
-                            getCommentsFromClient();
+//                            getCommentsFromClient();
                             // Notify the adapter about the data change
 //                            adapter.updateCommentsList(comments);
+                            parentLayout.removeAllViews();
+                            fetchOwnerCommentsFromServer();
                             Log.d("REZ", "Owner comment successfully created!");
                             Toast.makeText(getContext(), "Owner comment successfully added!", Toast.LENGTH_LONG).show();
 
@@ -238,13 +248,13 @@ public class OwnerProfileFragment extends ListFragment {
                 popupMenu.show();
             }
         });
-        getCommentsFromClient();
+//        getCommentsFromClient();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getCommentsFromClient();
+//        getCommentsFromClient();
     }
 
     @Override
@@ -252,55 +262,269 @@ public class OwnerProfileFragment extends ListFragment {
         super.onDestroyView();
     }
 
-    private void getCommentsFromClient() {
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        Long ownerId = sharedPref.getLong(OWNER_ID_KEY, 0);
-        Call<List<OwnerCommentDTO>> call = ClientUtils.ownerCommentService.getAllForOwner(id);
+//    private void getCommentsFromClient() {
+//        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+//        Long ownerId = sharedPref.getLong(OWNER_ID_KEY, 0);
+//        Call<List<OwnerCommentDTO>> call = ClientUtils.ownerCommentService.getAllForOwner(id);
+//        call.enqueue(new Callback<List<OwnerCommentDTO>>() {
+//            @Override
+//            public void onResponse(Call<List<OwnerCommentDTO>> call, Response<List<OwnerCommentDTO>> response) {
+//                if (response.code() == 200) {
+//                    Log.d("REZ", "Message received");
+//                    System.out.println(response.body());
+//                    ownerComments = response.body();
+//
+//                    // Update the comments list with the data from the response
+//                    comments.clear();
+//                    comments.addAll(response.body());
+//
+//                    // Initialize or update the adapter with the correct data
+//                    if (adapter == null) {
+//                        adapter = new OwnerCommentAdapter(getActivity(), getActivity().getSupportFragmentManager(), comments);
+//                        setListAdapter(adapter);
+//                    } else {
+//                        adapter.notifyDataSetChanged();
+//                    }
+//
+//                    for (OwnerCommentDTO commentDTO : response.body()) {
+//                        System.out.println(commentDTO.toString());
+//                    }
+//                } else {
+//                    Log.d("REZ", "Message received: " + response.code());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<OwnerCommentDTO>> call, Throwable t) {
+//                Log.d("REZ", t.getMessage() != null ? t.getMessage() : "error");
+//            }
+//        });
+//
+//
+//
+//    }
+
+//    public float calculateAverageRating() {
+//        int ratingNum = ownerComments.size();
+//        float totalRating = 0;
+//        for (OwnerCommentDTO ownerCommentDTO : ownerComments) {
+//            totalRating += ownerCommentDTO.getRating();
+//        }
+//
+//        return totalRating / ratingNum;
+//    }
+
+    private void fetchOwnerCommentsFromServer() {
+        OwnerCommentService apiservice = retrofit.create(OwnerCommentService.class);
+        Call<List<OwnerCommentDTO>> call = apiservice.getAllForOwner(id);
         call.enqueue(new Callback<List<OwnerCommentDTO>>() {
             @Override
             public void onResponse(Call<List<OwnerCommentDTO>> call, Response<List<OwnerCommentDTO>> response) {
                 if (response.code() == 200) {
-                    Log.d("REZ", "Message received");
-                    System.out.println(response.body());
-                    ownerComments = response.body();
-
-                    // Update the comments list with the data from the response
-                    comments.clear();
-                    comments.addAll(response.body());
-
-                    // Initialize or update the adapter with the correct data
-                    if (adapter == null) {
-                        adapter = new OwnerCommentAdapter(getActivity(), getActivity().getSupportFragmentManager(), comments);
-                        setListAdapter(adapter);
-                    } else {
-                        adapter.notifyDataSetChanged();
+                    Log.d("REZ", "Message received " + response.code());
+                    List<OwnerCommentDTO> ownerCommentsList = response.body();
+                    comments = (ArrayList<OwnerCommentDTO>) response.body();
+                    for (OwnerCommentDTO ownerComment : ownerCommentsList) {
+                        View ownerCommentItem = createOwnerCommentItem(ownerComment);
+                        parentLayout.addView(ownerCommentItem);
+                        total += ownerComment.getRating();
                     }
-
-                    for (OwnerCommentDTO commentDTO : response.body()) {
-                        System.out.println(commentDTO.toString());
-                    }
+                    average = total / ownerCommentsList.size();
+                    // Call a method or update UI components with the new average here
+                    updateAverageRating(average);
                 } else {
-                    Log.d("REZ", "Message received: " + response.code());
+                    Log.d("REZ", "Message received " + response.code());
                 }
             }
 
             @Override
             public void onFailure(Call<List<OwnerCommentDTO>> call, Throwable t) {
-                Log.d("REZ", t.getMessage() != null ? t.getMessage() : "error");
+                Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
             }
         });
 
-
-
     }
 
-    public float calculateAverageRating() {
-        int ratingNum = ownerComments.size();
-        float totalRating = 0;
-        for (OwnerCommentDTO ownerCommentDTO : ownerComments) {
-            totalRating += ownerCommentDTO.getRating();
+
+    private View createOwnerCommentItem(OwnerCommentDTO ownerCommentDTO) {
+        View ownerCommentItem = LayoutInflater.from(getActivity()).inflate(R.layout.owner_comment_item, null);
+        TextView name = ownerCommentItem.findViewById(R.id.name);
+        TextView content = ownerCommentItem.findViewById(R.id.commentContent);
+        TextView commentDate = ownerCommentItem.findViewById(R.id.commentDate);
+        TextView commentRating = ownerCommentItem.findViewById(R.id.rating);
+        ImageView deleteComment = ownerCommentItem.findViewById(R.id.deleteComment);
+        ImageView reportComment = ownerCommentItem.findViewById(R.id.report_comment);
+
+        String nameString = ownerCommentDTO.getGuestName() + " " + ownerCommentDTO.getGuestSurname();
+        name.setText(nameString);
+        content.setText(ownerCommentDTO.getContent());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String dateString = sdf.format(ownerCommentDTO.getDate());
+        commentDate.setText(dateString);
+        String ratingString = String.format("%.2f", ownerCommentDTO.getRating()) + "/5";
+        commentRating.setText(ratingString);
+
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        Long loggedId = sharedPref.getLong(USER_ID_KEY, -1);
+        String jwt = sharedPref.getString(JWT_TOKEN_KEY, "");
+        String roleString = sharedPref.getString(USER_ROLE_KEY, "");
+        Log.d("LOGGED_IN", loggedId+"");
+        Log.d("ROLE", roleString);
+
+        if (loggedId == ownerCommentDTO.getGuestId()) {
+            deleteComment.setVisibility(View.VISIBLE);
+
+            deleteComment.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    handleDeleteComment(ownerCommentDTO.getId());
+                }
+            });
+        } else {
+            deleteComment.setVisibility(View.GONE);
         }
 
-        return totalRating / ratingNum;
+        if (loggedId == ownerCommentDTO.getGuestId() && roleString.equals(String.valueOf(Role.OWNER))) {
+            reportComment.setVisibility(View.VISIBLE);
+            reportComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    handleReportComment(ownerCommentDTO.getId());
+                }
+            });
+        } else {
+            reportComment.setVisibility(View.GONE);
+        }
+
+        return ownerCommentItem;
+
     }
+    private void handleDeleteComment(Long commentId) {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String jwt = sharedPref.getString(JWT_TOKEN_KEY, "");
+        String jwtToken = jwt; // Replace with your actual JWT token
+        String authorizationHeaderValue = "Bearer " + jwtToken;
+
+        // Create a new instance of the OkHttpClient.Builder
+        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+
+        // Add an interceptor to the OkHttpClient to set the Authorization header
+        clientBuilder.addInterceptor(chain -> {
+            Request original = chain.request();
+            Request.Builder requestBuilder = original.newBuilder()
+                    .header("Authorization", authorizationHeaderValue)
+                    .method(original.method(), original.body());
+
+            Request request = requestBuilder.build();
+            return chain.proceed(request);
+        });
+
+        // Build the OkHttpClient
+        OkHttpClient client = clientBuilder.build();
+
+        // Create a new Retrofit instance with the modified OkHttpClient
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ClientUtils.SERVICE_API_PATH) // Replace with your actual base URL
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+        OwnerCommentService apiService = retrofit.create(OwnerCommentService.class);
+        Call<Void> call = apiService.deleteOwnerComment(commentId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.code() == 200) {
+                    Log.d("REZ", "Message received: " + response.code());
+                    parentLayout.removeAllViews();
+                    fetchOwnerCommentsFromServer();
+                    Toast.makeText(getContext(), "Successfully deleted!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d("REZ", "Message received: " + response.code());
+                    Toast.makeText(getContext(), "Error!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
+            }
+        });
+
+    }
+
+    private void handleReportComment(Long commentId) {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String jwt = sharedPref.getString(JWT_TOKEN_KEY, "");
+        String jwtToken = jwt; // Replace with your actual JWT token
+        String authorizationHeaderValue = "Bearer " + jwtToken;
+
+        // Create a new instance of the OkHttpClient.Builder
+        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+
+        // Add an interceptor to the OkHttpClient to set the Authorization header
+        clientBuilder.addInterceptor(chain -> {
+            Request original = chain.request();
+            Request.Builder requestBuilder = original.newBuilder()
+                    .header("Authorization", authorizationHeaderValue)
+                    .method(original.method(), original.body());
+
+            Request request = requestBuilder.build();
+            return chain.proceed(request);
+        });
+
+        // Build the OkHttpClient
+        OkHttpClient client = clientBuilder.build();
+
+        // Create a new Retrofit instance with the modified OkHttpClient
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ClientUtils.SERVICE_API_PATH) // Replace with your actual base URL
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+        OwnerCommentService apiService = retrofit.create(OwnerCommentService.class);
+        Call<OwnerCommentDTO> call = apiService.report(commentId);
+
+        call.enqueue(new Callback<OwnerCommentDTO>() {
+            @Override
+            public void onResponse(Call<OwnerCommentDTO> call, Response<OwnerCommentDTO> response) {
+                if (response.code() == 200) {
+                    Log.d("REZ", "Message received: " + response.code());
+                    Toast.makeText(getContext(), "Successfully reported!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d("REZ", "Message received: " + response.code());
+                    Toast.makeText(getContext(), "Error!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OwnerCommentDTO> call, Throwable t) {
+                Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
+            }
+        });
+    }
+
+    private float calculateAverageRate(List<OwnerCommentDTO> comments) {
+        if (comments == null || comments.isEmpty()) {
+            return 0;
+        }
+
+        float totalRating = 0;
+
+        for (OwnerCommentDTO comment : comments) {
+            totalRating += comment.getRating();
+        }
+
+        return totalRating / comments.size();
+    }
+
+    private void updateAverageRating(float averageRating) {
+        // Update UI components with the new average rating
+        RatingBar rb = getView().findViewById(R.id.owner_rate);
+        rb.setRating(averageRating);
+        TextView rt = getView().findViewById(R.id.rating_text);
+        rt.setText(averageRating+"");
+    }
+
+
 }

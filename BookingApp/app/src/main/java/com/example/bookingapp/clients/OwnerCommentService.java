@@ -34,4 +34,17 @@ public interface OwnerCommentService {
     })
     @PUT("owner_comments/remove/{id}")
     Call<Void> deleteOwnerComment(@Path("id") Long id);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @PUT("owner_comments/report/{comment_id}")
+    Call<OwnerCommentDTO> report(@Path("comment_id") Long comment_id);
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("owner_comments/all/{owner_id}/not_deleted")
+    Call<List<OwnerCommentDTO>> getAllNotDeleted(@Path("owner_id") Long owner_id);
 }

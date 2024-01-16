@@ -4,32 +4,30 @@ import com.example.bookingapp.model.ProfilePicture;
 
 import java.util.Date;
 
-public class OwnerCommentDTO {
+public class AccommodationCommentDTO {
     private Long id;
-    private Long ownerId;
+    private Long accommodationId;
     private Long guestId;
     private String guestName;
     private String guestSurname;
     private ProfilePicture guestProfilePicture;
     private String content;
-    private double rating;
     private Date date;
     private boolean reported;
     private boolean deleted;
     private boolean approved;
 
-    public OwnerCommentDTO() {
+    public AccommodationCommentDTO() {
     }
 
-    public OwnerCommentDTO(Long id, Long ownerId, Long guestId, String guestName, String guestSurname, ProfilePicture guestProfilePicture, String content, double rating, Date date, boolean reported, boolean deleted, boolean approved) {
+    public AccommodationCommentDTO(Long id, Long accommodationId, Long guestId, String guestName, String guestSurname, ProfilePicture guestProfilePicture, String content, Date date, boolean reported, boolean deleted, boolean approved) {
         this.id = id;
-        this.ownerId = ownerId;
+        this.accommodationId = accommodationId;
         this.guestId = guestId;
         this.guestName = guestName;
         this.guestSurname = guestSurname;
         this.guestProfilePicture = guestProfilePicture;
         this.content = content;
-        this.rating = rating;
         this.date = date;
         this.reported = reported;
         this.deleted = deleted;
@@ -44,12 +42,12 @@ public class OwnerCommentDTO {
         this.id = id;
     }
 
-    public Long getOwnerId() {
-        return ownerId;
+    public Long getAccommodationId() {
+        return accommodationId;
     }
 
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
+    public void setAccommodationId(Long accommodationId) {
+        this.accommodationId = accommodationId;
     }
 
     public Long getGuestId() {
@@ -92,14 +90,6 @@ public class OwnerCommentDTO {
         this.content = content;
     }
 
-    public double getRating() {
-        return rating;
-    }
-
-    public void setRating(double rating) {
-        this.rating = rating;
-    }
-
     public Date getDate() {
         return date;
     }
@@ -123,29 +113,12 @@ public class OwnerCommentDTO {
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
+
     public boolean isApproved() {
         return approved;
     }
 
     public void setApproved(boolean approved) {
         this.approved = approved;
-    }
-
-    @Override
-    public String toString() {
-        return "OwnerCommentDTO{" +
-                "id=" + id +
-                ", ownerId=" + ownerId +
-                ", guestId=" + guestId +
-                ", guestName='" + guestName + '\'' +
-                ", guestSurname='" + guestSurname + '\'' +
-                ", guestProfilePicture=" + guestProfilePicture +
-                ", content='" + content + '\'' +
-                ", rating=" + rating +
-                ", date=" + date +
-                ", reported=" + reported +
-                ", deleted=" + deleted +
-                ", approved=" + approved +
-                '}';
     }
 }

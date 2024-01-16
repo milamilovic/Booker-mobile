@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,7 +45,11 @@ import com.example.bookingapp.SplashScreen;
 import com.example.bookingapp.adapters.AccommodationListAdapter;
 import com.example.bookingapp.adapters.AmenityAdapter;
 import com.example.bookingapp.adapters.ImageAdapter;
+import com.example.bookingapp.clients.AccommodationCommentService;
 import com.example.bookingapp.clients.ClientUtils;
+import com.example.bookingapp.dto.commentsAndRatings.AccommodationCommentDTO;
+import com.example.bookingapp.dto.commentsAndRatings.CreateAccommodationCommentDTO;
+import com.example.bookingapp.dto.commentsAndRatings.OwnerCommentDTO;
 import com.example.bookingapp.dto.users.UserDTO;
 import com.example.bookingapp.enums.ReservationRequestStatus;
 import com.example.bookingapp.enums.Role;
@@ -64,9 +69,13 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,11 +88,14 @@ public class AccommodationViewFragment extends Fragment {
     private static Long id;
 
     public static ArrayList<Amenity> amenities = new ArrayList<Amenity>();
+    public static ArrayList<AccommodationCommentDTO> comments = new ArrayList<AccommodationCommentDTO>();
     ListView listView;
+    ListView listViewComments;
 
     private static final String ARG_PARAM = "param";
     private static final String USER_ID_KEY = "user_id";
     private static final String OWNER_ID_KEY = "owner_id";
+    private static final String JWT_TOKEN_KEY = "jwt_token";
     private static final String ACCOMMODATION_ID_KEY = "accommodation_id";
     Button showMap;
     public AccommodationViewFragment() {
@@ -391,7 +403,53 @@ public class AccommodationViewFragment extends Fragment {
             priceButton.setVisibility(View.GONE);
         }
 
+        RatingBar ratingBar = view.findViewById(R.id.ratingBarComment);
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                Toast.makeText(getContext(), "Rating: " + rating, Toast.LENGTH_SHORT).show();
+            }
+        });
 
+        ImageView postComment = view.findViewById(R.id.post_comment);
+        postComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                String jwt = sharedPref.getString(JWT_TOKEN_KEY, "");
+                Long commenterId = sharedPref.getLong(USER_ID_KEY, 0);
+                Long ownerId = sharedPref.getLong(OWNER_ID_KEY, 0);
+                String jwtToken = jwt; // Replace with your actual JWT token
+                String authorizationHeaderValue = "Bearer " + jwtToken;
+
+                // Create a new instance of the OkHttpClient.Builder
+                OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+
+                // Add an interceptor to the OkHttpClient to set the Authorization header
+                clientBuilder.addInterceptor(chain -> {
+                    Request original = chain.request();
+                    Request.Builder requestBuilder = original.newBuilder()
+                            .header("Authorization", authorizationHeaderValue)
+                            .method(original.method(), original.body());
+
+                    Request request = requestBuilder.build();
+                    return chain.proceed(request);
+                });
+
+                // Build the OkHttpClient
+                OkHttpClient client = clientBuilder.build();
+
+                // Create a new Retrofit instance with the modified OkHttpClient
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(ClientUtils.SERVICE_API_PATH) // Replace with your actual base URL
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .client(client)
+                        .build();
+                AccommodationCommentService apiService = retrofit.create(AccommodationCommentService.class);
+                CreateAccommodationCommentDTO createAccommodationCommentDTO = new CreateAccommodationCommentDTO();
+
+            }
+        });
 
 
         return view;
