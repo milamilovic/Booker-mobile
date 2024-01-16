@@ -25,6 +25,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.db.williamchart.data.AxisType;
 import com.db.williamchart.view.BarChartView;
@@ -32,12 +33,18 @@ import com.example.bookingapp.R;
 import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.model.AccommodationName;
 import com.example.bookingapp.model.ReportDataUnit;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Jpeg;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -342,6 +349,7 @@ public class ReportFragment extends Fragment {
                 returnView.findViewById(R.id.interval_text).setVisibility(View.GONE);
                 tackeAndSaveScreenShot(getActivity());
                 returnView.findViewById(R.id.interval_text).setVisibility(View.VISIBLE);
+                Toast.makeText(getContext(), "pdf downloaded", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -352,6 +360,7 @@ public class ReportFragment extends Fragment {
                 returnView.findViewById(R.id.accommodation_text).setVisibility(View.GONE);
                 tackeAndSaveScreenShot(getActivity());
                 returnView.findViewById(R.id.accommodation_text).setVisibility(View.VISIBLE);
+                Toast.makeText(getContext(), "pdf downloaded", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -472,10 +481,30 @@ public class ReportFragment extends Fragment {
             fOut.flush();
             fOut.close();
 
-            //this line will add the saved picture to gallery
-            //MediaStore.Images.Media.insertImage(myFragment.getContentResolver(), file.getAbsolutePath(), file.getName(), file.getName());
+            Document document = new Document();
 
-        } catch (FileNotFoundException e) {
+            File pdffile = File.createTempFile(
+                    name,  // prefix
+                    ".pdf",         // suffix
+                    pathDir      // directory
+            );
+            PdfWriter.getInstance(document, new FileOutputStream(pdffile)); //  Change pdf's name.
+
+            document.open();
+
+            Image image = Image.getInstance(file.getAbsolutePath());
+
+            float scaler = ((document.getPageSize().getWidth() - document.leftMargin()
+                    - document.rightMargin() - 50) / image.getWidth()) * 80; // 0 means you have no indentation. If you have any, change it.
+            image.scalePercent(scaler);
+            image.setAlignment(Image.ALIGN_CENTER | Image.ALIGN_TOP);
+
+            document.add(image);
+            document.close();
+
+            file.delete();
+
+        } catch (FileNotFoundException | DocumentException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
