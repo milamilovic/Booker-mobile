@@ -152,6 +152,8 @@ public class AccommodationViewFragment extends Fragment {
         parentLayout = view.findViewById(R.id.comment_section);
         parentLayout.removeAllViews();
         fetchAccommodationCommentsFromServer();
+        
+
 
         showMap = view.findViewById(R.id.show_map);
         showMap.setOnClickListener(new View.OnClickListener() {
