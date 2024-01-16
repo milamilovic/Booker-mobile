@@ -2,16 +2,19 @@ package com.example.bookingapp.fragments;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
+import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
-import android.util.Pair;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,27 +27,23 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.db.williamchart.data.AxisType;
-import com.db.williamchart.data.Label;
 import com.db.williamchart.view.BarChartView;
-import com.example.bookingapp.BaseActivity;
 import com.example.bookingapp.R;
-import com.example.bookingapp.SplashScreen;
-import com.example.bookingapp.adapters.AccommodationListAdapter;
 import com.example.bookingapp.clients.ClientUtils;
-import com.example.bookingapp.dto.users.UserDTO;
-import com.example.bookingapp.enums.Role;
-import com.example.bookingapp.model.AccommodationListing;
 import com.example.bookingapp.model.AccommodationName;
 import com.example.bookingapp.model.ReportDataUnit;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -336,6 +335,26 @@ public class ReportFragment extends Fragment {
             }
         });
 
+        Button generatePdfInterval = returnView.findViewById(R.id.pdf);
+        generatePdfInterval.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnView.findViewById(R.id.interval_text).setVisibility(View.GONE);
+                tackeAndSaveScreenShot(getActivity());
+                returnView.findViewById(R.id.interval_text).setVisibility(View.VISIBLE);
+            }
+        });
+
+        Button generatePdfAccommodation = returnView.findViewById(R.id.pdf2);
+        generatePdfAccommodation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnView.findViewById(R.id.accommodation_text).setVisibility(View.GONE);
+                tackeAndSaveScreenShot(getActivity());
+                returnView.findViewById(R.id.accommodation_text).setVisibility(View.VISIBLE);
+            }
+        });
+
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -417,6 +436,50 @@ public class ReportFragment extends Fragment {
                 put(finalData2.get(i).getName(), (float) finalData2.get(i).getReservations() / 100);
             }
         }};
+    }
+
+    public void tackeAndSaveScreenShot(FragmentActivity myFragment) {
+        View MainView = myFragment.getWindow().getDecorView();
+        MainView.setDrawingCacheEnabled(true);
+        MainView.buildDrawingCache();
+        Bitmap MainBitmap = MainView.getDrawingCache();
+        Rect frame = new Rect();
+
+        myFragment.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+        //to remove statusBar from the taken sc
+        int statusBarHeight = frame.top;
+        //using screen size to create bitmap
+        int width = myFragment.getWindowManager().getDefaultDisplay().getWidth();
+        int height = myFragment.getWindowManager().getDefaultDisplay().getHeight();
+        Bitmap OutBitmap = Bitmap.createBitmap(MainBitmap, 0, statusBarHeight, width, height - statusBarHeight);
+        MainView.destroyDrawingCache();
+        try {
+
+            File pathDir = Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOWNLOADS);
+            OutputStream fOut = null;
+            //you can also using current time to generate name
+            String name="Report";
+            pathDir.mkdirs();
+            File file = File.createTempFile(
+                    name,  // prefix
+                    ".png",         // suffix
+                    pathDir      // directory
+            );
+            fOut = new FileOutputStream(file);
+
+           OutBitmap.compress(Bitmap.CompressFormat.PNG, 90, fOut);
+            fOut.flush();
+            fOut.close();
+
+            //this line will add the saved picture to gallery
+            //MediaStore.Images.Media.insertImage(myFragment.getContentResolver(), file.getAbsolutePath(), file.getName(), file.getName());
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

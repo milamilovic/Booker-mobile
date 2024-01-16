@@ -77,7 +77,8 @@ fun getIpAddress(): String? {
         implementation("com.squareup.retrofit2:adapter-rxjava2:2.4.0")
         // for date range picker
         implementation ("com.google.android.material:material:1.9.0")
-
+        //for pdf
+        implementation("com.itextpdf:itextpdf:5.5.13")
     }
 
 
