@@ -115,7 +115,44 @@ public class ReportFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
                 ((TextView) view).setTextColor(getResources().getColor(R.color.dark_gray));
-                //TODO: change data here
+                String accName = (String) accommodations.getSelectedItem();
+                Long accId = 0L;
+                StrictMode.setThreadPolicy(policy);
+                Call<Long> call3 = ClientUtils.accommodationService.getAccId(accName);
+                try{
+                    Response<Long> response3 = call3.execute();
+                    accId = (Long) response3.body();
+                }catch(Exception ex){
+                    System.out.println("ERROR WHILE GETTING ACCOMMODATION ID");
+                }
+                StrictMode.setThreadPolicy(policy);
+                ArrayList<ReportDataUnit> data2 = null;
+                Call<List<ReportDataUnit>> call2 = ClientUtils.accommodationService.getAccReport(userID, 2023, accId);
+                try{
+                    Response<List<ReportDataUnit>> response2 = call2.execute();
+                    data2 = (ArrayList<ReportDataUnit>) response2.body();
+                }catch(Exception ex){
+                    System.out.println("ERROR WHILE GETTING DATA FOR ACCOMMODATION REPORT");
+                }
+
+                ArrayList<ReportDataUnit> finalData2 = data2;
+                accommodationPrices = new LinkedHashMap<String, Float>() {{
+                    for(int i = 0; i< finalData2.size(); i++) {
+                        //put("jan", (float) 100);
+                        put(finalData2.get(i).getName(), (float) finalData2.get(i).getProfit());
+                    }
+                }};
+                BarChartView accommodationChartPrices = returnView.findViewById(R.id.accommodation_chart_reservations);
+                accommodationChartPrices.animate(accommodationPrices);
+                accommodationReservations = new LinkedHashMap<String, Float>() {{
+                    for(int i = 0; i< finalData2.size(); i++) {
+                        //put("jan", (float) 100);
+                        put(finalData2.get(i).getName(), (float) finalData2.get(i).getReservations());
+                    }
+                }};
+
+                BarChartView accommodationChartReservations = returnView.findViewById(R.id.accommodation_chart_profit);
+                accommodationChartReservations.animate(accommodationReservations);
             }
 
             @Override
