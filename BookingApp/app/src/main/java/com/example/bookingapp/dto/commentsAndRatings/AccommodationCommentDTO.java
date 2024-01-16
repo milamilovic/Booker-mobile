@@ -12,6 +12,7 @@ public class AccommodationCommentDTO {
     private String guestSurname;
     private ProfilePicture guestProfilePicture;
     private String content;
+    private double rating;
     private Date date;
     private boolean reported;
     private boolean deleted;
@@ -20,7 +21,7 @@ public class AccommodationCommentDTO {
     public AccommodationCommentDTO() {
     }
 
-    public AccommodationCommentDTO(Long id, Long accommodationId, Long guestId, String guestName, String guestSurname, ProfilePicture guestProfilePicture, String content, Date date, boolean reported, boolean deleted, boolean approved) {
+    public AccommodationCommentDTO(Long id, Long accommodationId, Long guestId, String guestName, String guestSurname, ProfilePicture guestProfilePicture, String content, double rating, Date date, boolean reported, boolean deleted, boolean approved) {
         this.id = id;
         this.accommodationId = accommodationId;
         this.guestId = guestId;
@@ -28,6 +29,7 @@ public class AccommodationCommentDTO {
         this.guestSurname = guestSurname;
         this.guestProfilePicture = guestProfilePicture;
         this.content = content;
+        this.rating = rating;
         this.date = date;
         this.reported = reported;
         this.deleted = deleted;
@@ -88,6 +90,14 @@ public class AccommodationCommentDTO {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 
     public Date getDate() {

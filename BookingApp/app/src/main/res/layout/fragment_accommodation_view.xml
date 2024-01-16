@@ -232,11 +232,19 @@
                         android:textSize="20dp"
                         android:textColor="@color/dark_gray"/>
 
-                    <LinearLayout
-                        android:id="@+id/comment_section"
+                    <androidx.core.widget.NestedScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"/>
+                        android:layout_height="match_parent"
+                        android:paddingBottom="10dp">
+
+                        <LinearLayout
+                            android:id="@+id/comment_section"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"/>
+                    </androidx.core.widget.NestedScrollView>
+
+
 
 
                     <!--Add rating user-->
