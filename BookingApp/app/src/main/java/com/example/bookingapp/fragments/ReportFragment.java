@@ -1,8 +1,10 @@
 package com.example.bookingapp.fragments;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,6 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -24,6 +29,7 @@ import com.db.williamchart.view.BarChartView;
 import com.example.bookingapp.BaseActivity;
 import com.example.bookingapp.R;
 import com.example.bookingapp.SplashScreen;
+import com.example.bookingapp.adapters.AccommodationListAdapter;
 import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.dto.users.UserDTO;
 import com.example.bookingapp.enums.Role;
@@ -31,9 +37,12 @@ import com.example.bookingapp.model.AccommodationListing;
 import com.example.bookingapp.model.AccommodationName;
 import com.example.bookingapp.model.ReportDataUnit;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,6 +60,9 @@ public class ReportFragment extends Fragment {
     private static LinkedHashMap<String, Float> accommodationPrices = null;
 
     private static LinkedHashMap<String, Float> accommodationReservations = null;
+    final Calendar myCalendar= Calendar.getInstance();
+    private static Date fromDate = null;
+    private static Date toDate = null;
     Spinner accommodations;
 
     public ReportFragment() {
@@ -77,6 +89,94 @@ public class ReportFragment extends Fragment {
                              Bundle savedInstanceState) {
         View returnView =  inflater.inflate(R.layout.fragment_report, container, false);
 
+        EditText from = returnView.findViewById(R.id.from);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            fromDate = formatter.parse("2023-01-01");
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        from.setText(formatter.format(fromDate));
+
+        DatePickerDialog.OnDateSetListener fromDate =new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH,month);
+                myCalendar.set(Calendar.DAY_OF_MONTH,day);
+                updateLabel(from, myCalendar);
+            }
+        };
+        from.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(getContext(),fromDate,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        EditText until = returnView.findViewById(R.id.until);
+        try {
+            toDate = formatter.parse("2024-01-01");
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        until.setText(formatter.format(toDate));
+
+        DatePickerDialog.OnDateSetListener toDate =new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH,month);
+                myCalendar.set(Calendar.DAY_OF_MONTH,day);
+                updateLabel(until, myCalendar);
+            }
+        };
+        until.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(getContext(),toDate,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        Button generateReportInterval = returnView.findViewById(R.id.generateReportInterval);
+        generateReportInterval.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                Long userID = sharedPref.getLong(USER_ID_KEY, 0);
+
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+                ArrayList<ReportDataUnit> data = null;
+                Call<List<ReportDataUnit>> call = ClientUtils.accommodationService.getIntervalReport(userID, from.getText().toString(), until.getText().toString());
+                try{
+                    Response<List<ReportDataUnit>> response = call.execute();
+                    data = (ArrayList<ReportDataUnit>) response.body();
+                }catch(Exception ex){
+                    System.out.println("ERROR WHILE GETTING DATA FOR INTERVAL REPORT");
+                }
+
+                ArrayList<ReportDataUnit> finalData = data;
+                intervalPrices = new LinkedHashMap<String, Float>() {{
+                    for(int i = 0; i< finalData.size(); i++) {
+                        //put("jan", (float) 100);
+                        put(finalData.get(i).getName(), (float) finalData.get(i).getProfit());
+                    }
+
+                }};
+                BarChartView intervalChartPrices = returnView.findViewById(R.id.interval_chart_profit);
+                intervalChartPrices.animate(intervalPrices);
+                intervalReservations = new LinkedHashMap<String, Float>() {{
+                    for(int i = 0; i< finalData.size(); i++) {
+                        //put("jan", (float) 100);
+                        put(finalData.get(i).getName(), (float) finalData.get(i).getReservations() / 100);
+                    }
+                }};
+                BarChartView intervalChartReservations = returnView.findViewById(R.id.interval_chart_reservations);
+                intervalChartReservations.animate(intervalReservations);
+            }
+        });
+
         Spinner dropdown = returnView.findViewById(R.id.spinner);
         String[] items = new String[]{"date interval report", "single accommodation report"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, items);
@@ -84,6 +184,9 @@ public class ReportFragment extends Fragment {
         dropdown.setSelection(0, true);
         View v = dropdown.getSelectedView();
         ((TextView)v).setTextColor(getResources().getColor(R.color.dark_gray));
+
+        EditText year_edit = returnView.findViewById(R.id.year);
+        year_edit.setText("2023");
 
         accommodations = returnView.findViewById(R.id.spinner_accommodation);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -109,12 +212,10 @@ public class ReportFragment extends Fragment {
         View v2 = accommodations.getSelectedView();
         ((TextView)v2).setTextColor(getResources().getColor(R.color.dark_gray));
 
-        accommodations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-        {
+        Button generateReportAcc = returnView.findViewById(R.id.generateReportAccommodation);
+        generateReportAcc.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {
-                ((TextView) view).setTextColor(getResources().getColor(R.color.dark_gray));
+            public void onClick(View v) {
                 String accName = (String) accommodations.getSelectedItem();
                 Long accId = 0L;
                 StrictMode.setThreadPolicy(policy);
@@ -127,7 +228,8 @@ public class ReportFragment extends Fragment {
                 }
                 StrictMode.setThreadPolicy(policy);
                 ArrayList<ReportDataUnit> data2 = null;
-                Call<List<ReportDataUnit>> call2 = ClientUtils.accommodationService.getAccReport(userID, 2023, accId);
+                int year = Integer.parseInt(year_edit.getText().toString());
+                Call<List<ReportDataUnit>> call2 = ClientUtils.accommodationService.getAccReport(userID, year, accId);
                 try{
                     Response<List<ReportDataUnit>> response2 = call2.execute();
                     data2 = (ArrayList<ReportDataUnit>) response2.body();
@@ -142,17 +244,26 @@ public class ReportFragment extends Fragment {
                         put(finalData2.get(i).getName(), (float) finalData2.get(i).getProfit());
                     }
                 }};
-                BarChartView accommodationChartPrices = returnView.findViewById(R.id.accommodation_chart_reservations);
+                BarChartView accommodationChartPrices = returnView.findViewById(R.id.accommodation_chart_profit);
                 accommodationChartPrices.animate(accommodationPrices);
                 accommodationReservations = new LinkedHashMap<String, Float>() {{
                     for(int i = 0; i< finalData2.size(); i++) {
                         //put("jan", (float) 100);
-                        put(finalData2.get(i).getName(), (float) finalData2.get(i).getReservations());
+                        put(finalData2.get(i).getName(), (float) finalData2.get(i).getReservations() / 100);
                     }
                 }};
 
-                BarChartView accommodationChartReservations = returnView.findViewById(R.id.accommodation_chart_profit);
+                BarChartView accommodationChartReservations = returnView.findViewById(R.id.accommodation_chart_reservations);
                 accommodationChartReservations.animate(accommodationReservations);
+            }
+        });
+
+        accommodations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                ((TextView) view).setTextColor(getResources().getColor(R.color.dark_gray));
             }
 
             @Override
@@ -164,7 +275,7 @@ public class ReportFragment extends Fragment {
         accommodations.setSelection(0);
         initializeData();
 
-        BarChartView intervalChartPrices = returnView.findViewById(R.id.interval_chart_reservations);
+        BarChartView intervalChartPrices = returnView.findViewById(R.id.interval_chart_profit);
         intervalChartPrices.getAnimation().setDuration(1200L);
         intervalChartPrices.animate(intervalPrices);
 
@@ -172,7 +283,7 @@ public class ReportFragment extends Fragment {
         intervalChartPrices.setScaleY(3f);
         intervalChartPrices.setAxis(AxisType.XY);
 
-        BarChartView intervalChartReservations = returnView.findViewById(R.id.interval_chart_profit);
+        BarChartView intervalChartReservations = returnView.findViewById(R.id.interval_chart_reservations);
         intervalChartReservations.getAnimation().setDuration(1200L);
         intervalChartReservations.animate(intervalReservations);
 
@@ -182,7 +293,7 @@ public class ReportFragment extends Fragment {
 
         //we show interval report initially
 
-        BarChartView accommodationChartPrices = returnView.findViewById(R.id.accommodation_chart_reservations);
+        BarChartView accommodationChartPrices = returnView.findViewById(R.id.accommodation_chart_profit);
         accommodationChartPrices.getAnimation().setDuration(1200L);
         accommodationChartPrices.animate(accommodationPrices);
 
@@ -191,7 +302,7 @@ public class ReportFragment extends Fragment {
         accommodationChartPrices.setScaleX(0.5f);
         accommodationChartPrices.setAxis(AxisType.XY);
 
-        BarChartView accommodationChartReservations = returnView.findViewById(R.id.accommodation_chart_profit);
+        BarChartView accommodationChartReservations = returnView.findViewById(R.id.accommodation_chart_reservations);
         accommodationChartReservations.getAnimation().setDuration(1200L);
         accommodationChartReservations.animate(accommodationReservations);
 
@@ -235,6 +346,13 @@ public class ReportFragment extends Fragment {
         return returnView;
     }
 
+    private void updateLabel(EditText editText, Calendar myCalendar){
+        String myFormat="yyyy-MM-dd";
+        SimpleDateFormat dateFormat=new SimpleDateFormat(myFormat);
+        editText.setText(dateFormat.format(myCalendar.getTime()));
+        editText.setTextColor(Color.parseColor("#3c3c3c"));
+    }
+
     private void initializeData() {
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         Long userID = sharedPref.getLong(USER_ID_KEY, 0);
@@ -261,7 +379,7 @@ public class ReportFragment extends Fragment {
         intervalReservations = new LinkedHashMap<String, Float>() {{
             for(int i = 0; i< finalData.size(); i++) {
                 //put("jan", (float) 100);
-                put(finalData.get(i).getName(), (float) finalData.get(i).getReservations());
+                put(finalData.get(i).getName(), (float) finalData.get(i).getReservations() / 100);
             }
         }};
 
@@ -296,7 +414,7 @@ public class ReportFragment extends Fragment {
         accommodationReservations = new LinkedHashMap<String, Float>() {{
             for(int i = 0; i< finalData2.size(); i++) {
                 //put("jan", (float) 100);
-                put(finalData2.get(i).getName(), (float) finalData2.get(i).getReservations());
+                put(finalData2.get(i).getName(), (float) finalData2.get(i).getReservations() / 100);
             }
         }};
     }

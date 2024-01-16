@@ -63,7 +63,8 @@
                     android:textColorHint="@color/transparent_60_dark_gray"
                     android:inputType="date"
                     android:minHeight="48dp"
-                    android:layout_marginTop="20dp"/>
+                    android:layout_marginTop="20dp"
+                    android:textColor="@color/dark_gray"/>
 
                 <EditText
                     android:id="@+id/until"
@@ -76,7 +77,22 @@
                     android:textColorHint="@color/transparent_60_dark_gray"
                     android:inputType="date"
                     android:minHeight="48dp"
-                    android:layout_marginBottom="20dp"/>
+                    android:layout_marginBottom="20dp"
+                    android:textColor="@color/dark_gray"/>
+
+                <Button
+                    android:id="@+id/generateReportInterval"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_marginBottom="30px"
+                    android:minWidth="150dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/round_corner_alternative"
+                    android:backgroundTint="@color/transparent_60_dark_gray"
+                    android:enabled="true"
+                    android:text="Generate Resport!"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/transparent_60_dark_gray"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -164,6 +180,34 @@
                     android:layout_marginTop="20dp"
                     />
 
+                <EditText
+                    android:id="@+id/year"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxHeight="10dp"
+                    android:autofillHints="@string/people_hint"
+                    android:drawableStart="@drawable/icons8_calendar_32"
+                    android:drawablePadding="20dp"
+                    android:inputType="number"
+                    android:minHeight="48dp"
+                    android:textColor="@color/dark_gray"
+                    android:layout_marginTop="20dp"/>
+
+                <Button
+                    android:id="@+id/generateReportAccommodation"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="30px"
+                    android:layout_marginBottom="30px"
+                    android:minWidth="150dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/round_corner_alternative"
+                    android:backgroundTint="@color/transparent_60_dark_gray"
+                    android:enabled="true"
+                    android:text="Generate Resport!"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/transparent_60_dark_gray"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -222,7 +266,7 @@
                         android:background="@drawable/round_corner_alternative"
                         android:backgroundTint="@color/transparent_60_dark_gray"
                         android:enabled="true"
-                        android:layout_marginBottom="30dp"
+                        android:layout_marginBottom="30px"
                         android:text="Generate PDF"
                         android:textColor="@color/white"
                         android:textColorHint="@color/transparent_60_dark_gray"/>
