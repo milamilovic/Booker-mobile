@@ -13,6 +13,7 @@ import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
 import com.example.bookingapp.clients.AccommodationRating;
 import com.example.bookingapp.clients.ClientUtils;
+import com.example.bookingapp.dto.commentsAndRatings.AccommodationCommentDTO;
 import com.example.bookingapp.dto.users.UserDTO;
 import com.example.bookingapp.enums.Role;
 import com.example.bookingapp.fragments.AccommodationViewFragment;
@@ -133,15 +134,15 @@ public class AccommodationListAdapter extends ArrayAdapter<AccommodationListing>
             pricePerDay.setText(AccommodationListing.getPricePerDay() + "$/day");
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
-            Call<List<AccommodationRating>> call = ClientUtils.accommodationService.getRatings(AccommodationListing.getId());
+            Call<List<AccommodationCommentDTO>> call = ClientUtils.accommodationCommentService.getAllNotDeleted(AccommodationListing.getId());
             try{
-                Response<List<AccommodationRating>> response = call.execute();
-                List<AccommodationRating> ratings = (List<AccommodationRating>) response.body();
+                Response<List<AccommodationCommentDTO>> response = call.execute();
+                List<AccommodationCommentDTO> ratings = (List<AccommodationCommentDTO>) response.body();
                 float rating_float = 0;
-                for(AccommodationRating a : ratings) {
-                    rating_float += a.getRate();
+                for(AccommodationCommentDTO a : ratings) {
+                    rating_float += a.getRating();
                 }
-                ratingBar.setRating(rating_float);
+                ratingBar.setRating(rating_float / ratings.size());
             }catch(Exception ex){
                 System.out.println("EXCEPTION WHILE GETTING RATINGS");
                 ex.printStackTrace();

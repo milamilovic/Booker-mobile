@@ -105,4 +105,5 @@
     <string name="cancellation_deadline">Cancellation deadline</string>
     <string name="pick_availability">Pick availability</string>
     <string name="way_of_accepting_requests"><b>Way of accepting requests</b></string>
+    <string name="commenter_profile_pic">commenter profile pic</string>
 </resources>

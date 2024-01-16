@@ -144,15 +144,13 @@ public class Accommodation implements Parcelable {
         this.max_capacity = pricePerDay;
     }
 
-
     public Long getOwner_id() {
         return owner_id;
     }
 
-    public void setOwner_id(Long id) {
-        this.owner_id = id;
+    public void setOwner_id(Long owner_id) {
+        this.owner_id = owner_id;
     }
-
 
     public List<Object> getComments() {
         return comments;

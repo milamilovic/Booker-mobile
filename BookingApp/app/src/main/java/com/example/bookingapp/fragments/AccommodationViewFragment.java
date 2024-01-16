@@ -1,5 +1,7 @@
 package com.example.bookingapp.fragments;
 
+import static com.example.bookingapp.clients.ClientUtils.retrofit;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,7 +29,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,7 +49,12 @@ import com.example.bookingapp.SplashScreen;
 import com.example.bookingapp.adapters.AccommodationListAdapter;
 import com.example.bookingapp.adapters.AmenityAdapter;
 import com.example.bookingapp.adapters.ImageAdapter;
+import com.example.bookingapp.clients.AccommodationCommentService;
 import com.example.bookingapp.clients.ClientUtils;
+import com.example.bookingapp.dto.accommodation.AccommodationViewDTO;
+import com.example.bookingapp.dto.commentsAndRatings.AccommodationCommentDTO;
+import com.example.bookingapp.dto.commentsAndRatings.CreateAccommodationCommentDTO;
+import com.example.bookingapp.dto.commentsAndRatings.OwnerCommentDTO;
 import com.example.bookingapp.dto.users.UserDTO;
 import com.example.bookingapp.enums.ReservationRequestStatus;
 import com.example.bookingapp.enums.Role;
@@ -56,17 +66,23 @@ import com.example.bookingapp.model.ReservationRequest;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.datepicker.DayViewDecorator;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,10 +95,18 @@ public class AccommodationViewFragment extends Fragment {
     private static Long id;
 
     public static ArrayList<Amenity> amenities = new ArrayList<Amenity>();
+    public static ArrayList<AccommodationCommentDTO> comments = new ArrayList<AccommodationCommentDTO>();
     ListView listView;
+    private LinearLayout parentLayout;
+    private float total = 0;
+    private float average = 0;
 
     private static final String ARG_PARAM = "param";
     private static final String USER_ID_KEY = "user_id";
+    private static final String OWNER_ID_KEY = "owner_id";
+    private static final String JWT_TOKEN_KEY = "jwt_token";
+    private static final String ACCOMMODATION_ID_KEY = "accommodation_id";
+    private static final String USER_ROLE_KEY = "user_role";
     Button showMap;
     public AccommodationViewFragment() {
         // Required empty public constructor
@@ -125,6 +149,11 @@ public class AccommodationViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_accommodation_view, container, false);
+        parentLayout = view.findViewById(R.id.comment_section);
+        parentLayout.removeAllViews();
+        fetchAccommodationCommentsFromServer();
+        
+
 
         showMap = view.findViewById(R.id.show_map);
         showMap.setOnClickListener(new View.OnClickListener() {
@@ -325,6 +354,10 @@ public class AccommodationViewFragment extends Fragment {
 
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         Long userID = sharedPref.getLong(USER_ID_KEY, 0);
+        String roleString = sharedPref.getString(USER_ROLE_KEY, "");
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putLong(OWNER_ID_KEY, accommodation.getOwner_id());
+        editor.apply();
         if(userID!=0) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
@@ -386,6 +419,275 @@ public class AccommodationViewFragment extends Fragment {
             priceButton.setVisibility(View.GONE);
         }
 
+        RatingBar ratingBar = view.findViewById(R.id.ratingBarComment);
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                Toast.makeText(getContext(), "Rating: " + rating, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        ImageView postComment = view.findViewById(R.id.post_comment);
+        EditText newComment = view.findViewById(R.id.new_comment);
+        RatingBar ratingBarComment = view.findViewById(R.id.ratingBarComment);
+        if (roleString.equals(String.valueOf(Role.OWNER))) {
+            postComment.setVisibility(View.GONE);
+            newComment.setVisibility(View.GONE);
+            ratingBarComment.setVisibility(View.GONE);
+        }
+        postComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                String jwt = sharedPref.getString(JWT_TOKEN_KEY, "");
+                Long commenterId = sharedPref.getLong(USER_ID_KEY, 0);
+                String jwtToken = jwt; // Replace with your actual JWT token
+                String authorizationHeaderValue = "Bearer " + jwtToken;
+
+                // Create a new instance of the OkHttpClient.Builder
+                OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+
+                // Add an interceptor to the OkHttpClient to set the Authorization header
+                clientBuilder.addInterceptor(chain -> {
+                    Request original = chain.request();
+                    Request.Builder requestBuilder = original.newBuilder()
+                            .header("Authorization", authorizationHeaderValue)
+                            .method(original.method(), original.body());
+
+                    Request request = requestBuilder.build();
+                    return chain.proceed(request);
+                });
+
+                // Build the OkHttpClient
+                OkHttpClient client = clientBuilder.build();
+
+                // Create a new Retrofit instance with the modified OkHttpClient
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(ClientUtils.SERVICE_API_PATH) // Replace with your actual base URL
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .client(client)
+                        .build();
+                AccommodationCommentService apiService = retrofit.create(AccommodationCommentService.class);
+                CreateAccommodationCommentDTO createAccommodationCommentDTO = new CreateAccommodationCommentDTO();
+                createAccommodationCommentDTO.setAccommodationId(id);
+                createAccommodationCommentDTO.setGuestId(commenterId);
+                EditText newComment = view.findViewById(R.id.new_comment);
+                createAccommodationCommentDTO.setContent(newComment.getText().toString());
+                RatingBar ratingBarComment = view.findViewById(R.id.ratingBarComment);
+                createAccommodationCommentDTO.setRating(ratingBarComment.getRating());
+
+                Call<AccommodationCommentDTO> call = apiService.create(createAccommodationCommentDTO);
+
+                call.enqueue(new Callback<AccommodationCommentDTO>() {
+                    @Override
+                    public void onResponse(Call<AccommodationCommentDTO> call, Response<AccommodationCommentDTO> response) {
+                        if (response.code() == 201) {
+                            Log.d("REZ", "Message received: " + response.code());
+                            Toast.makeText(getContext(), "Accommodation comment successfully created!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.d("REZ", "Message received: " + response.code());
+                            Toast.makeText(getContext(), "Error in creating comment!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<AccommodationCommentDTO> call, Throwable t) {
+                        Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
+                    }
+                });
+
+            }
+        });
+
+
         return view;
     }
+
+    private void fetchAccommodationCommentsFromServer() {
+        AccommodationCommentService apiService = retrofit.create(AccommodationCommentService.class);
+        Call<List<AccommodationCommentDTO>> call = apiService.getAllNotDeleted(id);
+
+        call.enqueue(new Callback<List<AccommodationCommentDTO>>() {
+            @Override
+            public void onResponse(Call<List<AccommodationCommentDTO>> call, Response<List<AccommodationCommentDTO>> response) {
+                if (response.code() == 200) {
+                    Log.d("REZ", "Message received: " + response.code());
+                    List<AccommodationCommentDTO> accommodationCommentsList = response.body();
+                    for (AccommodationCommentDTO accommodationCommentDTO : accommodationCommentsList) {
+                        View accommodationCommentItem = createAccommodationCommentItem(accommodationCommentDTO);
+                        parentLayout.addView(accommodationCommentItem);
+
+                    }
+                } else {
+                    Log.d("REZ", "Message received: " + response.code());
+                    Toast.makeText(getContext(), "Error in fetching comments!", Toast.LENGTH_SHORT);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<AccommodationCommentDTO>> call, Throwable t) {
+                Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
+            }
+        });
+    }
+
+    private View createAccommodationCommentItem(AccommodationCommentDTO accommodationCommentDTO) {
+        View accommodationCommentItem = LayoutInflater.from(getActivity()).inflate(R.layout.owner_comment_item, null);
+        TextView name = accommodationCommentItem.findViewById(R.id.name);
+        TextView content = accommodationCommentItem.findViewById(R.id.commentContent);
+        TextView commentDate = accommodationCommentItem.findViewById(R.id.commentDate);
+        TextView commentRating = accommodationCommentItem.findViewById(R.id.rating);
+        ImageView deleteComment = accommodationCommentItem.findViewById(R.id.deleteComment);
+        ImageView reportComment = accommodationCommentItem.findViewById(R.id.report_comment);
+
+        String nameString = accommodationCommentDTO.getGuestName() + " " + accommodationCommentDTO.getGuestSurname();
+        name.setText(nameString);
+        content.setText(accommodationCommentDTO.getContent());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String dateString = sdf.format(accommodationCommentDTO.getDate());
+        commentDate.setText(dateString);
+        String ratingString = String.format("%.2f", accommodationCommentDTO.getRating()) + "/5";
+        commentRating.setText(ratingString);
+
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        Long loggedId = sharedPref.getLong(USER_ID_KEY, -1);
+        String jwt = sharedPref.getString(JWT_TOKEN_KEY, "");
+        String roleString = sharedPref.getString(USER_ROLE_KEY, "");
+        Log.d("LOGGED_IN", loggedId+"");
+        Log.d("ROLE", roleString);
+
+
+
+
+        if(loggedId == accommodationCommentDTO.getGuestId()) {
+            deleteComment.setVisibility(View.VISIBLE);
+            deleteComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    handleDeleteComment(accommodationCommentDTO.getId());
+                }
+            });
+        } else {
+            deleteComment.setVisibility(View.GONE);
+        }
+
+        if (loggedId == accommodation.getOwner_id()) {
+            reportComment.setVisibility(View.VISIBLE);
+            reportComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    handleReportComment(accommodationCommentDTO.getId());
+                }
+            });
+        } else {
+            reportComment.setVisibility(View.GONE);
+        }
+
+        return accommodationCommentItem;
+    }
+
+    private void handleDeleteComment(Long commentId) {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String jwt = sharedPref.getString(JWT_TOKEN_KEY, "");
+        String jwtToken = jwt; // Replace with your actual JWT token
+        String authorizationHeaderValue = "Bearer " + jwtToken;
+
+        // Create a new instance of the OkHttpClient.Builder
+        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+
+        // Add an interceptor to the OkHttpClient to set the Authorization header
+        clientBuilder.addInterceptor(chain -> {
+            Request original = chain.request();
+            Request.Builder requestBuilder = original.newBuilder()
+                    .header("Authorization", authorizationHeaderValue)
+                    .method(original.method(), original.body());
+
+            Request request = requestBuilder.build();
+            return chain.proceed(request);
+        });
+
+        // Build the OkHttpClient
+        OkHttpClient client = clientBuilder.build();
+
+        // Create a new Retrofit instance with the modified OkHttpClient
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ClientUtils.SERVICE_API_PATH) // Replace with your actual base URL
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+        AccommodationCommentService apiService = retrofit.create(AccommodationCommentService.class);
+        Call<Void> call = apiService.delete(commentId);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.code() == 200) {
+                    Log.d("REZ", "Message received: " + response.code());
+                    parentLayout.removeAllViews();
+                    fetchAccommodationCommentsFromServer();
+                    Toast.makeText(getContext(), "Successfully deleted!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d("REZ", "Message received: " + response.code());
+                    Toast.makeText(getContext(), "Error in deleting comment!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
+            }
+        });
+    }
+
+    private void handleReportComment(Long commentId) {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String jwt = sharedPref.getString(JWT_TOKEN_KEY, "");
+        String jwtToken = jwt; // Replace with your actual JWT token
+        String authorizationHeaderValue = "Bearer " + jwtToken;
+
+        // Create a new instance of the OkHttpClient.Builder
+        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+
+        // Add an interceptor to the OkHttpClient to set the Authorization header
+        clientBuilder.addInterceptor(chain -> {
+            Request original = chain.request();
+            Request.Builder requestBuilder = original.newBuilder()
+                    .header("Authorization", authorizationHeaderValue)
+                    .method(original.method(), original.body());
+
+            Request request = requestBuilder.build();
+            return chain.proceed(request);
+        });
+
+        // Build the OkHttpClient
+        OkHttpClient client = clientBuilder.build();
+
+        // Create a new Retrofit instance with the modified OkHttpClient
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ClientUtils.SERVICE_API_PATH) // Replace with your actual base URL
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+        AccommodationCommentService apiService = retrofit.create(AccommodationCommentService.class);
+        Call<AccommodationCommentDTO> call = apiService.report(commentId);
+
+        call.enqueue(new Callback<AccommodationCommentDTO>() {
+            @Override
+            public void onResponse(Call<AccommodationCommentDTO> call, Response<AccommodationCommentDTO> response) {
+                if (response.code() == 200) {
+                    Log.d("REZ", "Message received: " + response.code());
+                    Toast.makeText(getContext(), "Successfully reported!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d("REZ", "Message received: " + response.code());
+                    Toast.makeText(getContext(), "Error in reporting comment!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AccommodationCommentDTO> call, Throwable t) {
+                Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
+            }
+        });
+    }
+
 }
