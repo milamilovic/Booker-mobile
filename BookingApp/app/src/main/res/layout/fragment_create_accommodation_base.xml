@@ -283,7 +283,8 @@
                 android:text="@string/show_map"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/round_corner_alternative"/>
+                android:background="@drawable/round_corner_alternative"
+                android:textColor="@color/white"/>
 
             <EditText
                 android:id="@+id/editTextFrom"

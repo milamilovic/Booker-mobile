@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.dto.users.GuestDTO;
 import com.example.bookingapp.dto.users.UserDTO;
+import com.example.bookingapp.fragments.ReportUserDialogFragment;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -113,9 +114,11 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         final String report = String.valueOf(R.id.report);
-                        final String id = String.valueOf(item.getItemId());
-                        if (report.equals(id)){
-                            Toast.makeText(getActivity(), "Reporting user ...", Toast.LENGTH_SHORT).show();
+                        final String itemId = String.valueOf(item.getItemId());
+                        if (report.equals(itemId)){
+                            //Toast.makeText(getActivity(), "Reporting user ...", Toast.LENGTH_SHORT).show();
+                            ReportUserDialogFragment dialogFragment = new ReportUserDialogFragment(id);
+                            dialogFragment.show(getActivity().getSupportFragmentManager(), "report_user");
                             return true;
                         }
                         return false;

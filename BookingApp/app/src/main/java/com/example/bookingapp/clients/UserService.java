@@ -1,11 +1,13 @@
 package com.example.bookingapp.clients;
 
+import com.example.bookingapp.dto.users.CreateReportUserDTO;
 import com.example.bookingapp.dto.users.CreateUserDTO;
 import com.example.bookingapp.dto.users.GuestDTO;
 import com.example.bookingapp.dto.users.LoginUserDTO;
 import com.example.bookingapp.dto.users.OwnerDTO;
 import com.example.bookingapp.dto.users.Token;
 import com.example.bookingapp.dto.users.UserDTO;
+import com.example.bookingapp.dto.users.UserReportDTO;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -83,4 +85,10 @@ public interface UserService {
     @GET("guests/{id}/cancelled")
     Call<Integer> getNumOfCancellations(@Path("id") Long id);
 
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @POST("report_user/add_report")
+    Call<UserReportDTO> addReport(@Body CreateReportUserDTO createReportUserDTO);
 }

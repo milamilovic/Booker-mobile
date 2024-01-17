@@ -38,6 +38,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import com.example.bookingapp.dto.users.OwnerDTO;
 import com.example.bookingapp.enums.Role;
+import com.example.bookingapp.fragments.ReportUserDialogFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -236,9 +237,11 @@ public class OwnerProfileFragment extends Fragment {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         final String report = String.valueOf(R.id.report);
-                        final String id = String.valueOf(item.getItemId());
-                        if (report.equals(id)){
-                            Toast.makeText(getActivity(), "Reporting user ...", Toast.LENGTH_SHORT).show();
+                        final String itemId = String.valueOf(item.getItemId());
+                        if (report.equals(itemId)){
+                            //Toast.makeText(getActivity(), "Reporting user ...", Toast.LENGTH_SHORT).show();
+                            ReportUserDialogFragment dialogFragment = new ReportUserDialogFragment(id);
+                            dialogFragment.show(getActivity().getSupportFragmentManager(), "report_user");
                             return true;
                         }
                         return false;
