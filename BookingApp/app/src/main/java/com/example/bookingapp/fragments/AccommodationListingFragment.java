@@ -38,6 +38,7 @@ import com.example.bookingapp.model.AccommodationListing;
 import com.example.bookingapp.model.CheckBoxFilter;
 import com.example.bookingapp.model.Filter;
 import com.example.bookingapp.model.PriceFilter;
+import com.github.tbouron.shakedetector.library.ShakeDetector;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.slider.RangeSlider;
 
@@ -45,6 +46,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -63,6 +66,8 @@ public class AccommodationListingFragment extends Fragment {
     private static Date fromDate = new Date();
     private static Date toDate = new Date();
     private static int people = 1;
+
+    private static String sort = "nothing";
 
     private static final String ARG_PARAM = "param";
     ListView listView;
@@ -108,6 +113,41 @@ public class AccommodationListingFragment extends Fragment {
             people = args.getInt("people");
             accommodations = getArguments().getParcelableArrayList(ARG_PARAM);
             adapter = new AccommodationListAdapter(getActivity(), accommodations, getActivity().getPreferences(Context.MODE_PRIVATE));
+        }
+        ShakeDetector.create(this.getContext(), new ShakeDetector.OnShakeListener() {
+            @Override
+            public void OnShake() {
+                if(sort.equals("nothing")) {
+                    Collections.sort(accommodations, new MyComparator());
+                    sort = "ascending";
+                } else {
+                    if(sort.equals("descending")) {
+                        Collections.sort(accommodations, new MyComparator());
+                        sort = "ascending";
+                    } else {
+                        accommodations.sort(new MyComparator().reversed());
+                        sort = "descending";
+                    }
+                }
+                adapter = new AccommodationListAdapter(getContext(), accommodations, getActivity().getPreferences(Context.MODE_PRIVATE));
+                listView.setAdapter(adapter);
+                Toast.makeText(getContext(), "Accommodations got sorted by price in " + sort + " oder!", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    class MyComparator implements Comparator {
+        public int compare(Object obj1, Object obj2){
+            AccommodationListing s1 = (AccommodationListing) obj1;
+            AccommodationListing s2 = (AccommodationListing) obj2;
+//            return s2.compareTo(s1);
+            if(s1.getTotalPrice() == s2.getTotalPrice()) {
+                return 0;
+            } else if (s1.getTotalPrice() < s2.getTotalPrice()) {
+                return -1;
+            } else {
+                return 1;
+            }
         }
     }
 
@@ -319,6 +359,24 @@ public class AccommodationListingFragment extends Fragment {
             System.out.println("EXCEPTION WHILE GETTING ACCOMMODATIONS");
             ex.printStackTrace();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ShakeDetector.start();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ShakeDetector.stop();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ShakeDetector.destroy();
     }
 
 
