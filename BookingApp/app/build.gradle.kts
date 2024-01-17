@@ -79,6 +79,8 @@ fun getIpAddress(): String? {
         implementation ("com.google.android.material:material:1.9.0")
         //for pdf
         implementation("com.itextpdf:itextpdf:5.5.13")
+        //for shake event
+        implementation("com.github.tbouron.shakedetector:library:1.0.0@aar")
     }
 
 

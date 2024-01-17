@@ -216,7 +216,7 @@ public class ReportFragment extends Fragment {
         accommodations.setAdapter(adapter_acc);
         accommodations.setSelection(0, true);
         View v2 = accommodations.getSelectedView();
-        ((TextView)v2).setTextColor(getResources().getColor(R.color.dark_gray));
+        //((TextView)v2).setTextColor(getResources().getColor(R.color.dark_gray));
 
         Button generateReportAcc = returnView.findViewById(R.id.generateReportAccommodation);
         generateReportAcc.setOnClickListener(new View.OnClickListener() {
