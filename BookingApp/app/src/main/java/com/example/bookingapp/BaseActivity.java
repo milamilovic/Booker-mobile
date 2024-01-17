@@ -49,6 +49,8 @@ public class BaseActivity extends AppCompatActivity{
 
     private static final String USER_ID_KEY = "user_id";
 
+    private static final String USER_ROLE_KEY = "user_role";
+
 
 
 
@@ -101,14 +103,35 @@ public class BaseActivity extends AppCompatActivity{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    protected void setNavigation() {
+    public void setNavigation() {
         NavigationView navigationView = findViewById(R.id.navigation_view);
         Menu menu = navigationView.getMenu();
 
         //TODO: set menu items not visible for each role and add listeners for everything
         //MenuItem item = menu.getItem(0);   ->   this is how you get item by position
         //item.setVisible(false);
-        menu.getItem(0).setOnMenuItemClickListener((v -> {
+
+        MenuItem item0 = menu.getItem(0).setVisible(true);
+        MenuItem item1 = menu.getItem(1).setVisible(false);
+        MenuItem item2 = menu.getItem(2).setVisible(false);
+        MenuItem item3 = menu.getItem(3).setVisible(false);
+        MenuItem item4 = menu.getItem(4).setVisible(false);
+        MenuItem item5 = menu.getItem(5).setVisible(false);
+        MenuItem item6 = menu.getItem(6).setVisible(false);
+        MenuItem item7 = menu.getItem(7).setVisible(false);
+        MenuItem item8 = menu.getItem(8).setVisible(false);
+        MenuItem item9 = menu.getItem(9).setVisible(false);
+        MenuItem item10 = menu.getItem(10).setVisible(false);
+        MenuItem item11 = menu.getItem(11).setVisible(true);
+        MenuItem item12 = menu.getItem(12).setVisible(false);
+        MenuItem item13 = menu.getItem(13).setVisible(false);
+        MenuItem item14 = menu.getItem(14).setVisible(false);
+        MenuItem item15 = menu.getItem(15).setVisible(false);
+
+        // menu items for unregistered user
+
+        // home (visible always for everyone)
+        item0.setOnMenuItemClickListener((v -> {
             FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -122,146 +145,9 @@ public class BaseActivity extends AppCompatActivity{
             return true;
         }));
 
-        menu.getItem(1).setOnMenuItemClickListener((v -> {
-            SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-            Long userID = sharedPref.getLong(USER_ID_KEY, 0);
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-            Call<UserDTO> userCall = ClientUtils.userService.getById(userID);
-            try {
-                Response<UserDTO> response = userCall.execute();
-                UserDTO user = (UserDTO) response.body();
-                if (user.getRole() == Role.GUEST || user.getRole() == Role.ADMIN) {
-                    FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
-                            .beginTransaction()
-                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                            .replace(R.id.fragment_placeholder, MyProfileFragment.newInstance(user));
-                    transaction.addToBackStack(null);
-                    transaction.commit();
-                } else if (user.getRole() == Role.OWNER) {
-                    FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
-                            .beginTransaction()
-                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                            .replace(R.id.fragment_placeholder, OwnerMyProfileFragment.newInstance(user));
-                    transaction.addToBackStack(null);
-                    transaction.commit();
-                }
-            }catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            // Close the drawer after selecting an option
-            drawerLayout.closeDrawer(GravityCompat.START);
-
-            return true;
-        }));
-
-        menu.getItem(4).setOnMenuItemClickListener((v -> {
-            FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
-                    .beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .replace(R.id.fragment_placeholder, OwnerAccommodationFragmentListing.newInstance());
-            transaction.addToBackStack(null);
-            transaction.commit();
-
-            // Close the drawer after selecting an option
-            drawerLayout.closeDrawer(GravityCompat.START);
-
-            return true;
-        }));
-
-        menu.getItem(5).setOnMenuItemClickListener((v -> {
-            SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-            Long userID = sharedPref.getLong(USER_ID_KEY, 0);
-            System.out.println(userID);
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-            Call<UserDTO> userCall = ClientUtils.userService.getById(userID);
-            try{
-                Response<UserDTO> response = userCall.execute();
-                UserDTO user = (UserDTO) response.body();
-                if(user.getRole()== Role.GUEST) {
-                    FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
-                    .beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .replace(R.id.fragment_placeholder, ReservationRequestsGuestFragment.newInstance());
-                    transaction.addToBackStack("requests");
-                    transaction.commit();
-                } else if(user.getRole()==Role.OWNER) {
-                    FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
-                            .beginTransaction()
-                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                            .replace(R.id.fragment_placeholder, ReservationRequestOwnerFragment.newInstance());
-                    transaction.addToBackStack("requests");
-                    transaction.commit();
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            // Close the drawer after selecting an option
-            drawerLayout.closeDrawer(GravityCompat.START);
-
-            return true;
-        }));
-
-        menu.getItem(7).setOnMenuItemClickListener((v -> {
-            FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
-                    .beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .replace(R.id.fragment_placeholder, ReportedUsersFragment.newInstance());
-            transaction.addToBackStack(null);
-            transaction.commit();
-
-            // Close the drawer after selecting an option
-            drawerLayout.closeDrawer(GravityCompat.START);
-
-            return true;
-        }));
-
-        menu.getItem(8).setOnMenuItemClickListener((v -> {
-            FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
-                    .beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .replace(R.id.fragment_placeholder, ApproveAccommodationFragment.newInstance());
-            transaction.addToBackStack(null);
-            transaction.commit();
-
-            // Close the drawer after selecting an option
-            drawerLayout.closeDrawer(GravityCompat.START);
-
-            return true;
-        }));
-
-        menu.getItem(9).setOnMenuItemClickListener((v -> {
-            FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
-                    .beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .replace(R.id.fragment_placeholder, FavouriteAccommodationsFragment.newInstance());
-            transaction.addToBackStack("favourites+");
-            transaction.commit();
-
-            // Close the drawer after selecting an option
-            drawerLayout.closeDrawer(GravityCompat.START);
-
-            return true;
-        }));
-
-        menu.getItem(10).setOnMenuItemClickListener((v -> {
-            FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
-                    .beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .replace(R.id.fragment_placeholder, ReportFragment.newInstance());
-            transaction.addToBackStack("reports");
-            transaction.commit();
-
-            // Close the drawer after selecting an option
-            drawerLayout.closeDrawer(GravityCompat.START);
-
-            return true;
-        }));
-
-        menu.getItem(11).setOnMenuItemClickListener((v -> {
+        // login
+        item11.setVisible(true);
+        item11.setOnMenuItemClickListener((v -> {
             FragmentTransition.to(LoginFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
 
             // Close the drawer after selecting an option
@@ -270,7 +156,9 @@ public class BaseActivity extends AppCompatActivity{
             return true;
         }));
 
-        menu.getItem(12).setOnMenuItemClickListener((v -> {
+        // register
+        item12.setVisible(true);
+        item12.setOnMenuItemClickListener((v -> {
             //Intent i = new Intent(BaseActivity.this, RegisterScreen.class);
             //startActivity(i);
 
@@ -285,34 +173,205 @@ public class BaseActivity extends AppCompatActivity{
             return true;
         }));
 
-        menu.getItem(13).setOnMenuItemClickListener((v-> {
-            FragmentTransition.to(CreateAccommodationBaseFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
+        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+        Long userId = sharedPreferences.getLong(USER_ID_KEY, 0);
+        if (userId!=0) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            Call<UserDTO> userCall = ClientUtils.userService.getById(userId);
+            try {
+                Response<UserDTO> response = userCall.execute();
+                UserDTO user = (UserDTO) response.body();
 
-            drawerLayout.closeDrawer(GravityCompat.START);
+                // login and register aren't visible for logged in user
+                item11.setVisible(false);
+                item12.setVisible(false);
 
-            return true;
-        }));
+                //for all user roles
 
-        menu.getItem(14).setOnMenuItemClickListener((v-> {
-            FragmentTransition.to(UpdateAccommodationDetailsFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
+                // my account
+                item1.setVisible(true);
+                item1.setOnMenuItemClickListener((v -> {
 
-            drawerLayout.closeDrawer(GravityCompat.START);
+                    if (user.getRole() == Role.GUEST || user.getRole() == Role.ADMIN) {
+                        FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                                .beginTransaction()
+                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                .replace(R.id.fragment_placeholder, MyProfileFragment.newInstance(user));
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    } else if (user.getRole() == Role.OWNER) {
+                        FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                                .beginTransaction()
+                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                .replace(R.id.fragment_placeholder, OwnerMyProfileFragment.newInstance(user));
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
 
-            return true;
-        }));
+                    // Close the drawer after selecting an option
+                    drawerLayout.closeDrawer(GravityCompat.START);
 
-        menu.getItem(15).setOnMenuItemClickListener((v-> {
-            SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.remove(USER_ID_KEY);
-            editor.commit();
-            FragmentTransition.to(LoginFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
+                    return true;
+                }));
 
-            drawerLayout.closeDrawer(GravityCompat.START);
+                // logout
+                item15.setVisible(true);
+                item15.setOnMenuItemClickListener((v -> {
+                    SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.remove(USER_ID_KEY);
+                    editor.remove(USER_ROLE_KEY);
+                    editor.commit();
+                    setNavigation();
+                    FragmentTransition.to(LoginFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
 
-            return true;
-        }));
+                    drawerLayout.closeDrawer(GravityCompat.START);
 
+                    return true;
+                }));
+
+                // visible for guest
+                if (user.getRole() == Role.GUEST) {
+                    item2.setVisible(true); // reservations
+                    item3.setVisible(true); // notifications
+                    item5.setVisible(true); // reservation requests
+                    item9.setVisible(true); // favourite accommodations
+                } else if (user.getRole() == Role.OWNER) {
+                    item2.setVisible(true); // reservations
+                    item3.setVisible(true); // notifications
+                    item4.setVisible(true); // my accommodations
+                    item5.setVisible(true); // reservation requests
+                    item10.setVisible(true); // reports
+                    item13.setVisible(true); // create accommodation
+                } else if (user.getRole() == Role.ADMIN) {
+                    item6.setVisible(true); // approve comments
+                    item7.setVisible(true); // approve blocking
+                    item8.setVisible(true); // approve accommodations
+                } else{
+                    item11.setVisible(true);
+                    item12.setVisible(true);
+                }
+
+
+                item4.setOnMenuItemClickListener((v -> {
+                    FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                            .beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .replace(R.id.fragment_placeholder, OwnerAccommodationFragmentListing.newInstance());
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+
+                    // Close the drawer after selecting an option
+                    drawerLayout.closeDrawer(GravityCompat.START);
+
+                    return true;
+                }));
+
+                item5.setOnMenuItemClickListener((v -> {
+                    if (user.getRole() == Role.GUEST) {
+                        FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                                .beginTransaction()
+                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                .replace(R.id.fragment_placeholder, ReservationRequestsGuestFragment.newInstance());
+                        transaction.addToBackStack("requests");
+                        transaction.commit();
+                    } else if (user.getRole() == Role.OWNER) {
+                        FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                                .beginTransaction()
+                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                .replace(R.id.fragment_placeholder, ReservationRequestOwnerFragment.newInstance());
+                        transaction.addToBackStack("requests");
+                        transaction.commit();
+                    }
+
+                    // Close the drawer after selecting an option
+                    drawerLayout.closeDrawer(GravityCompat.START);
+
+                    return true;
+                }));
+
+                item6.setOnMenuItemClickListener((v -> {
+                    FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                            .beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .replace(R.id.fragment_placeholder, ReportedUsersFragment.newInstance());
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+
+                    // Close the drawer after selecting an option
+                    drawerLayout.closeDrawer(GravityCompat.START);
+
+                    return true;
+                }));
+
+                item8.setOnMenuItemClickListener((v -> {
+                    FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                            .beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .replace(R.id.fragment_placeholder, ApproveAccommodationFragment.newInstance());
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+
+                    // Close the drawer after selecting an option
+                    drawerLayout.closeDrawer(GravityCompat.START);
+
+                    return true;
+                }));
+
+                item9.setOnMenuItemClickListener((v -> {
+                    FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                            .beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .replace(R.id.fragment_placeholder, FavouriteAccommodationsFragment.newInstance());
+                    transaction.addToBackStack("favourites+");
+                    transaction.commit();
+
+                    // Close the drawer after selecting an option
+                    drawerLayout.closeDrawer(GravityCompat.START);
+
+                    return true;
+                }));
+
+                item10.setOnMenuItemClickListener((v -> {
+                    FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                            .beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .replace(R.id.fragment_placeholder, ReportFragment.newInstance());
+                    transaction.addToBackStack("reports");
+                    transaction.commit();
+
+                    // Close the drawer after selecting an option
+                    drawerLayout.closeDrawer(GravityCompat.START);
+
+                    return true;
+                }));
+
+
+                item13.setOnMenuItemClickListener((v -> {
+                    FragmentTransition.to(CreateAccommodationBaseFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
+
+                    drawerLayout.closeDrawer(GravityCompat.START);
+
+                    return true;
+                }));
+
+                item14.setOnMenuItemClickListener((v -> {
+                    FragmentTransition.to(UpdateAccommodationDetailsFragment.newInstance(), BaseActivity.this, false, R.id.fragment_placeholder);
+
+                    drawerLayout.closeDrawer(GravityCompat.START);
+
+                    return true;
+                }));
+
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            item11.setVisible(true);
+            item12.setVisible(true);
+        }
 
     };
 
