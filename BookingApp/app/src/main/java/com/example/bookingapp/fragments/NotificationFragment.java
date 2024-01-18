@@ -106,10 +106,9 @@ public class NotificationFragment extends Fragment {
                     boolean checked = toggle.isChecked();
                     System.out.println("CLICKED ENABLED: " + toggle.isChecked());
                     StrictMode.setThreadPolicy(policy);
-                    Call<Void> call = ClientUtils.notificationService.changePreferences(loggedId, 0, toggle.isChecked());
+                    Call<Void> call = ClientUtils.notificationService.changePreferences(loggedId, 0, !toggle.isChecked());
                     try{
                         call.execute();
-                        toggle.setChecked(!checked);
                     }catch(Exception ex){
                         System.out.println("EXCEPTION WHILE CHANGING PREFERENCE");
                         ex.printStackTrace();
@@ -137,10 +136,9 @@ public class NotificationFragment extends Fragment {
                     boolean checked = toggle.isChecked();
                     System.out.println("CLICKED ENABLED: " + toggle.isChecked());
                     StrictMode.setThreadPolicy(policy);
-                    Call<Void> call = ClientUtils.notificationService.changePreferences(loggedId, 4, toggle.isChecked());
+                    Call<Void> call = ClientUtils.notificationService.changePreferences(loggedId, 4, !toggle.isChecked());
                     try{
                         call.execute();
-                        toggle.setChecked(!checked);
                     }catch(Exception ex){
                         System.out.println("EXCEPTION WHILE CHANGING PREFERENCE");
                         ex.printStackTrace();
@@ -155,10 +153,9 @@ public class NotificationFragment extends Fragment {
                     boolean checked = toggle2.isChecked();
                     System.out.println("CLICKED ENABLED: " + toggle2.isChecked());
                     StrictMode.setThreadPolicy(policy);
-                    Call<Void> call = ClientUtils.notificationService.changePreferences(loggedId, 3, toggle2.isChecked());
+                    Call<Void> call = ClientUtils.notificationService.changePreferences(loggedId, 3, !toggle2.isChecked());
                     try{
                         call.execute();
-                        toggle2.setChecked(!checked);
                     }catch(Exception ex){
                         System.out.println("EXCEPTION WHILE CHANGING PREFERENCE");
                         ex.printStackTrace();
@@ -173,10 +170,9 @@ public class NotificationFragment extends Fragment {
                     boolean checked = toggle3.isChecked();
                     System.out.println("CLICKED ENABLED: " + toggle3.isChecked());
                     StrictMode.setThreadPolicy(policy);
-                    Call<Void> call = ClientUtils.notificationService.changePreferences(loggedId, 2, toggle3.isChecked());
+                    Call<Void> call = ClientUtils.notificationService.changePreferences(loggedId, 2, !toggle3.isChecked());
                     try{
                         call.execute();
-                        toggle3.setChecked(!checked);
                     }catch(Exception ex){
                         System.out.println("EXCEPTION WHILE CHANGING PREFERENCE");
                         ex.printStackTrace();
@@ -191,10 +187,9 @@ public class NotificationFragment extends Fragment {
                     boolean checked = toggle.isChecked();
                     System.out.println("CLICKED ENABLED: " + toggle4.isChecked());
                     StrictMode.setThreadPolicy(policy);
-                    Call<Void> call = ClientUtils.notificationService.changePreferences(loggedId, 1, toggle4.isChecked());
+                    Call<Void> call = ClientUtils.notificationService.changePreferences(loggedId, 1, !toggle4.isChecked());
                     try{
                         call.execute();
-                        toggle4.setChecked(!checked);
                     }catch(Exception ex){
                         System.out.println("EXCEPTION WHILE CHANGING PREFERENCE");
                         ex.printStackTrace();
