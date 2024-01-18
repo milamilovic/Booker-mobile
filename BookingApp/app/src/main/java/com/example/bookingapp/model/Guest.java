@@ -7,4 +7,5 @@ public class Guest extends User{
     private boolean blocked;
     private boolean deleted;
     private ArrayList<Long> favouriteAccommodations;
+    private boolean notificationEnabled;
 }

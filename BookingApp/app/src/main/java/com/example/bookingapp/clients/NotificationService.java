@@ -15,4 +15,10 @@ public interface NotificationService {
     @Headers("Content-Type: application/json")
     @GET("notifications/{userId}")
     Call<List<NotificationListing>> getUsersNotifications(@Path("userId")Long userId);
+
+    @Headers("Content-Type: application/json")
+    @GET("notifications/settings/{userId}/{id}/{checked}")
+    Call<Void> changePreferences(@Path("userId")Long userId,
+                                                          @Path("id")int id,
+                                                          @Path("checked")boolean checked);
 }
