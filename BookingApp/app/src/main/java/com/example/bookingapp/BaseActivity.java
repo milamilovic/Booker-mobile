@@ -28,6 +28,7 @@ import com.example.bookingapp.fragments.CreateAccommodationBaseFragment;
 import com.example.bookingapp.fragments.FavouriteAccommodationsFragment;
 import com.example.bookingapp.fragments.HomeFragment;
 import com.example.bookingapp.fragments.LoginFragment;
+import com.example.bookingapp.fragments.NotificationFragment;
 import com.example.bookingapp.fragments.RegisterFragment;
 import com.example.bookingapp.fragments.ReportFragment;
 import com.example.bookingapp.fragments.ReportedUsersFragment;
@@ -252,6 +253,20 @@ public class BaseActivity extends AppCompatActivity{
                     item11.setVisible(true);
                     item12.setVisible(true);
                 }
+
+                item3.setOnMenuItemClickListener((v -> {
+                    FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                            .beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .replace(R.id.fragment_placeholder, NotificationFragment.newInstance());
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+
+                    // Close the drawer after selecting an option
+                    drawerLayout.closeDrawer(GravityCompat.START);
+
+                    return true;
+                }));
 
 
                 item4.setOnMenuItemClickListener((v -> {

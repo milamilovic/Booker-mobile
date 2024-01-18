@@ -17,6 +17,7 @@ import com.example.bookingapp.adapters.AccommodationListAdapter;
 import com.example.bookingapp.adapters.NotificationAdapter;
 import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.databinding.FragmentAccommodationListingBinding;
+import com.example.bookingapp.databinding.FragmentNotificationBinding;
 import com.example.bookingapp.model.AccommodationListing;
 import com.example.bookingapp.model.NotificationListing;
 
@@ -29,7 +30,7 @@ import retrofit2.Response;
 
 public class NotificationFragment extends Fragment {
 
-    FragmentAccommodationListingBinding binding;
+    FragmentNotificationBinding binding;
     ArrayList<NotificationListing> notifications;
     ListView listView;
     private NotificationAdapter adapter;
@@ -39,7 +40,7 @@ public class NotificationFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static NotificationFragment newInstance(String param1, String param2) {
+    public static NotificationFragment newInstance() {
         NotificationFragment fragment = new NotificationFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -57,7 +58,7 @@ public class NotificationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentAccommodationListingBinding.inflate(inflater, container, false);
+        binding = FragmentNotificationBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         notifications = new ArrayList<>();
         prepareNotificationList(notifications);
