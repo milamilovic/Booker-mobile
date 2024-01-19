@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,9 +38,12 @@ import com.example.bookingapp.fragments.ReservationRequestOwnerFragment;
 import com.example.bookingapp.fragments.OwnerAccommodationFragmentListing;
 import com.example.bookingapp.fragments.ReservationRequestsGuestFragment;
 import com.example.bookingapp.fragments.UpdateAccommodationDetailsFragment;
+import com.example.bookingapp.model.NotificationListing;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -47,20 +52,58 @@ public class BaseActivity extends AppCompatActivity{
     ActionBarDrawerToggle actionBarDrawerToggle;
     Toolbar toolbar;
     DrawerLayout drawerLayout;
+    boolean shouldRun;
 
     private static final String USER_ID_KEY = "user_id";
 
     private static final String USER_ROLE_KEY = "user_role";
 
 
-
+    private void showToast(final String message) {
+        // Koristi Handler za poslati poruku na glavnu (UI) nit
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_activity);
 
+        shouldRun = true;
+        Thread myThread = new Thread(() -> {
+            while(shouldRun) { // Change the loop condition as needed
+                try {
+                    Thread.sleep(3000); // Sleep for 3 seconds (3000 milliseconds)
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    //call service and get accommodations that are adequate for search
+                    SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                    Long loggedId = sharedPref.getLong(USER_ID_KEY, -1);
+                    Call<NotificationListing> call = ClientUtils.notificationService.getUsersNewNotification(loggedId);
+                    try{
+                        Response<NotificationListing> response = call.execute();
+                        System.out.println("response " + response);
+                        NotificationListing notification = (NotificationListing) response.body();
+                        if (notification != null) {
+                            showToast(notification.getContent());
+                            Thread.sleep(3000);
+                        }
+                    }catch(Exception ex){
+                        System.out.println("EXCEPTION WHILE GETTING NOTIFICATIONS");
+                        ex.printStackTrace();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
+        myThread.start();
 
         FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
                 .beginTransaction()
@@ -448,6 +491,7 @@ public class BaseActivity extends AppCompatActivity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        shouldRun = false;
     }
 
 

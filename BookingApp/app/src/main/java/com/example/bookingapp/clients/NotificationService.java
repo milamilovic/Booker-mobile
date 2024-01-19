@@ -21,4 +21,8 @@ public interface NotificationService {
     Call<Void> changePreferences(@Path("userId")Long userId,
                                                           @Path("id")int id,
                                                           @Path("checked")boolean checked);
+
+    @Headers("Content-Type: application/json")
+    @GET("notifications/{userId}/new")
+    Call<NotificationListing> getUsersNewNotification(@Path("userId")Long userId);
 }
