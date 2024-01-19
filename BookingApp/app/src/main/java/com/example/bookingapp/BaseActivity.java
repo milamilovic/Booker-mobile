@@ -34,6 +34,7 @@ import com.example.bookingapp.fragments.NotificationFragment;
 import com.example.bookingapp.fragments.RegisterFragment;
 import com.example.bookingapp.fragments.ReportFragment;
 import com.example.bookingapp.fragments.ReportedUsersFragment;
+import com.example.bookingapp.fragments.ReservationOwnerFragment;
 import com.example.bookingapp.fragments.ReservationRequestOwnerFragment;
 import com.example.bookingapp.fragments.OwnerAccommodationFragmentListing;
 import com.example.bookingapp.fragments.ReservationRequestsGuestFragment;
@@ -78,7 +79,7 @@ public class BaseActivity extends AppCompatActivity{
         Thread myThread = new Thread(() -> {
             while(shouldRun) { // Change the loop condition as needed
                 try {
-                    Thread.sleep(3000); // Sleep for 3 seconds (3000 milliseconds)
+                    Thread.sleep(33000); // Sleep for 3 seconds (3000 milliseconds)
                     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                     StrictMode.setThreadPolicy(policy);
                     //call service and get accommodations that are adequate for search
@@ -91,7 +92,7 @@ public class BaseActivity extends AppCompatActivity{
                         NotificationListing notification = (NotificationListing) response.body();
                         if (notification != null) {
                             showToast(notification.getContent());
-                            Thread.sleep(3000);
+                            Thread.sleep(33000);
                         }
                     }catch(Exception ex){
                         System.out.println("EXCEPTION WHILE GETTING NOTIFICATIONS");
@@ -296,6 +297,29 @@ public class BaseActivity extends AppCompatActivity{
                     item11.setVisible(true);
                     item12.setVisible(true);
                 }
+
+                item2.setOnMenuItemClickListener((v -> {
+                    if (user.getRole() == Role.GUEST) {
+                        /*FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                                .beginTransaction()
+                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                .replace(R.id.fragment_placeholder, ReservationRequestsGuestFragment.newInstance());
+                        transaction.addToBackStack("requests");
+                        transaction.commit();*/
+                    } else if (user.getRole() == Role.OWNER) {
+                        FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                                .beginTransaction()
+                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                .replace(R.id.fragment_placeholder, ReservationOwnerFragment.newInstance());
+                        transaction.addToBackStack("reservations");
+                        transaction.commit();
+                    }
+
+                    // Close the drawer after selecting an option
+                    drawerLayout.closeDrawer(GravityCompat.START);
+
+                    return true;
+                }));
 
                 item3.setOnMenuItemClickListener((v -> {
                     FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
