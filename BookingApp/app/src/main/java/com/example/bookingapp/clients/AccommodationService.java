@@ -146,4 +146,8 @@ public interface AccommodationService {
     Call<List<ReportDataUnit>> getIntervalReport(@Path("ownerId")Long ownerId,
                                                     @Path("from")String from,
                                                     @Path("to")String to);
+
+    @Headers("Content-Type: application/json")
+    @GET("accommodations/images/{id}")
+    Call<List<String>> getImages(@Path("id") Long id);
 }

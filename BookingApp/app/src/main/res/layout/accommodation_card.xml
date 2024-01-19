@@ -26,7 +26,6 @@
                 android:id="@+id/accommodation_image"
                 android:layout_width="120dp"
                 android:layout_height="130dp"
-                android:src="@drawable/apartment_image"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 />

@@ -2,6 +2,8 @@ package com.example.bookingapp.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +11,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.StrictMode;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,6 +34,7 @@ import com.example.bookingapp.model.Image;
 import com.example.bookingapp.model.Price;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -89,15 +93,26 @@ public class UpdateAccommodationFragment extends Fragment {
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler);
 
-        ArrayList<Integer> images = new ArrayList<Integer>();
-        images.add(R.drawable.apartment_image);
-        images.add(R.drawable.paris_image);
-        images.add(R.drawable.copenhagen_image);
-        images.add(R.drawable.madrid_image);
-        images.add(R.drawable.room_image);
-        images.add(R.drawable.hotel_image);
-        images.add(R.drawable.lisbon_image);
-        images.add(R.drawable.london_image);
+        ArrayList<Bitmap> images = new ArrayList<Bitmap>();
+
+        //getting images
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        Call<List<String>> imageCall = ClientUtils.accommodationService.getImages(this.accommodation.getId());
+        try{
+            Response<List<String>> response = imageCall.execute();
+            List<String> imageStrings = (List<String>) response.body();
+            if(images!=null && !images.isEmpty()) {
+                for(String image : imageStrings) {
+                    byte[] bytes = Base64.decode(image, Base64.DEFAULT);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    images.add(bitmap);
+                }
+            }
+        }catch(Exception ex){
+            System.out.println("EXCEPTION WHILE GETTING IMAGES");
+            ex.printStackTrace();
+        }
 
         ImageAdapter adapter = new ImageAdapter(getContext(), images);
         recyclerView.setAdapter(adapter);

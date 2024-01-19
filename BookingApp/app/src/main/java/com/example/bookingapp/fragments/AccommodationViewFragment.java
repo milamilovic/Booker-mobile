@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -21,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -171,15 +174,26 @@ public class AccommodationViewFragment extends Fragment {
         address.setText(accommodation.getAddress().toString());
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler);
-        ArrayList<Integer> images = new ArrayList<Integer>();
-        images.add(R.drawable.apartment_image);
-        images.add(R.drawable.paris_image);
-        images.add(R.drawable.copenhagen_image);
-        images.add(R.drawable.madrid_image);
-        images.add(R.drawable.room_image);
-        images.add(R.drawable.hotel_image);
-        images.add(R.drawable.lisbon_image);
-        images.add(R.drawable.london_image);
+        ArrayList<Bitmap> images = new ArrayList<Bitmap>();
+
+        //getting images
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        Call<List<String>> imageCall = ClientUtils.accommodationService.getImages(this.accommodation.getId());
+        try{
+            Response<List<String>> response = imageCall.execute();
+            List<String> imageStrings = (List<String>) response.body();
+            if(images!=null && !images.isEmpty()) {
+                for(String image : imageStrings) {
+                    byte[] bytes = Base64.decode(image, Base64.DEFAULT);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    images.add(bitmap);
+                }
+            }
+        }catch(Exception ex){
+            System.out.println("EXCEPTION WHILE GETTING IMAGES");
+            ex.printStackTrace();
+        }
 
         ImageAdapter adapter = new ImageAdapter(getContext(), images);
         recyclerView.setAdapter(adapter);
@@ -379,7 +393,6 @@ public class AccommodationViewFragment extends Fragment {
         editor.putLong(OWNER_ID_KEY, accommodation.getOwner_id());
         editor.apply();
         if(userID!=0) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
             Call<UserDTO> userCall = ClientUtils.userService.getById(userID);
             try{
