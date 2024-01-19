@@ -1,8 +1,14 @@
 package com.example.bookingapp;
 
+import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -18,6 +24,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
@@ -58,13 +66,30 @@ public class BaseActivity extends AppCompatActivity{
 
     private static final String USER_ROLE_KEY = "user_role";
 
+    private static String CHANNEL_ID = "Zero channel";
 
-    private void showToast(final String message) {
+    private static int NOTIFICATION_ID = 1;
+
+
+
+    private void showToast(final String message, final Long notificationId) {
         // Koristi Handler za poslati poruku na glavnu (UI) nit
         new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @SuppressLint("MissingPermission")
             @Override
             public void run() {
                 Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getBaseContext());
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getBaseContext(), CHANNEL_ID);
+                Bitmap bm = BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.booker_favicon_color);
+                mBuilder.setSmallIcon(R.drawable.booker_favicon_color);
+                mBuilder.setContentTitle("Booker");
+                mBuilder.setContentText(message);
+                mBuilder.setLargeIcon(bm);
+                mBuilder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                // notificationID allows you to update the notification later on.
+                notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+
             }
         });
     }
@@ -73,6 +98,19 @@ public class BaseActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_activity);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Notification channel";
+            String description = "Description";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
 
         shouldRun = true;
         Thread myThread = new Thread(() -> {
@@ -90,7 +128,7 @@ public class BaseActivity extends AppCompatActivity{
                         System.out.println("response " + response);
                         NotificationListing notification = (NotificationListing) response.body();
                         if (notification != null) {
-                            showToast(notification.getContent());
+                            showToast(notification.getContent(), notification.getId());
                             Thread.sleep(3000);
                         }
                     }catch(Exception ex){
