@@ -25,11 +25,12 @@ public class Accommodation implements Parcelable {
     private int max_capacity;
     private boolean approved;
     private boolean manual_accepting;
+    private int deadline;
 
     public Accommodation(Long id, String title, String description, List<Image> images, List<Availability> availabilities,
                          List<Price> prices, List<Object> comments, List<Object> ratings, Long ownerId,
                          ArrayList<Amenity> amenities, int max_capacity, int min_capacity, boolean approved,
-                         Address address, boolean manual) {
+                         Address address, boolean manual, int deadline) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -45,6 +46,7 @@ public class Accommodation implements Parcelable {
         this.approved = approved;
         this.address = address;
         this.manual_accepting = manual;
+        this.deadline = deadline;
     }
 
     public Accommodation() {
@@ -68,6 +70,7 @@ public class Accommodation implements Parcelable {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             approved = in.readBoolean();
         }
+        deadline = in.readInt();
     }
 
     public Address getAddress() {
@@ -193,6 +196,14 @@ public class Accommodation implements Parcelable {
         this.manual_accepting = manual_accepting;
     }
 
+    public int getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(int deadline) {
+        this.deadline = deadline;
+    }
+
     @Override
     public String toString() {
         return "AccommodationListing{" +
@@ -230,6 +241,7 @@ public class Accommodation implements Parcelable {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             dest.writeBoolean(approved);
         }
+        dest.writeInt(deadline);
     }
 
     public static final Creator<AccommodationListing> CREATOR = new Creator<AccommodationListing>() {
