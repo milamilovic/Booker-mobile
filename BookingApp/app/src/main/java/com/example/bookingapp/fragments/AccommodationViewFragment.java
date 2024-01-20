@@ -183,7 +183,7 @@ public class AccommodationViewFragment extends Fragment {
         try{
             Response<List<String>> response = imageCall.execute();
             List<String> imageStrings = (List<String>) response.body();
-            if(images!=null && !images.isEmpty()) {
+            if(imageStrings!=null && !imageStrings.isEmpty()) {
                 for(String image : imageStrings) {
                     byte[] bytes = Base64.decode(image, Base64.DEFAULT);
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);

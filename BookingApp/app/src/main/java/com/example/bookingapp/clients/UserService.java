@@ -9,6 +9,8 @@ import com.example.bookingapp.dto.users.Token;
 import com.example.bookingapp.dto.users.UserDTO;
 import com.example.bookingapp.dto.users.UserReportDTO;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -91,4 +93,8 @@ public interface UserService {
     })
     @POST("report_user/add_report")
     Call<UserReportDTO> addReport(@Body CreateReportUserDTO createReportUserDTO);
+
+    @Headers("Content-Type: application/json")
+    @GET("users/image/{id}")
+    Call<List<String>> getImage(@Path("id") Long id);
 }
