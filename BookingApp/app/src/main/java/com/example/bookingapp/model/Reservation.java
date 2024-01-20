@@ -66,12 +66,20 @@ public class Reservation implements Parcelable{
         this.id = id;
     }
 
-    public ReservationRequestStatus getStatus() {
+    public ReservationRequestStatus getRequestStatus() {
         return requestStatus;
     }
 
-    public void setStatus(ReservationRequestStatus status) {
+    public void setRequestStatus(ReservationRequestStatus status) {
         this.requestStatus = status;
+    }
+
+    public void setStatus(ReservationStatus status) {
+        this.status = status;
+    }
+
+    public ReservationStatus getStatus() {
+        return status;
     }
 
     public int getNumberOfGuests() {

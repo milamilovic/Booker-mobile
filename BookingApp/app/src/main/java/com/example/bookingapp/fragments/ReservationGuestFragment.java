@@ -13,12 +13,11 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.example.bookingapp.R;
+import com.example.bookingapp.adapters.ReservationGuestAdapter;
 import com.example.bookingapp.adapters.ReservationOwnerAdapter;
-import com.example.bookingapp.adapters.ReservationRequestOwnerAdapter;
 import com.example.bookingapp.clients.ClientUtils;
+import com.example.bookingapp.databinding.FragmentReservationGuestBinding;
 import com.example.bookingapp.databinding.FragmentReservationOwnerBinding;
-import com.example.bookingapp.databinding.FragmentReservationRequestOwnerBinding;
-import com.example.bookingapp.model.AccommodationRequestDTO;
 import com.example.bookingapp.model.ApproveAccommodationListing;
 import com.example.bookingapp.model.Reservation;
 
@@ -29,25 +28,23 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-
-public class ReservationOwnerFragment extends Fragment {
-
+public class ReservationGuestFragment extends Fragment {
     public static ArrayList<Reservation> reservations = new ArrayList<Reservation>();
-    private FragmentReservationOwnerBinding binding;
-    private ReservationOwnerAdapter adapter;
+    private FragmentReservationGuestBinding binding;
+    private ReservationGuestAdapter adapter;
     ListView listView;
 
     private static final String ARG_PARAM = "param";
     private static final String USER_ID_KEY = "user_id";
 
 
-    public ReservationOwnerFragment() {
+    public ReservationGuestFragment() {
         // Required empty public constructor
     }
 
 
-    public static ReservationOwnerFragment newInstance() {
-        ReservationOwnerFragment fragment = new ReservationOwnerFragment();
+    public static ReservationGuestFragment newInstance() {
+        ReservationGuestFragment fragment = new ReservationGuestFragment();
         return fragment;
     }
 
@@ -56,19 +53,18 @@ public class ReservationOwnerFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             reservations = getArguments().getParcelableArrayList(ARG_PARAM);
-            adapter = new ReservationOwnerAdapter(getActivity(), reservations);
+            adapter = new ReservationGuestAdapter(getActivity(), reservations);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentReservationOwnerBinding.inflate(inflater, container, false);
+        binding = FragmentReservationGuestBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
         prepareReservationsList(reservations);
         listView = root.findViewById(R.id.reservation_list);
-        adapter = new ReservationOwnerAdapter(getContext(), reservations);
+        adapter = new ReservationGuestAdapter(getContext(), reservations);
         listView.setAdapter(adapter);
         return root;
     }
@@ -80,23 +76,13 @@ public class ReservationOwnerFragment extends Fragment {
         StrictMode.setThreadPolicy(policy);
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         Long userID = sharedPref.getLong(USER_ID_KEY, 0);
-        Call<List<ApproveAccommodationListing>> accommodations = ClientUtils.accommodationService.findAllForOwner(userID);
+        Call<List<Reservation>> reservationsForGuest = ClientUtils.reservationService.findReservationsForGuest(userID);
         try{
-            Response<List<ApproveAccommodationListing>> response = accommodations.execute();
-            ArrayList<ApproveAccommodationListing> listings = (ArrayList<ApproveAccommodationListing>) response.body();
-            for(ApproveAccommodationListing a : listings) {
-                StrictMode.setThreadPolicy(policy);
-                Call<List<Reservation>> allReservationsForAccommodation = ClientUtils.reservationService.findReservationsForAccommodation(a.getId());
-                try{
-                    Response<List<Reservation>> response2 = allReservationsForAccommodation.execute();
-                    ArrayList<Reservation> listings2 = (ArrayList<Reservation>) response2.body();
-                    for(Reservation r : listings2) {
-                        reservations.add(r);
-                    }
-                }catch(Exception ex){
-                    ex.printStackTrace();
+            Response<List<Reservation>> response = reservationsForGuest.execute();
+            ArrayList<Reservation> listings = (ArrayList<Reservation>) response.body();
+                for(Reservation r : listings) {
+                    reservations.add(r);
                 }
-            }
         }catch(Exception ex){
             ex.printStackTrace();
         }

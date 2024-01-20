@@ -15,4 +15,8 @@ public interface ReservationService {
     @Headers("Content-Type: application/json")
     @GET("reservations/accommodation/{accommodationId}")
     Call<List<Reservation>> findReservationsForAccommodation(@Path("accommodationId") Long accommodationId);
+
+    @Headers("Content-Type: application/json")
+    @GET("reservations/guest/{guestId}")
+    Call<List<Reservation>> findReservationsForGuest(@Path("guestId") Long guestId);
 }

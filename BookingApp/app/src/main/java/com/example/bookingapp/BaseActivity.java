@@ -34,6 +34,7 @@ import com.example.bookingapp.fragments.NotificationFragment;
 import com.example.bookingapp.fragments.RegisterFragment;
 import com.example.bookingapp.fragments.ReportFragment;
 import com.example.bookingapp.fragments.ReportedUsersFragment;
+import com.example.bookingapp.fragments.ReservationGuestFragment;
 import com.example.bookingapp.fragments.ReservationOwnerFragment;
 import com.example.bookingapp.fragments.ReservationRequestOwnerFragment;
 import com.example.bookingapp.fragments.OwnerAccommodationFragmentListing;
@@ -300,12 +301,12 @@ public class BaseActivity extends AppCompatActivity{
 
                 item2.setOnMenuItemClickListener((v -> {
                     if (user.getRole() == Role.GUEST) {
-                        /*FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                        FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
                                 .beginTransaction()
                                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                                .replace(R.id.fragment_placeholder, ReservationRequestsGuestFragment.newInstance());
-                        transaction.addToBackStack("requests");
-                        transaction.commit();*/
+                                .replace(R.id.fragment_placeholder, ReservationGuestFragment.newInstance());
+                        transaction.addToBackStack("reservations");
+                        transaction.commit();
                     } else if (user.getRole() == Role.OWNER) {
                         FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
                                 .beginTransaction()
