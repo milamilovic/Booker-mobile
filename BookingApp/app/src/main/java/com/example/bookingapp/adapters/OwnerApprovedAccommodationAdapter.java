@@ -99,7 +99,7 @@ public class OwnerApprovedAccommodationAdapter extends ArrayAdapter<ApproveAccom
                 amenities.add(new Amenity(4L, "clean",  "", null));
                 FragmentTransition.to(AccommodationViewFragment.newInstance(new Accommodation(accommodation.getId(),
                         accommodation.getTitle(), "The units come with parquet floors and feature a fully equipped kitchen with a microwave, a dining area, a flat-screen TV with streaming services, and a private bathroom with walk-in shower and a hair dryer.",
-                        images, new ArrayList<Availability>(), new ArrayList<Price>(), new ArrayList<Object>(), new ArrayList<Object>(), 2L, amenities, 1, 5, true, new Address(1L, "Ulica 111", "London", 12.21, 15.55, null), false)), (FragmentActivity) context, true, R.id.fragment_placeholder);
+                        images, new ArrayList<Availability>(), new ArrayList<Price>(), new ArrayList<Object>(), new ArrayList<Object>(), 2L, amenities, 1, 5, true, new Address(1L, "Ulica 111", "London", 12.21, 15.55, null), false, 0)), (FragmentActivity) context, true, R.id.fragment_placeholder);
             });
             update.setOnClickListener(v->{
                 ArrayList<Image> images = new ArrayList<Image>();
@@ -116,7 +116,7 @@ public class OwnerApprovedAccommodationAdapter extends ArrayAdapter<ApproveAccom
                 amenities.add(new Amenity(4L, "clean",  "", null));
                 FragmentTransition.to(UpdateAccommodationFragment.newInstance(new Accommodation(accommodation.getId(),
                         accommodation.getTitle(), "The units come with parquet floors and feature a fully equipped kitchen with a microwave, a dining area, a flat-screen TV with streaming services, and a private bathroom with walk-in shower and a hair dryer.",
-                        images, new ArrayList<Availability>(), new ArrayList<Price>(), new ArrayList<Object>(), new ArrayList<Object>(), 2L, amenities, 1, 5, true, new Address(1L, "Ulica 111", "London", 12.21, 15.55, null), false)), (FragmentActivity) context, true, R.id.fragment_placeholder);
+                        images, new ArrayList<Availability>(), new ArrayList<Price>(), new ArrayList<Object>(), new ArrayList<Object>(), 2L, amenities, 1, 5, true, new Address(1L, "Ulica 111", "London", 12.21, 15.55, null), false, 0)), (FragmentActivity) context, true, R.id.fragment_placeholder);
             });
         }
 

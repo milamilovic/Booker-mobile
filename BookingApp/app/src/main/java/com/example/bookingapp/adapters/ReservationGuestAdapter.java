@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,10 +24,17 @@ import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.dto.users.UserDTO;
 import com.example.bookingapp.enums.ReservationStatus;
 import com.example.bookingapp.fragments.AccommodationViewFragment;
+import com.example.bookingapp.fragments.ReservationGuestFragment;
 import com.example.bookingapp.model.Accommodation;
+import com.example.bookingapp.model.AccommodationRequestDTO;
 import com.example.bookingapp.model.Reservation;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -106,6 +115,7 @@ public class ReservationGuestAdapter extends ArrayAdapter<Reservation> {
             TextView totalPrice = convertView.findViewById(R.id.price_total);
             RatingBar ratingBar = convertView.findViewById(R.id.rating);
             LinearLayout cancel = convertView.findViewById(R.id.cancel);
+            Button cancel_btn = convertView.findViewById(R.id.cancel_btn);
 
 
             if(reservation != null){
@@ -119,10 +129,36 @@ public class ReservationGuestAdapter extends ArrayAdapter<Reservation> {
                 }
                 else {
                     cancel.setVisibility(View.VISIBLE);
-                    cancel.setOnClickListener(new View.OnClickListener() {
+                    cancel_btn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            // TODO cancel reservation
+                            // cancel reservation
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                try {
+                                    Date startDate = sdf.parse(reservation.getFromDate());
+                                    Date deadLine = daysCalculator(startDate, -accommodation.getDeadline());
+                                    if (deadLine.before(new Date()) || deadLine.equals(new Date())){
+                                        Toast.makeText(context, "You can't cancel this reservation because cancellation period expired!", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else{
+                                        // send request
+                                        Call<Boolean> canceledCall = ClientUtils.reservationService.cancelReservation(reservation.getId());
+                                        try{
+                                            Response<Boolean> response = canceledCall.execute();
+                                            Boolean canceled = (Boolean) response.body();
+                                            if (canceled) {
+                                                Toast.makeText(context, "Canceled reservation!", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(context, "Error while reservation cancellation!", Toast.LENGTH_SHORT).show();
+                                            }
+                                            FragmentTransition.to(ReservationGuestFragment.newInstance(), (FragmentActivity) context, false, R.id.fragment_placeholder);
+                                        }catch(Exception ex){
+                                            ex.printStackTrace();
+                                        }
+                                    }
+                                } catch (ParseException e) {
+                                    throw new RuntimeException(e);
+                                }
                         }
                     });
                 }
@@ -146,5 +182,12 @@ public class ReservationGuestAdapter extends ArrayAdapter<Reservation> {
 
 
         return convertView;
+    }
+
+    public Date daysCalculator(Date date, int days){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_YEAR, days);
+        return calendar.getTime();
     }
 }

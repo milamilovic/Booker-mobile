@@ -80,7 +80,7 @@ public class BaseActivity extends AppCompatActivity{
         Thread myThread = new Thread(() -> {
             while(shouldRun) { // Change the loop condition as needed
                 try {
-                    Thread.sleep(33000); // Sleep for 3 seconds (3000 milliseconds)
+                    Thread.sleep(3000); // Sleep for 3 seconds (3000 milliseconds)
                     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                     StrictMode.setThreadPolicy(policy);
                     //call service and get accommodations that are adequate for search
@@ -93,7 +93,7 @@ public class BaseActivity extends AppCompatActivity{
                         NotificationListing notification = (NotificationListing) response.body();
                         if (notification != null) {
                             showToast(notification.getContent());
-                            Thread.sleep(33000);
+                            Thread.sleep(3000);
                         }
                     }catch(Exception ex){
                         System.out.println("EXCEPTION WHILE GETTING NOTIFICATIONS");
