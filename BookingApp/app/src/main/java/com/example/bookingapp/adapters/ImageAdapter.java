@@ -1,6 +1,8 @@
 package com.example.bookingapp.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +18,10 @@ import java.util.ArrayList;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
     Context context;
-    ArrayList<Integer> arrayList;
+    ArrayList<Bitmap> arrayList;
     OnItemClickListener onItemClickListener;
 
-    public ImageAdapter(Context context, ArrayList<Integer> arrayList) {
+    public ImageAdapter(Context context, ArrayList<Bitmap> arrayList) {
         this.context = context;
         this.arrayList = arrayList;
     }
@@ -33,7 +35,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Glide.with(context).load(arrayList.get(position)).into(holder.imageView);
+        System.out.println("USAO U SLIKE ON BIND");
+        Glide.with(context).load(new BitmapDrawable(context.getResources(),arrayList.get(position))).into(holder.imageView);
         holder.itemView.setOnClickListener(view -> onItemClickListener.onClick(holder.imageView, String.valueOf(arrayList.get(position))));
     }
 

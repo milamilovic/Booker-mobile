@@ -3,7 +3,10 @@ package com.example.bookingapp.adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.StrictMode;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,6 +122,21 @@ public class ReservationRequestGuestAdapter  extends ArrayAdapter<AccommodationR
         Button cancelButton = convertView.findViewById(R.id.cancel);
 
         if(request != null){
+            //getting images
+            StrictMode.setThreadPolicy(policy);
+            Call<List<String>> imageCall = ClientUtils.accommodationService.getImages(accommodation.getId());
+            try{
+                Response<List<String>> response = imageCall.execute();
+                List<String> images = (List<String>) response.body();
+                if(images!=null && !images.isEmpty()) {
+                    byte[] bytes = Base64.decode(images.get(0), Base64.DEFAULT);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    image.setImageBitmap(bitmap);
+                }
+            }catch(Exception ex){
+                System.out.println("EXCEPTION WHILE GETTING IMAGES");
+                ex.printStackTrace();
+            }
             title.setText(accommodation.getTitle());
             status.setText(request.getStatusFormated());
             totalPrice.setText(request.getPrice() + "$");

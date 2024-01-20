@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.StrictMode;
+import android.util.Base64;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
@@ -45,6 +47,7 @@ import androidx.fragment.app.FragmentActivity;
 
 
 import java.io.File;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -127,12 +130,26 @@ public class AccommodationListAdapter extends ArrayAdapter<AccommodationListing>
         ImageButton favorite = convertView.findViewById(R.id.favorite);
 
         if(AccommodationListing != null){
-            //TODO: getting image
+            //getting images
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            Call<List<String>> imageCall = ClientUtils.accommodationService.getImages(AccommodationListing.getId());
+            try{
+                Response<List<String>> response = imageCall.execute();
+                List<String> images = (List<String>) response.body();
+                if(images!=null && !images.isEmpty()) {
+                    byte[] bytes = Base64.decode(images.get(0), Base64.DEFAULT);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    image.setImageBitmap(bitmap);
+                }
+            }catch(Exception ex){
+                System.out.println("EXCEPTION WHILE GETTING IMAGES");
+                ex.printStackTrace();
+            }
             title.setText(AccommodationListing.getTitle());
             description.setText(AccommodationListing.getDescription());
             totalPrice.setText(AccommodationListing.getTotalPrice() + "$");
             pricePerDay.setText(AccommodationListing.getPricePerDay() + "$/day");
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
             Call<List<AccommodationCommentDTO>> call = ClientUtils.accommodationCommentService.getAllNotDeleted(AccommodationListing.getId());
             try{

@@ -1,7 +1,10 @@
 package com.example.bookingapp.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.StrictMode;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +35,7 @@ import com.example.bookingapp.model.Reservation;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -121,6 +125,21 @@ public class ReservationOwnerAdapter extends ArrayAdapter<Reservation> {
 
 
         if(reservation != null){
+            //getting images
+            StrictMode.setThreadPolicy(policy);
+            Call<List<String>> imageCall = ClientUtils.accommodationService.getImages(accommodation.getId());
+            try{
+                Response<List<String>> responseIMG = imageCall.execute();
+                List<String> images = (List<String>) responseIMG.body();
+                if(images!=null && !images.isEmpty()) {
+                    byte[] bytes = Base64.decode(images.get(0), Base64.DEFAULT);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    image.setImageBitmap(bitmap);
+                }
+            }catch(Exception ex){
+                System.out.println("EXCEPTION WHILE GETTING IMAGES");
+                ex.printStackTrace();
+            }
             title.setText(accommodation.getTitle());
             status.setText(reservation.getStatusFormated());
             totalPrice.setText(reservation.getPrice() + "$");

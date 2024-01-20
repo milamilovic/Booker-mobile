@@ -5,12 +5,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.StrictMode;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -108,12 +111,23 @@ public class OwnerMyProfileFragment extends Fragment {
         fetchCommentsFromServer();
 
         // TODO load profile picture path
-        /*ImageView bigProfilePic = view.findViewById(R.id.profile_pic);
-        bigProfilePic.setImageURI(Uri.parse(user.getProfilePicture().getPath_mobile()));
-
+        ImageView bigProfilePic = view.findViewById(R.id.profile_pic);
         ImageView miniProfilePic = view.findViewById(R.id.mini_profile_pic);
-        miniProfilePic.setImageURI(Uri.parse(user.getProfilePicture().getPath_mobile()));
-        System.out.println(Uri.parse(user.getProfilePicture().getPath_mobile()));*/
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        Call<List<String>> imageCall = ClientUtils.userService.getImage(owner.getId());
+        try{
+            Response<List<String>> response = imageCall.execute();
+            List<String> images = (List<String>) response.body();
+            if(images!=null && !images.isEmpty()) {
+                byte[] bytes = Base64.decode(images.get(0), Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                miniProfilePic.setImageBitmap(bitmap);
+            }
+        }catch(Exception ex){
+            System.out.println("EXCEPTION WHILE GETTING IMAGES");
+            ex.printStackTrace();
+        }
 
         EditText name = view.findViewById(R.id.name);
         name.setText(owner.getName() + " " + owner.getSurname());
