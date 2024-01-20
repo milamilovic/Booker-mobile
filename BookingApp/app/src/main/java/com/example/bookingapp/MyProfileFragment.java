@@ -58,9 +58,6 @@ import retrofit2.http.Multipart;
  */
 public class MyProfileFragment extends Fragment {
 
-    private static final int PICK_IMAGE_REQUEST = 1;
-    private static final int REQUEST_IMAGE_CAPTURE = 2;
-
     private static Long id;
     private UserDTO user;
     private GuestDTO guest;
@@ -143,7 +140,7 @@ public class MyProfileFragment extends Fragment {
             }
         }
     }
-    
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
