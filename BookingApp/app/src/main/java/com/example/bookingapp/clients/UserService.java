@@ -97,4 +97,9 @@ public interface UserService {
     @Headers("Content-Type: application/json")
     @GET("users/image/{id}")
     Call<List<String>> getImage(@Path("id") Long id);
+
+    @Headers("Content-Type: application/json")
+    @POST("users/image/upload/{id}")
+    Call<String> saveImage(@Path("id") Long id,
+                           @Body List<String> images);
 }
