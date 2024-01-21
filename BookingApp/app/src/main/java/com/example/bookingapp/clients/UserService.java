@@ -84,7 +84,7 @@ public interface UserService {
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
-    @PUT("admins/{adminId}")
+    @PUT("admin/{adminId}")
     Call<UserDTO> updateAdmin(@Path("adminId") Long adminId, @Body UserDTO user);
 
     @GET("guests/{id}/cancelled")

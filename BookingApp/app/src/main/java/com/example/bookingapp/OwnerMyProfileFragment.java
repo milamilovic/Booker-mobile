@@ -232,6 +232,7 @@ public class OwnerMyProfileFragment extends Fragment {
                 FragmentTransition.to(HomeFragment.newInstance(), (FragmentActivity) getContext(), true, R.id.fragment_placeholder);
 
                 // save image
+                /*
                 Bitmap bitmap = ((BitmapDrawable) miniProfilePic.getDrawable()).getBitmap();
                 // Bitmap to byte array
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -251,6 +252,7 @@ public class OwnerMyProfileFragment extends Fragment {
                     System.out.println("EXCEPTION WHILE GETTING IMAGES");
                     ex.printStackTrace();
                 }
+               */
             }
         });
 
