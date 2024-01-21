@@ -4,6 +4,8 @@ import static com.example.bookingapp.clients.ClientUtils.retrofit;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 
+import android.util.Base64;
 import android.util.Log;
 import android.os.StrictMode;
 import android.view.LayoutInflater;
@@ -111,6 +114,26 @@ public class OwnerProfileFragment extends Fragment {
         parentLayout = view.findViewById(R.id.comment_section);
         parentLayout.removeAllViews();
         fetchOwnerCommentsFromServer();
+
+        ImageView bigProfilePic = view.findViewById(R.id.profile_pic);
+        ImageView miniProfilePic = view.findViewById(R.id.mini_profile_pic);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        Call<List<String>> imageCall = ClientUtils.userService.getImage(owner.getId());
+        try{
+            Response<List<String>> response = imageCall.execute();
+            List<String> images = (List<String>) response.body();
+            if(images!=null && !images.isEmpty()) {
+                byte[] bytes = Base64.decode(images.get(0), Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                miniProfilePic.setImageBitmap(bitmap);
+                bigProfilePic.setImageBitmap(bitmap);
+            }
+        }catch(Exception ex){
+            System.out.println("EXCEPTION WHILE GETTING IMAGES");
+            ex.printStackTrace();
+        }
+
         TextView name = view.findViewById(R.id.name);
         name.setText(owner.getName() + " " + owner.getSurname());
 

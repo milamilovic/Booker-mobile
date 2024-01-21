@@ -31,4 +31,8 @@ public class GuestDTO extends UserDTO{
     public void setNotificationEnabled(boolean notificationEnabled) {
         this.notificationEnabled = notificationEnabled;
     }
+
+    public boolean isBlocked() {
+        return blocked;
+    }
 }

@@ -8,6 +8,7 @@ import com.example.bookingapp.dto.users.OwnerDTO;
 import com.example.bookingapp.dto.users.Token;
 import com.example.bookingapp.dto.users.UserDTO;
 import com.example.bookingapp.dto.users.UserReportDTO;
+import com.example.bookingapp.model.UserReport;
 import com.example.bookingapp.model.AdminOwnerComment;
 
 import java.util.ArrayList;
@@ -105,6 +106,19 @@ public interface UserService {
     Call<String> saveImage(@Path("id") Long id,
                            @Body List<String> images);
 
+    @Headers("Content-Type: application/json")
+    @GET("admin/reported")
+    Call<ArrayList<UserDTO>> getAllReported();
+
+    @Headers("Content-Type: application/json")
+    @GET("report_user/{id}")
+    Call<List<UserReport>> getAllReportsForUser(@Path("id") Long id);
+
+    @Headers("Content-Type: application/json")
+    @GET("report_user/{userId}/block/{blocked}")
+    Call<Void> blockOrUnblock(@Path("userId") Long userId,
+                              @Path("blocked") boolean blocked);
+    
     @Headers("Content-Type: application/json")
     @GET("owners/all")
     Call<ArrayList<OwnerDTO>> getOwners();

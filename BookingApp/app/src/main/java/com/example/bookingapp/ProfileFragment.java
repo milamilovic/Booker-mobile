@@ -1,6 +1,8 @@
 package com.example.bookingapp;
 
 import android.app.AlertDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,6 +11,7 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 
 import android.os.StrictMode;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +25,8 @@ import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.dto.users.GuestDTO;
 import com.example.bookingapp.dto.users.UserDTO;
 import com.example.bookingapp.fragments.ReportUserDialogFragment;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -77,6 +82,25 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        ImageView bigProfilePic = view.findViewById(R.id.profile_pic);
+        ImageView miniProfilePic = view.findViewById(R.id.mini_profile_pic);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        Call<List<String>> imageCall = ClientUtils.userService.getImage(user.getId());
+        try{
+            Response<List<String>> response = imageCall.execute();
+            List<String> images = (List<String>) response.body();
+            if(images!=null && !images.isEmpty()) {
+                byte[] bytes = Base64.decode(images.get(0), Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                miniProfilePic.setImageBitmap(bitmap);
+                bigProfilePic.setImageBitmap(bitmap);
+            }
+        }catch(Exception ex){
+            System.out.println("EXCEPTION WHILE GETTING IMAGES");
+            ex.printStackTrace();
+        }
 
         TextView name = view.findViewById(R.id.name);
         name.setText(user.getName() + " " + user.getSurname());
