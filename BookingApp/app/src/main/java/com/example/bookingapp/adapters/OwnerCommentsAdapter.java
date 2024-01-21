@@ -128,7 +128,7 @@ public class OwnerCommentsAdapter extends ArrayAdapter<AdminOwnerComment> {
                         Call<OwnerCommentDTO> call = ClientUtils.ownerCommentService.approveComment(comment.getId());
                         try{
                             Response<OwnerCommentDTO> response = call.execute();
-                            Toast.makeText(context, "Deleted comment!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Approved comment!", Toast.LENGTH_SHORT).show();
                             FragmentTransition.to(CommentsFragment.newInstance(), (FragmentActivity) context, false, R.id.fragment_placeholder);
                         }catch(Exception ex){
                             System.out.println("EXCEPTION WHILE COMMENT DELETION");
@@ -148,7 +148,7 @@ public class OwnerCommentsAdapter extends ArrayAdapter<AdminOwnerComment> {
                         try{
                             Response<AdminOwnerComment> response = call.execute();
                             AdminOwnerComment comm = (AdminOwnerComment) response.body();
-                            Toast.makeText(context, "Approved comment!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Deleted comment!", Toast.LENGTH_SHORT).show();
                             FragmentTransition.to(CommentsFragment.newInstance(), (FragmentActivity) context, false, R.id.fragment_placeholder);
                         }catch(Exception ex){
                             System.out.println("EXCEPTION WHILE COMMENT DELETION");
