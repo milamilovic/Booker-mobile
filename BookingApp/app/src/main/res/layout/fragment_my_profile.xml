@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MyProfileFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <!--Big profile pic-->
+        <RelativeLayout
+            android:layout_width="360dp"
+            android:layout_height="360dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/white_background">
+
+            <ImageView
+                android:id="@+id/profile_pic"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha=".5" />
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <!--Whole page layout-->
+            <LinearLayout
+                android:layout_width="360dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical" >
+
+                <!--Transparent block over big ImageView-->
+                <RelativeLayout
+                    android:layout_width="360dp"
+                    android:layout_height="360dp">
+
+                    <!--Mini profile pic & name block-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:layout_alignParentBottom="true"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <androidx.cardview.widget.CardView
+                                    android:id="@+id/mini_profile_pic_wrapper"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    app:cardCornerRadius="80dp" >
+
+                                    <ImageView
+                                        android:id="@+id/mini_profile_pic"
+                                        android:layout_width="150dp"
+                                        android:layout_height="150dp"/>
+                                </androidx.cardview.widget.CardView>
+
+                                <ImageView
+                                    android:id="@+id/edit_profile_pic"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignEnd="@id/mini_profile_pic_wrapper"
+                                    android:layout_alignBottom="@id/mini_profile_pic_wrapper"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:focusableInTouchMode="true"
+                                    android:paddingBottom="5dp"
+                                    android:src="@drawable/pencil_32" />
+                            </RelativeLayout>
+                        </LinearLayout>
+
+                        <EditText
+                            android:id="@+id/name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:hint="@string/name_amp_surname_hint"
+                            android:text="Maria Jones"
+                            android:textSize="30sp"
+                            android:textColor="@color/dark_gray"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:selectAllOnFocus="true"
+                            android:inputType="textCapWords"/>
+
+                        <TextView
+                            android:id="@+id/role"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/user_role"
+                            android:drawablePadding="20dp"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="Guest"
+                            android:textColor="@color/dark_gray"
+                            android:textFontWeight="@integer/material_motion_duration_long_1"
+                            android:textSize="25sp" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <!--User info-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/half_round_corner_grayish_green_background"
+                    android:padding="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        app:cardBackgroundColor="@color/light_gray"
+                        app:cardCornerRadius="15dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:id="@+id/profileTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="Profile"
+                                android:textColor="@color/dark_gray"
+                                android:textSize="40sp" />
+
+                            <EditText
+                                android:id="@+id/email_profile"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableStart="@drawable/email_32"
+                                android:drawablePadding="20dp"
+                                android:focusable="true"
+                                android:focusableInTouchMode="true"
+                                android:inputType="textEmailAddress"
+                                android:minHeight="48dp"
+                                android:selectAllOnFocus="true"
+                                android:hint="@string/email_hint"
+                                android:text="maria.jones@domain.com"
+                                android:textColor="@color/dark_gray" />
+
+                            <EditText
+                                android:id="@+id/address_profile"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableStart="@drawable/location_32"
+                                android:drawablePadding="20dp"
+                                android:focusable="true"
+                                android:focusableInTouchMode="true"
+                                android:inputType="textPostalAddress"
+                                android:minHeight="48dp"
+                                android:selectAllOnFocus="true"
+                                android:hint="@string/address_hint"
+                                android:text="292 University Hill Road, USA"
+                                android:textColor="@color/dark_gray" />
+
+                            <EditText
+                                android:id="@+id/phone_profile"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableStart="@drawable/phone_32"
+                                android:drawablePadding="20dp"
+                                android:focusable="true"
+                                android:focusableInTouchMode="true"
+                                android:inputType="phone"
+                                android:minHeight="48dp"
+                                android:selectAllOnFocus="true"
+                                android:hint="@string/phone_number_hint"
+                                android:text="270-446-6573"
+                                android:textColor="@color/dark_gray" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!--Password settings-->
+                    <TextView
+                        android:id="@+id/profilePassword"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="Password"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="40sp" />
+
+                    <TextView
+                        android:id="@+id/new_profile_password"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="7dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="new password:"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/password_profile_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/baseline_password_24"
+                        android:drawablePadding="20dp"
+                        android:inputType="textPassword"
+                        android:minHeight="48dp"
+                        android:selectAllOnFocus="true" />
+
+                    <TextView
+                        android:id="@+id/confirm_profile_password"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="7dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="confirm password:"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/password_profile_confirm_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/baseline_password_24"
+                        android:drawablePadding="20dp"
+                        android:inputType="textPassword"
+                        android:minHeight="48dp"
+                        android:selectAllOnFocus="true" />
+
+                    <!--Buttons-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
+
+                        <Button
+                            android:id="@+id/delete_profile_button"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/round_corner_alternative"
+                            android:enabled="true"
+                            android:text="Delete account"
+                            android:textColor="@color/light_gray"
+                            android:layout_marginVertical="15dp"
+                            android:layout_marginHorizontal="10dp"/>
+
+                        <Button
+                            android:id="@+id/apply_profile_changes_button"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/round_corner_alternative"
+                            android:enabled="true"
+                            android:text="Apply changes"
+                            android:textColor="@color/light_gray"
+                            android:layout_marginVertical="15dp"
+                            android:layout_marginHorizontal="10dp"/>
+                    </LinearLayout>
+
+                    <!--Log out-->
+                    <Button
+                        android:id="@+id/logout_profile_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/round_corner_alternative"
+                        android:enabled="true"
+                        android:text="@string/log_out_button"
+                        android:textColor="@color/light_gray"
+                        android:layout_marginVertical="15dp"
+                        android:layout_marginHorizontal="10dp"/>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+
+</FrameLayout>

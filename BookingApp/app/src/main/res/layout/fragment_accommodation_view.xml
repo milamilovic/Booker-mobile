@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.AccommodationListingFragment"
+    android:background="@drawable/phone_background_1">
+
+
+    <!-- Green Linear as background -->
+    <LinearLayout
+        android:id="@+id/greenBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/round_corner_green_background"
+        android:minWidth="500dp"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <ScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/scroll_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="200sp"
+                    android:layout_marginTop="10sp"
+                    android:id="@+id/recycler"
+                    app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
+                    android:orientation="horizontal"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/round_corner"
+                    android:backgroundTint="@color/transparent_60_grayish_green"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/owner"
+                        android:textSize="20dp"
+                        android:textColor="@color/dark_gray"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/profile_picture"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            app:cardCornerRadius="20dp"
+                            android:elevation="10dp">
+                            <ImageView
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:src="@drawable/profile_image"
+                                android:adjustViewBounds="true"
+                                android:scaleType="centerCrop"
+                                />
+                        </androidx.cardview.widget.CardView>
+
+                        <TextView
+                            android:id="@+id/name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Name Surname"
+                            android:layout_toRightOf="@+id/profile_picture"
+                            android:layout_marginLeft="15dp"
+                            android:textColor="@color/dark_gray"/>
+
+                        <RatingBar
+                            android:id="@+id/rating"
+                            style="?android:attr/ratingBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/name"
+                            android:layout_toRightOf="@+id/profile_picture"
+                            android:isIndicator="true"
+                            android:numStars="5"
+                            android:stepSize="0.1"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginLeft="15dp"
+                            android:rating="3.4"/>
+
+                        <TextView
+                            android:id="@+id/view_profile"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginTop="30dp"
+                            android:text="@string/view_profile"
+                            android:textSize="12sp"
+                            android:textColor="@color/dark_gray"
+                            android:layout_marginRight="10dp"/>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/round_corner"
+                    android:backgroundTint="@color/transparent_60_grayish_green"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/description"
+                        android:textSize="20dp"
+                        android:textColor="@color/dark_gray"/>
+
+                    <TextView
+                        android:id="@+id/description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/dark_gray"
+                        android:text="The units come with parquet floors and feature a fully equipped kitchen with a microwave, a dining area, a flat-screen TV with streaming services, and a private bathroom with walk-in shower and a hair dryer. A toaster, a fridge and stovetop are also available, as well as a coffee machine and a kettle. Eventim Apollo is 2.4 km from the apartment, while South Kensington Underground Station is 3 km from the property. The nearest airport is London Heathrow Airport, 21 km from Central London Luxury Studios Fulham Close to Underground Newly Refurbished."/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/round_corner"
+                    android:backgroundTint="@color/transparent_60_grayish_green"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/address"
+                        android:textSize="20dp"
+                        android:textColor="@color/dark_gray"/>
+
+                    <TextView
+                        android:id="@+id/address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/example_address"
+                        android:textSize="14dp"
+                        android:textColor="@color/dark_gray"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/round_corner"
+                        android:backgroundTint="@color/white"
+                        >
+
+                    <Button
+                        android:id="@+id/show_map"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="130dp"
+                        android:background="@drawable/round_corner"
+                        android:backgroundTint="@color/transparent_60_dark_gray"
+                        android:text="@string/show_on_map"
+                        android:textSize="10dp"
+                        android:textColor="@color/light_gray"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/round_corner"
+                    android:backgroundTint="@color/transparent_60_grayish_green"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/amenities_bold"
+                        android:textSize="20dp"
+                        android:textColor="@color/dark_gray"/>
+
+                    <ListView
+                        android:id="@+id/amenity_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:layout_marginTop="10dp"
+                        android:minHeight="100dp"
+                        android:scrollbarThumbVertical="@android:color/darker_gray"
+                        android:scrollbarAlwaysDrawVerticalTrack="true"/>
+
+                </LinearLayout>
+
+
+                <!--Comments block-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/round_corner"
+                    android:backgroundTint="@color/transparent_60_grayish_green"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:id="@+id/profileComments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comments_bold"
+                        android:textSize="20dp"
+                        android:textColor="@color/dark_gray"/>
+
+                    <androidx.core.widget.NestedScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingBottom="10dp">
+
+                        <LinearLayout
+                            android:id="@+id/comment_section"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"/>
+                    </androidx.core.widget.NestedScrollView>
+
+
+
+
+                    <!--Add rating user-->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+
+
+                        <!--New comment-->
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="300dp"
+                            android:layout_height="wrap_content"
+                            app:cardBackgroundColor="@color/light_gray"
+                            android:layout_marginVertical="20dp"
+                            app:cardCornerRadius="15dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <EditText
+                                    android:id="@+id/new_comment"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:drawableStart="@drawable/pencil_32"
+                                    android:drawablePadding="5dp"
+                                    android:focusable="true"
+                                    android:focusableInTouchMode="true"
+                                    android:inputType="text"
+                                    android:minHeight="20dp"
+                                    android:selectAllOnFocus="true"
+                                    android:hint="new comment ..."
+                                    android:textColorHint="@color/transparent_60_dark_gray"
+                                    android:textSize="15sp"
+                                    android:textColor="@color/dark_gray" />
+
+                                <RatingBar
+                                    android:id="@+id/ratingBarComment"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:numStars="5"
+                                    android:rating="0"
+                                    android:stepSize="0.1"
+                                    style="@style/RatingBar" />
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <!--Send-->
+                        <ImageView
+                            android:id="@+id/post_comment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/send_32"
+                            android:layout_gravity="center"
+                            android:padding="5dp" />
+                    </LinearLayout>
+
+
+
+                    <!--        add comments here       -->
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/reservation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/round_corner"
+                    android:backgroundTint="@color/transparent_60_grayish_green"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/make_a_reservation"
+                        android:textSize="20dp"
+                        android:textColor="@color/dark_gray"
+                        android:layout_marginBottom="10dp"
+                        android:id="@+id/reservation_title"/>
+
+                    <com.applandeo.materialcalendarview.CalendarView
+                        android:id="@+id/calendarView"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        app:headerColor="@color/grayish_green"
+                        app:headerLabelColor="@color/light_gray"
+                        android:fadingEdge="horizontal"
+                        app:firstDayOfWeek="monday"
+                        app:type="range_picker"
+                        app:selectionColor="@color/grayish_green"/>
+
+                    <EditText
+                        android:id="@+id/dates"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxHeight="10dp"
+                        android:autofillHints="@string/when_hint"
+                        android:drawableStart="@drawable/icons8_calendar_32"
+                        android:drawablePadding="10dp"
+                        android:hint="@string/when_hint"
+                        android:textColorHint="@color/transparent_80_dark_gray"
+                        android:inputType="date"
+                        android:minHeight="48dp"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:cursorVisible="false"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/people"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxHeight="10dp"
+                            android:drawableStart="@drawable/icons8_calendar_32"
+                            android:drawablePadding="10dp"
+                            android:text="1"
+                            android:textColorHint="@color/transparent_80_dark_gray"
+                            android:inputType="number"
+                            android:minHeight="48dp"/>
+
+                        <EditText
+                            android:id="@+id/price"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxHeight="10dp"
+                            android:autofillHints="Price"
+                            android:drawableStart="@drawable/icons8_dollar_16"
+                            android:drawablePadding="10dp"
+                            android:hint="Price"
+                            android:textColorHint="@color/transparent_80_dark_gray"
+                            android:inputType="number"
+                            android:minHeight="48dp"
+                            android:clickable="false"
+                            android:focusable="false"
+                            android:cursorVisible="false"/>
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/calculate_price"
+                        android:layout_gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/round_corner_alternative"
+                        android:backgroundTint="@color/transparent_60_dark_gray"
+                        android:enabled="true"
+                        android:text="Calculate price!"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/transparent_60_dark_gray"/>
+                    <Button
+                        android:id="@+id/make_reservation_request"
+                        android:layout_gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/round_corner_alternative"
+                        android:backgroundTint="@color/transparent_60_dark_gray"
+                        android:enabled="true"
+                        android:text="@string/make_a_reservation"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/transparent_60_dark_gray"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/round_corner_alternative"
+    android:backgroundTint="@color/transparent_60_dark_gray"
+    android:paddingBottom="10dp"
+    android:paddingHorizontal="10dp"
+    android:layout_marginVertical="10dp"
+    android:id="@+id/accommodation_listing_card_item"
+    >
+    <RelativeLayout
+        android:layout_width="130dp"
+        android:layout_height="match_parent">
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="10dp"
+            android:elevation="10dp"
+            android:layout_marginTop="10dp">
+            <ImageView
+                android:id="@+id/accommodation_image"
+                android:layout_width="120dp"
+                android:layout_height="130dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                />
+        </androidx.cardview.widget.CardView>
+
+        <RelativeLayout
+            android:id="@+id/favourite_circle"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/round_corner"
+            android:backgroundTint="@color/light_gray"
+            android:layout_alignParentRight="true"
+            android:elevation="2dp"
+            android:layout_marginTop="2dp">
+
+            <ImageButton
+                android:id="@+id/favourite"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="2.5dp"
+                android:src="@drawable/icons8_heart_30_not_selected_favourite"
+                android:elevation="10dp"
+                android:background="@color/transparent"
+                android:foregroundGravity="center"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop" />
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/AccommodationListing_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="@string/accommodation_name"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/dark_gray"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="5dp"
+                android:layout_alignParentRight="true">
+                <TextView
+                    android:id="@+id/accommodation_listing_price_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="360$"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/dark_gray"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:textColor="@color/dark_gray"
+                    android:id="@+id/accommodation_listing_price_per_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="120$/day"
+                    android:textSize="10sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:minHeight="100dp">
+
+            <TextView
+                android:id="@+id/AccommodationListing_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="3dp"
+                android:text="@string/accommodation_description"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                android:textColor="@color/dark_gray"/>
+
+            <RatingBar
+                android:id="@+id/rating"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:stepSize="0.1" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>

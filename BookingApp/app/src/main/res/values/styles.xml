@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="FullScreenBottomSheetDialog" parent="Theme.Design.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowMinWidthMinor">100%</item>
+    </style>
+
+    <style name="ThemeOverlay.Calendar" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <!-- Add relevant attributes for the calendar overlay theme -->
+        <item name="colorPrimary">@color/light_gray</item>
+        <item name="colorPrimaryVariant">@color/dark_gray</item>
+        <item name="colorOnPrimary">@color/darker_green</item>
+        <!-- Add more attributes as needed -->
+    </style>
+
+
+</resources>

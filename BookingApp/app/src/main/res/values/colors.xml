@@ -3,21 +3,33 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+
+    <color name="transparent">#00FFFFFF</color>
+
     <color name="light_gray">#E4E4E4</color>
     <color name="dark_gray">#3C3C3C</color>
-    <color name="green">#096A2E</color>
+    <color name="medium_gray">#D9D9D9</color>
+    <color name="darker_green">#096A2E</color>
+    <color name="grayish_green">#90A288</color>
 
     <color name="transparent_40_light_gray">#40E4E4E4</color>
     <color name="transparent_40_dark_gray">#403C3C3C</color>
-    <color name="transparent_40_green">#40096A2E</color>
+    <color name="transparent_40_darker_green">#40096A2E</color>
+    <color name="transparent_40_grayish_green">#4090A288</color>
 
     <color name="transparent_60_light_gray">#60E4E4E4</color>
     <color name="transparent_60_dark_gray">#603C3C3C</color>
-    <color name="transparent_60_green">#60096A2E</color>
+    <color name="transparent_60_darker_green">#60096A2E</color>
+    <color name="transparent_60_grayish_green">#6090A288</color>
 
     <color name="transparent_80_light_gray">#80E4E4E4</color>
     <color name="transparent_80_dark_gray">#803C3C3C</color>
+
+
+    <color name="transparent_80_darker_green">#80096A2E</color>
+    <color name="transparent_80_grayish_green">#8090A288</color>
     <color name="transparent_80_green">#80096A2E</color>
 
     <color name="transparent_white">#00FFFFFF</color>
+
 </resources>
