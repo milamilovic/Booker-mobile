@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.StrictMode;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
 import com.example.bookingapp.clients.ClientUtils;
+import com.example.bookingapp.dto.commentsAndRatings.OwnerCommentDTO;
 import com.example.bookingapp.dto.users.OwnerDTO;
 import com.example.bookingapp.dto.users.UserDTO;
 import com.example.bookingapp.fragments.AccommodationViewFragment;
@@ -118,6 +120,22 @@ public class OwnerCommentsAdapter extends ArrayAdapter<AdminOwnerComment> {
                 approveLayout.setVisibility(View.GONE);
             } else {
                 approveLayout.setVisibility(View.VISIBLE);
+                approve.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                        StrictMode.setThreadPolicy(policy);
+                        Call<OwnerCommentDTO> call = ClientUtils.ownerCommentService.approveComment(comment.getId());
+                        try{
+                            Response<OwnerCommentDTO> response = call.execute();
+                            Toast.makeText(context, "Deleted comment!", Toast.LENGTH_SHORT).show();
+                            FragmentTransition.to(CommentsFragment.newInstance(), (FragmentActivity) context, false, R.id.fragment_placeholder);
+                        }catch(Exception ex){
+                            System.out.println("EXCEPTION WHILE COMMENT DELETION");
+                            ex.printStackTrace();
+                        }
+                    }
+                });
             }
             if (comment.isReported()){
                 deleteLayout.setVisibility(View.VISIBLE);
@@ -130,7 +148,7 @@ public class OwnerCommentsAdapter extends ArrayAdapter<AdminOwnerComment> {
                         try{
                             Response<AdminOwnerComment> response = call.execute();
                             AdminOwnerComment comm = (AdminOwnerComment) response.body();
-                            Toast.makeText(context, "Deleted comment!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Approved comment!", Toast.LENGTH_SHORT).show();
                             FragmentTransition.to(CommentsFragment.newInstance(), (FragmentActivity) context, false, R.id.fragment_placeholder);
                         }catch(Exception ex){
                             System.out.println("EXCEPTION WHILE COMMENT DELETION");

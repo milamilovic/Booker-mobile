@@ -47,4 +47,10 @@ public interface OwnerCommentService {
     })
     @GET("owner_comments/all/{owner_id}/not_deleted")
     Call<List<OwnerCommentDTO>> getAllNotDeleted(@Path("owner_id") Long owner_id);
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @PUT("owner_comments/approve/{comment_id}")
+    Call<OwnerCommentDTO> approveComment(@Path("comment_id") Long comment_id);
 }

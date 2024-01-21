@@ -342,7 +342,7 @@ public class OwnerProfileFragment extends Fragment {
 
     private void fetchOwnerCommentsFromServer() {
         OwnerCommentService apiservice = retrofit.create(OwnerCommentService.class);
-        Call<List<OwnerCommentDTO>> call = apiservice.getAllForOwner(id);
+        Call<List<OwnerCommentDTO>> call = apiservice.getAllNotDeleted(id);
         call.enqueue(new Callback<List<OwnerCommentDTO>>() {
             @Override
             public void onResponse(Call<List<OwnerCommentDTO>> call, Response<List<OwnerCommentDTO>> response) {
