@@ -412,7 +412,7 @@ public class BaseActivity extends AppCompatActivity{
                     return true;
                 }));
 
-                item6.setOnMenuItemClickListener((v -> {
+                item7.setOnMenuItemClickListener((v -> {
                     FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
                             .beginTransaction()
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)

@@ -42,4 +42,8 @@ public class OwnerDTO extends UserDTO{
     public boolean isRatingNotificationEnabled() {
         return ratingNotificationEnabled;
     }
+
+    public boolean isBlocked() {
+        return blocked;
+    }
 }
