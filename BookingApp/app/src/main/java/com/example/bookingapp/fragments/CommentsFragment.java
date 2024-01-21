@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.example.bookingapp.R;
+import com.example.bookingapp.adapters.AccommodationCommentsAdapter;
 import com.example.bookingapp.adapters.OwnerCommentsAdapter;
 import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.databinding.FragmentCommentsBinding;
@@ -30,8 +31,10 @@ public class CommentsFragment extends Fragment {
     public static ArrayList<AdminAccommodationComment> accComments = new ArrayList<AdminAccommodationComment>();
     private FragmentCommentsBinding binding;
     private OwnerCommentsAdapter ownerCommentsAdapter;
+    private AccommodationCommentsAdapter accommodationCommentsAdapter;
     private static final String ARG_PARAM = "param";
     ListView listViewOwner;
+    ListView listViewAcc;
 
     public CommentsFragment() {
         // Required empty public constructor
@@ -48,6 +51,9 @@ public class CommentsFragment extends Fragment {
         if (getArguments() != null) {
             ownerComments = getArguments().getParcelableArrayList(ARG_PARAM);
             ownerCommentsAdapter = new OwnerCommentsAdapter(getActivity(), ownerComments);
+
+            accComments = getArguments().getParcelableArrayList(ARG_PARAM);
+            accommodationCommentsAdapter = new AccommodationCommentsAdapter(getActivity(), accComments);
         }
     }
 
@@ -58,13 +64,46 @@ public class CommentsFragment extends Fragment {
         View root = binding.getRoot();
 
         listViewOwner = root.findViewById(R.id.list_owner);
+        listViewAcc = root.findViewById(R.id.list_accommodation);
 
         prepareOwnerCommentsList(ownerComments);
+        prepareAccCommentsList(accComments);
 
         ownerCommentsAdapter = new OwnerCommentsAdapter(getContext(), ownerComments);
         listViewOwner.setAdapter(ownerCommentsAdapter);
 
+        accommodationCommentsAdapter = new AccommodationCommentsAdapter(getContext(), accComments);
+        listViewAcc.setAdapter(accommodationCommentsAdapter);
+
         return root;
+    }
+
+    private void prepareAccCommentsList(ArrayList<AdminAccommodationComment> products) {
+        products.clear();
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        Call<ArrayList<Long>> call1 = ClientUtils.accommodationService.getAllIds();
+        try{
+            Response<ArrayList<Long>> response1 = call1.execute();
+            ArrayList<Long> ids = (ArrayList<Long>) response1.body();
+            for(Long u: ids){
+                StrictMode.setThreadPolicy(policy);
+                Call<List<AdminAccommodationComment>> call2 = ClientUtils.accommodationService.getCommentsForAcc(u);
+                try{
+                    Response<List<AdminAccommodationComment>> response2 = call2.execute();
+                    List<AdminAccommodationComment> accComms = (List<AdminAccommodationComment>) response2.body();
+                    for(AdminAccommodationComment ur: accComms){
+                        products.add(ur);
+                    }
+                }catch(Exception ex){
+                    System.out.println("EXCEPTION WHILE GETTING ACC COMMENTS");
+                    ex.printStackTrace();
+                }
+            }
+        }catch(Exception ex){
+            System.out.println("EXCEPTION WHILE GETTING ACC ID");
+            ex.printStackTrace();
+        }
     }
 
     private void prepareOwnerCommentsList(ArrayList<AdminOwnerComment> products) {
