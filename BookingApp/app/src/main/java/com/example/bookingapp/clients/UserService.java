@@ -8,7 +8,9 @@ import com.example.bookingapp.dto.users.OwnerDTO;
 import com.example.bookingapp.dto.users.Token;
 import com.example.bookingapp.dto.users.UserDTO;
 import com.example.bookingapp.dto.users.UserReportDTO;
+import com.example.bookingapp.model.AdminOwnerComment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -102,4 +104,16 @@ public interface UserService {
     @POST("users/image/upload/{id}")
     Call<String> saveImage(@Path("id") Long id,
                            @Body List<String> images);
+
+    @Headers("Content-Type: application/json")
+    @GET("owners/all")
+    Call<ArrayList<OwnerDTO>> getOwners();
+
+    @Headers("Content-Type: application/json")
+    @GET("owner_comments/all/{owner_id}/comments")
+    Call<List<AdminOwnerComment>> getCommentsForOwner(@Path("owner_id") Long owner_id);
+
+    @Headers("Content-Type: application/json")
+    @PUT("owner_comments/delete/{comment_id}")
+    Call<AdminOwnerComment> deleteComment(@Path("comment_id") Long comment_id);
 }

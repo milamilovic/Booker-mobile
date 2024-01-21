@@ -6,10 +6,13 @@ import com.example.bookingapp.dto.accommodation.AccommodationViewDTO;
 import com.example.bookingapp.dto.accommodation.CreateAccommodationDTO;
 import com.example.bookingapp.dto.accommodation.UpdateAvailabilityDTO;
 import com.example.bookingapp.dto.users.LoginUserDTO;
+import com.example.bookingapp.dto.users.OwnerDTO;
 import com.example.bookingapp.dto.users.Token;
 import com.example.bookingapp.model.Accommodation;
 import com.example.bookingapp.model.AccommodationListing;
 import com.example.bookingapp.model.AccommodationName;
+import com.example.bookingapp.model.AdminAccommodationComment;
+import com.example.bookingapp.model.AdminOwnerComment;
 import com.example.bookingapp.model.ApproveAccommodationListing;
 import com.example.bookingapp.model.FavouriteAccommodationListing;
 import com.example.bookingapp.model.Filter;
@@ -150,4 +153,16 @@ public interface AccommodationService {
     @Headers("Content-Type: application/json")
     @GET("accommodations/images/{id}")
     Call<List<String>> getImages(@Path("id") Long id);
+
+    @Headers("Content-Type: application/json")
+    @GET("accommodations/all/id")
+    Call<ArrayList<Long>> getAllIds();
+
+    @Headers("Content-Type: application/json")
+    @GET("accommodation_comments/{accommodation_id}/comments")
+    Call<List<AdminAccommodationComment>> getCommentsForAcc(@Path("accommodation_id") Long accommodation_id);
+
+    @Headers("Content-Type: application/json")
+    @PUT("accommodation_comments/delete/{comment_id}")
+    Call<AdminAccommodationComment> deleteComment(@Path("comment_id") Long comment_id);
 }
