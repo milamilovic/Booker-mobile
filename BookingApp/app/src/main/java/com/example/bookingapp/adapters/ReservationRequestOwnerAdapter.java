@@ -19,12 +19,16 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 
+import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
 import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.dto.users.UserDTO;
 import com.example.bookingapp.enums.ReservationRequestStatus;
 import com.example.bookingapp.enums.Role;
+import com.example.bookingapp.fragments.ReservationRequestOwnerFragment;
+import com.example.bookingapp.fragments.ReservationRequestsGuestFragment;
 import com.example.bookingapp.model.Accommodation;
 import com.example.bookingapp.model.AccommodationRequestDTO;
 import com.example.bookingapp.model.GuestOwnerViewDTO;
@@ -148,10 +152,28 @@ public class ReservationRequestOwnerAdapter  extends ArrayAdapter<AccommodationR
                 approve.setVisibility(View.VISIBLE);
                 deny.setVisibility(View.VISIBLE);
                 approve.setOnClickListener(v -> {
-                    Toast.makeText(context, "Reservation request approved!", Toast.LENGTH_SHORT).show();
+                    StrictMode.setThreadPolicy(policy);
+                    Call<String> call = ClientUtils.reservationRequestService.approveOrDenyRequest(true, request);
+                    try{
+                        Response<String> response = call.execute();
+                        Toast.makeText(context, "Reservation request approved!", Toast.LENGTH_SHORT).show();
+                    }catch(Exception ex){
+                        System.out.println("EXCEPTION WHILE APPROVING REQUEST");
+                        ex.printStackTrace();
+                    }
+                    FragmentTransition.to(ReservationRequestOwnerFragment.newInstance(), (FragmentActivity) context, false, R.id.fragment_placeholder);
                 });
                 deny.setOnClickListener(v -> {
-                    Toast.makeText(context, "Reservation request denied!", Toast.LENGTH_SHORT).show();
+                    StrictMode.setThreadPolicy(policy);
+                    Call<String> call = ClientUtils.reservationRequestService.approveOrDenyRequest(false, request);
+                    try{
+                        Response<String> response = call.execute();
+                        Toast.makeText(context, "Reservation request denied!", Toast.LENGTH_SHORT).show();
+                    }catch(Exception ex){
+                        System.out.println("EXCEPTION WHILE DENYING REQUEST");
+                        ex.printStackTrace();
+                    }
+                    FragmentTransition.to(ReservationRequestOwnerFragment.newInstance(), (FragmentActivity) context, false, R.id.fragment_placeholder);
                 });
             }
             UserDTO guest = null;
@@ -178,7 +200,7 @@ public class ReservationRequestOwnerAdapter  extends ArrayAdapter<AccommodationR
     }
 
     private boolean canReservationBeApproved(AccommodationRequestDTO request) {
-        if(request.getFromDate().compareTo(new Date()) <= 0) return false;
+        if(request.getFromDateDate().compareTo(new Date()) <= 0) return false;
         System.out.println("THIS RESERVATION DOES NOT HAVE A PASSED DATE AND STATUS IS: "  + request.getStatus());
         return request.getStatus() == ReservationRequestStatus.WAITING;
     }

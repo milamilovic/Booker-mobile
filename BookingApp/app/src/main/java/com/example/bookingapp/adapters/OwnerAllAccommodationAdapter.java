@@ -114,39 +114,9 @@ public class OwnerAllAccommodationAdapter extends ArrayAdapter<ApproveAccommodat
                 status.setText("unapproved");
             }*/
             card.setOnClickListener(v->{
-                ArrayList<Image> images = new ArrayList<Image>();
-                images.add(new Image(1L, "../../../../../res/drawable/paris_image.jpg", "", null));
-                images.add(new Image(1L, "../../../../../res/drawable/copenhagen_image.jpg", "", null));
-                images.add(new Image(1L, "../../../../../res/drawable/madrid_image.jpg", "", null));
-                images.add(new Image(1L, "../../../../../res/drawable/room_image.jpg", "", null));
-                images.add(new Image(1L, "../../../../../res/drawable/hotel_image.jpg", "", null));
-                images.add(new Image(1L, "../../../../../res/drawable/lisbon_image.jpg", "", null));
-                ArrayList<Amenity> amenities = new ArrayList<Amenity>();
-                amenities.add(new Amenity(1L, "Wi-Fi", "", null));
-                amenities.add(new Amenity(2L, "AC", "", null));
-                amenities.add(new Amenity(3L, "popular location", "", null));
-                amenities.add(new Amenity(4L, "clean", "", null));
-                FragmentTransition.to(AccommodationViewFragment.newInstance(new Accommodation(accommodation.getId(),
-                        accommodation.getTitle(), "The units come with parquet floors and feature a fully equipped kitchen with a microwave, a dining area, a flat-screen TV with streaming services, and a private bathroom with walk-in shower and a hair dryer.",
-                        images, new ArrayList<Availability>(), new ArrayList<Price>(), new ArrayList<Object>(), new ArrayList<Object>(), 2L, amenities, 1, 5, true, new Address(1L, "Ulica 111", "London", 12.21, 15.55, null), false, 0)), (FragmentActivity) context, true, R.id.fragment_placeholder);
             });
 
             update.setOnClickListener(v->{
-                ArrayList<Image> images = new ArrayList<Image>();
-                images.add(new Image(1L, "../../../../../res/drawable/paris_image.jpg", "", null));
-                images.add(new Image(1L, "../../../../../res/drawable/copenhagen_image.jpg", "", null));
-                images.add(new Image(1L, "../../../../../res/drawable/madrid_image.jpg", "", null));
-                images.add(new Image(1L, "../../../../../res/drawable/room_image.jpg", "", null));
-                images.add(new Image(1L, "../../../../../res/drawable/hotel_image.jpg", "", null));
-                images.add(new Image(1L, "../../../../../res/drawable/lisbon_image.jpg", "", null));
-                ArrayList<Amenity> amenities = new ArrayList<Amenity>();
-                amenities.add(new Amenity(1L, "Wi-Fi", "", null));
-                amenities.add(new Amenity(2L, "AC",  "", null));
-                amenities.add(new Amenity(3L, "popular location",  "", null));
-                amenities.add(new Amenity(4L, "clean",  "", null));
-                FragmentTransition.to(UpdateAccommodationFragment.newInstance(new Accommodation(accommodation.getId(),
-                        accommodation.getTitle(), "The units come with parquet floors and feature a fully equipped kitchen with a microwave, a dining area, a flat-screen TV with streaming services, and a private bathroom with walk-in shower and a hair dryer.",
-                        images, new ArrayList<Availability>(), new ArrayList<Price>(), new ArrayList<Object>(), new ArrayList<Object>(), 2L, amenities, 1, 5, true, new Address(1L, "Ulica 111", "London", 12.21, 15.55, null), false, 0)), (FragmentActivity) context, true, R.id.fragment_placeholder);
             });
         }
 

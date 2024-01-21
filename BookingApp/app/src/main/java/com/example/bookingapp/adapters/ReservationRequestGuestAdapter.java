@@ -170,7 +170,7 @@ public class ReservationRequestGuestAdapter  extends ArrayAdapter<AccommodationR
                             }).setPositiveButton("I'm sure!", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            //TODO: cancel and refresh
+                            // cancel and refresh
                             StrictMode.setThreadPolicy(policy);
                             Call<Void> call = ClientUtils.reservationRequestService.cancel(request.getGuestId(), request.getId());
                             try{
@@ -194,7 +194,7 @@ public class ReservationRequestGuestAdapter  extends ArrayAdapter<AccommodationR
     }
 
     private boolean canReservationBeCanceled(AccommodationRequestDTO request) {
-        if(request.getFromDate().compareTo(new Date()) <= 0) return false;
+        if(request.getFromDateDate().compareTo(new Date()) <= 0) return false;
         System.out.println("THIS RESERVATION DOES NOT HAVE A PASSED DATE AND STATUS IS: "  + request.getStatus());
         return request.getStatus() == ReservationRequestStatus.WAITING;
     }

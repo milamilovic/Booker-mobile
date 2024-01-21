@@ -17,10 +17,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
 import com.example.bookingapp.clients.ClientUtils;
+import com.example.bookingapp.fragments.ApproveAccommodationFragment;
 import com.example.bookingapp.model.ApproveAccommodationListing;
 import com.example.bookingapp.model.ReportedUsersListing;
 
@@ -106,8 +108,10 @@ public class ApproveAccommodationAdapter extends ArrayAdapter<ApproveAccommodati
                     try {
                         Response<String> response = stringCall.execute();
                         System.out.println(response.body());
+                        FragmentTransition.to(ApproveAccommodationFragment.newInstance(), (FragmentActivity) context, false, R.id.fragment_placeholder);
                     } catch (Exception ex) {
                         System.out.println("EXCEPTION WHILE APPROVING ACCOMMODATION");
+                        FragmentTransition.to(ApproveAccommodationFragment.newInstance(), (FragmentActivity) context, false, R.id.fragment_placeholder);
                         ex.printStackTrace();
                     }
                 }
