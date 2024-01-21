@@ -41,4 +41,11 @@ public interface AccommodationCommentService {
     })
     @PUT("accommodation_comments/report/{comment_id}")
     Call<AccommodationCommentDTO> report(@Path("comment_id") Long comment_id);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @PUT("accommodation_comments/approve/{comment_id}")
+    Call<AccommodationCommentDTO> approveComment(@Path("comment_id") Long comment_id);
 }

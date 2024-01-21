@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
 import com.example.bookingapp.clients.ClientUtils;
+import com.example.bookingapp.dto.commentsAndRatings.AccommodationCommentDTO;
 import com.example.bookingapp.dto.users.OwnerDTO;
 import com.example.bookingapp.fragments.CommentsFragment;
 import com.example.bookingapp.model.Accommodation;
@@ -108,15 +109,34 @@ public class AccommodationCommentsAdapter extends ArrayAdapter<AdminAccommodatio
                 approveLayout.setVisibility(View.GONE);
             } else {
                 approveLayout.setVisibility(View.VISIBLE);
+                approve.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                        StrictMode.setThreadPolicy(policy);
+                        Call<AccommodationCommentDTO> call = ClientUtils.accommodationCommentService.approveComment(comment.getId());
+
+                        try{
+                            Response<AccommodationCommentDTO> response = call.execute();
+                            Toast.makeText(context, "Approved accommodation comment!", Toast.LENGTH_SHORT).show();
+                            FragmentTransition.to(CommentsFragment.newInstance(), (FragmentActivity) context, false, R.id.fragment_placeholder);
+                        }catch(Exception ex){
+                            System.out.println("EXCEPTION WHILE COMMENT APPROVAL");
+                            ex.printStackTrace();
+                        }
+                    }
+                });
             }
             if (comment.isReported()){
                 deleteLayout.setVisibility(View.VISIBLE);
+
                 delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                         StrictMode.setThreadPolicy(policy);
                         Call<AdminAccommodationComment> call = ClientUtils.accommodationService.deleteComment(comment.getId());
+
                         try{
                             Response<AdminAccommodationComment> response = call.execute();
                             AdminAccommodationComment comm = (AdminAccommodationComment) response.body();
