@@ -34,6 +34,7 @@ import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.dto.users.UserDTO;
 import com.example.bookingapp.enums.Role;
 import com.example.bookingapp.fragments.ApproveAccommodationFragment;
+import com.example.bookingapp.fragments.CommentsFragment;
 import com.example.bookingapp.fragments.CreateAccommodationBaseFragment;
 import com.example.bookingapp.fragments.FavouriteAccommodationsFragment;
 import com.example.bookingapp.fragments.HomeFragment;
@@ -418,6 +419,20 @@ public class BaseActivity extends AppCompatActivity{
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                             .replace(R.id.fragment_placeholder, ReportedUsersFragment.newInstance());
                     transaction.addToBackStack(null);
+                    transaction.commit();
+
+                    // Close the drawer after selecting an option
+                    drawerLayout.closeDrawer(GravityCompat.START);
+
+                    return true;
+                }));
+
+                item6.setOnMenuItemClickListener((v -> {
+                    FragmentTransaction transaction = BaseActivity.this.getSupportFragmentManager()
+                            .beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .replace(R.id.fragment_placeholder, CommentsFragment.newInstance());
+                    transaction.addToBackStack("comments");
                     transaction.commit();
 
                     // Close the drawer after selecting an option
