@@ -124,6 +124,7 @@ public class LoginFragment extends Fragment {
                             getActivity().getSupportFragmentManager().popBackStack();
                             Toast.makeText(root.getContext(), "Login successful", Toast.LENGTH_SHORT).show();
                             saveRole();
+                            ((BaseActivity)getActivity()).setNavigation();
                             FragmentTransition.to(HomeFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
                         } else {
                             Log.d("REZ","Meesage recieved: "+response.code());

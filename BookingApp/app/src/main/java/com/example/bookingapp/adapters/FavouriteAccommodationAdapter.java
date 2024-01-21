@@ -2,7 +2,10 @@ package com.example.bookingapp.adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.StrictMode;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,11 +113,25 @@ public class FavouriteAccommodationAdapter  extends ArrayAdapter<FavouriteAccomm
         ImageButton favorite = convertView.findViewById(R.id.favorite);
 
         if(AccommodationListing != null){
-            image.setImageResource(R.drawable.apartment_image);
+            //getting images
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            Call<List<String>> imageCall = ClientUtils.accommodationService.getImages(AccommodationListing.getId());
+            try{
+                Response<List<String>> response = imageCall.execute();
+                List<String> images = (List<String>) response.body();
+                if(images!=null && !images.isEmpty()) {
+                    byte[] bytes = Base64.decode(images.get(0), Base64.DEFAULT);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    image.setImageBitmap(bitmap);
+                }
+            }catch(Exception ex){
+                System.out.println("EXCEPTION WHILE GETTING IMAGES");
+                ex.printStackTrace();
+            }
             title.setText(AccommodationListing.getTitle());
             description.setText(AccommodationListing.getShortDescription());
             address.setText(AccommodationListing.getAddress().getCity());
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
             Call<List<AccommodationRating>> call = ClientUtils.accommodationService.getRatings(AccommodationListing.getId());
             try{

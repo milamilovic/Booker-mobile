@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.FavouriteAccommodationsFragment"
-    android:background="@drawable/phone_background_1">
+    android:background="@drawable/phone_background_1"
+    android:id="@+id/background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,6 +17,7 @@
         android:backgroundTint="@color/transparent_60_grayish_green">
 
         <TextView
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Favourite accommodations"

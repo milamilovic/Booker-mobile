@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -21,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -40,6 +43,7 @@ import com.applandeo.materialcalendarview.CalendarDay;
 import com.applandeo.materialcalendarview.CalendarUtils;
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
+import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
 import com.applandeo.materialcalendarview.listeners.OnDayLongClickListener;
 import com.example.bookingapp.FragmentTransition;
@@ -61,6 +65,7 @@ import com.example.bookingapp.enums.Role;
 import com.example.bookingapp.model.Accommodation;
 import com.example.bookingapp.model.AccommodationListing;
 import com.example.bookingapp.model.Amenity;
+import com.example.bookingapp.model.Availability;
 import com.example.bookingapp.model.Image;
 import com.example.bookingapp.model.ReservationRequest;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -169,15 +174,26 @@ public class AccommodationViewFragment extends Fragment {
         address.setText(accommodation.getAddress().toString());
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler);
-        ArrayList<Integer> images = new ArrayList<Integer>();
-        images.add(R.drawable.apartment_image);
-        images.add(R.drawable.paris_image);
-        images.add(R.drawable.copenhagen_image);
-        images.add(R.drawable.madrid_image);
-        images.add(R.drawable.room_image);
-        images.add(R.drawable.hotel_image);
-        images.add(R.drawable.lisbon_image);
-        images.add(R.drawable.london_image);
+        ArrayList<Bitmap> images = new ArrayList<Bitmap>();
+
+        //getting images
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        Call<List<String>> imageCall = ClientUtils.accommodationService.getImages(this.accommodation.getId());
+        try{
+            Response<List<String>> response = imageCall.execute();
+            List<String> imageStrings = (List<String>) response.body();
+            if(imageStrings!=null && !imageStrings.isEmpty()) {
+                for(String image : imageStrings) {
+                    byte[] bytes = Base64.decode(image, Base64.DEFAULT);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    images.add(bitmap);
+                }
+            }
+        }catch(Exception ex){
+            System.out.println("EXCEPTION WHILE GETTING IMAGES");
+            ex.printStackTrace();
+        }
 
         ImageAdapter adapter = new ImageAdapter(getContext(), images);
         recyclerView.setAdapter(adapter);
@@ -195,6 +211,7 @@ public class AccommodationViewFragment extends Fragment {
         });
 
         CalendarView calendarView = view.findViewById(R.id.calendarView);
+        calendarView.setSwipeEnabled(false);
         EditText dates = view.findViewById(R.id.dates);
         calendarView.setOnDayClickListener(new OnDayClickListener() {
             @Override
@@ -213,6 +230,23 @@ public class AccommodationViewFragment extends Fragment {
                 }
             }
         });
+
+        //date range
+        Calendar minDate = Calendar.getInstance();
+        calendarView.setMinimumDate(minDate);
+        Calendar maxDate = (Calendar) minDate.clone();
+        maxDate.add(Calendar.YEAR, 2);
+        calendarView.setMaximumDate(maxDate);
+        //reverse availability
+        Calendar today = Calendar.getInstance();
+        List<Calendar> disabledDates = new ArrayList<>();
+        while(today.before(maxDate)) {
+            if(!isDateAvailable(today)) {
+                disabledDates.add((Calendar) today.clone());
+            }
+            today.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        calendarView.setDisabledDays(disabledDates);
 
         ScrollView scrollView = view.findViewById(R.id.scroll_view);
 
@@ -359,7 +393,6 @@ public class AccommodationViewFragment extends Fragment {
         editor.putLong(OWNER_ID_KEY, accommodation.getOwner_id());
         editor.apply();
         if(userID!=0) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
             Call<UserDTO> userCall = ClientUtils.userService.getById(userID);
             try{
@@ -501,6 +534,27 @@ public class AccommodationViewFragment extends Fragment {
 
 
         return view;
+    }
+
+    private boolean isDateAvailable(Calendar today) {
+        if (today.before(Calendar.getInstance())) {
+            return false;
+        }
+
+        // Iterate through availabilities
+        List<Availability> availabilities = accommodation.getAvailabilities();
+        for (Availability availability : availabilities) {
+            Calendar startDate = Calendar.getInstance();
+            startDate.setTime(availability.getStartDate());
+            Calendar endDate = Calendar.getInstance();
+            endDate.setTime(availability.getEndDate());
+
+            // Check if today is within the availability range
+            if (today.compareTo(startDate) >= 0 && today.compareTo(endDate) <= 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void fetchAccommodationCommentsFromServer() {

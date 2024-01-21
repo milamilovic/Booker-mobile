@@ -1,16 +1,25 @@
 package com.example.bookingapp;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.StrictMode;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +41,9 @@ import com.example.bookingapp.dto.users.UserDTO;
 import com.example.bookingapp.enums.Role;
 import com.example.bookingapp.fragments.HomeFragment;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -60,6 +71,21 @@ public class OwnerMyProfileFragment extends Fragment {
     private LinearLayout parentLayout;
     private float total = 0;
     private float average = 0;
+
+    ImageView updateProfilePic;
+    ImageView bigProfilePic;
+    ImageView miniProfilePic;
+    private ActivityResultLauncher<Intent> imageChooserLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    if (data != null) {
+                        handleImageResult(data);
+                    }
+                }
+            }
+    );
 
     public OwnerMyProfileFragment() {
         // Required empty public constructor
@@ -98,6 +124,31 @@ public class OwnerMyProfileFragment extends Fragment {
         }
     }
 
+    private void openImageChooser() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        Intent chooserIntent = Intent.createChooser(galleryIntent, "Choose Image Source");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{cameraIntent});
+
+        imageChooserLauncher.launch(chooserIntent);
+    }
+
+    private void handleImageResult(Intent data) {
+        Uri selectedImageUri = data.getData();
+        if (selectedImageUri != null) {
+            miniProfilePic.setImageURI(selectedImageUri);
+            bigProfilePic.setImageURI(selectedImageUri);
+        } else {
+            Bundle extras = data.getExtras();
+            if (extras != null) {
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                miniProfilePic.setImageBitmap(imageBitmap);
+                bigProfilePic.setImageBitmap(imageBitmap);
+            }
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -107,13 +158,25 @@ public class OwnerMyProfileFragment extends Fragment {
         parentLayout.removeAllViews();
         fetchCommentsFromServer();
 
-        // TODO load profile picture path
-        /*ImageView bigProfilePic = view.findViewById(R.id.profile_pic);
-        bigProfilePic.setImageURI(Uri.parse(user.getProfilePicture().getPath_mobile()));
-
-        ImageView miniProfilePic = view.findViewById(R.id.mini_profile_pic);
-        miniProfilePic.setImageURI(Uri.parse(user.getProfilePicture().getPath_mobile()));
-        System.out.println(Uri.parse(user.getProfilePicture().getPath_mobile()));*/
+        // profile picture
+        bigProfilePic = view.findViewById(R.id.profile_pic);
+        miniProfilePic = view.findViewById(R.id.mini_profile_pic);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        Call<List<String>> imageCall = ClientUtils.userService.getImage(owner.getId());
+        try{
+            Response<List<String>> response = imageCall.execute();
+            List<String> images = (List<String>) response.body();
+            if(images!=null && !images.isEmpty()) {
+                byte[] bytes = Base64.decode(images.get(0), Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                miniProfilePic.setImageBitmap(bitmap);
+                bigProfilePic.setImageBitmap(bitmap);
+            }
+        }catch(Exception ex){
+            System.out.println("EXCEPTION WHILE GETTING IMAGES");
+            ex.printStackTrace();
+        }
 
         EditText name = view.findViewById(R.id.name);
         name.setText(owner.getName() + " " + owner.getSurname());
@@ -168,6 +231,26 @@ public class OwnerMyProfileFragment extends Fragment {
                 }
                 FragmentTransition.to(HomeFragment.newInstance(), (FragmentActivity) getContext(), true, R.id.fragment_placeholder);
 
+                // save image
+                Bitmap bitmap = ((BitmapDrawable) miniProfilePic.getDrawable()).getBitmap();
+                // Bitmap to byte array
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                byte[] imageBytes = outputStream.toByteArray();
+                String base64Image = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+                List<String> picturesToSave = new ArrayList<>();
+                picturesToSave.add(base64Image);
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+                Call<String> imageCall = ClientUtils.userService.saveImage(owner.getId(), picturesToSave);
+                try{
+                    Response<String> response = imageCall.execute();
+                    String images = (String) response.body();
+                    System.out.println("Odgovor: " + images);
+                }catch(Exception ex){
+                    System.out.println("EXCEPTION WHILE GETTING IMAGES");
+                    ex.printStackTrace();
+                }
             }
         });
 
@@ -208,6 +291,14 @@ public class OwnerMyProfileFragment extends Fragment {
                 Intent i = new Intent(getActivity(), BaseActivity.class);
                 startActivity(i);
                 //TODO log out
+            }
+        });
+
+        updateProfilePic = view.findViewById(R.id.edit_profile_pic);
+        updateProfilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openImageChooser();
             }
         });
 

@@ -1,6 +1,10 @@
 package com.example.bookingapp.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.StrictMode;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +22,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
+import com.example.bookingapp.clients.ClientUtils;
 import com.example.bookingapp.fragments.AccommodationViewFragment;
 import com.example.bookingapp.fragments.UpdateAccommodationFragment;
 import com.example.bookingapp.model.Accommodation;
@@ -29,6 +34,10 @@ import com.example.bookingapp.model.Image;
 import com.example.bookingapp.model.Price;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class OwnerAllAccommodationAdapter extends ArrayAdapter<ApproveAccommodationListing> {
     private ArrayList<ApproveAccommodationListing> approveAccommodationListings;
@@ -79,6 +88,22 @@ public class OwnerAllAccommodationAdapter extends ArrayAdapter<ApproveAccommodat
         LinearLayout card = convertView.findViewById(R.id.approve_accommodation_card);
 
         if (accommodation != null) {
+            //getting images
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            Call<List<String>> imageCall = ClientUtils.accommodationService.getImages(accommodation.getId());
+            try{
+                Response<List<String>> response = imageCall.execute();
+                List<String> images = (List<String>) response.body();
+                if(images!=null && !images.isEmpty()) {
+                    byte[] bytes = Base64.decode(images.get(0), Base64.DEFAULT);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    image.setImageBitmap(bitmap);
+                }
+            }catch(Exception ex){
+                System.out.println("EXCEPTION WHILE GETTING IMAGES");
+                ex.printStackTrace();
+            }
             title.setText(accommodation.getTitle());
             description.setText(accommodation.getDescription());
             ratingBar.setRating(accommodation.getRating());
@@ -103,7 +128,7 @@ public class OwnerAllAccommodationAdapter extends ArrayAdapter<ApproveAccommodat
                 amenities.add(new Amenity(4L, "clean", "", null));
                 FragmentTransition.to(AccommodationViewFragment.newInstance(new Accommodation(accommodation.getId(),
                         accommodation.getTitle(), "The units come with parquet floors and feature a fully equipped kitchen with a microwave, a dining area, a flat-screen TV with streaming services, and a private bathroom with walk-in shower and a hair dryer.",
-                        images, new ArrayList<Availability>(), new ArrayList<Price>(), new ArrayList<Object>(), new ArrayList<Object>(), 2L, amenities, 1, 5, true, new Address(1L, "Ulica 111", "London", 12.21, 15.55, null), false)), (FragmentActivity) context, true, R.id.fragment_placeholder);
+                        images, new ArrayList<Availability>(), new ArrayList<Price>(), new ArrayList<Object>(), new ArrayList<Object>(), 2L, amenities, 1, 5, true, new Address(1L, "Ulica 111", "London", 12.21, 15.55, null), false, 0)), (FragmentActivity) context, true, R.id.fragment_placeholder);
             });
 
             update.setOnClickListener(v->{
@@ -121,7 +146,7 @@ public class OwnerAllAccommodationAdapter extends ArrayAdapter<ApproveAccommodat
                 amenities.add(new Amenity(4L, "clean",  "", null));
                 FragmentTransition.to(UpdateAccommodationFragment.newInstance(new Accommodation(accommodation.getId(),
                         accommodation.getTitle(), "The units come with parquet floors and feature a fully equipped kitchen with a microwave, a dining area, a flat-screen TV with streaming services, and a private bathroom with walk-in shower and a hair dryer.",
-                        images, new ArrayList<Availability>(), new ArrayList<Price>(), new ArrayList<Object>(), new ArrayList<Object>(), 2L, amenities, 1, 5, true, new Address(1L, "Ulica 111", "London", 12.21, 15.55, null), false)), (FragmentActivity) context, true, R.id.fragment_placeholder);
+                        images, new ArrayList<Availability>(), new ArrayList<Price>(), new ArrayList<Object>(), new ArrayList<Object>(), 2L, amenities, 1, 5, true, new Address(1L, "Ulica 111", "London", 12.21, 15.55, null), false, 0)), (FragmentActivity) context, true, R.id.fragment_placeholder);
             });
         }
 

@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="@drawable/round_corner_alternative"
-    android:backgroundTint="@color/transparent_60_dark_gray"
+    android:backgroundTint="@color/light_gray"
     android:paddingBottom="10dp"
     android:paddingHorizontal="10dp"
     android:layout_marginVertical="10dp"
