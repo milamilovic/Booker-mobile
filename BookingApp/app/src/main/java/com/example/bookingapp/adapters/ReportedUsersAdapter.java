@@ -91,7 +91,6 @@ public class ReportedUsersAdapter extends ArrayAdapter<UserReport> {
                     parent, false);
         }
         TextView sender = convertView.findViewById(R.id.sender);
-        ImageView receiverImage = convertView.findViewById(R.id.profile_pic);
         TextView receiver = convertView.findViewById(R.id.receiver);
         TextView date = convertView.findViewById(R.id.report_date);
         TextView reason = convertView.findViewById(R.id.report_reason);
@@ -112,21 +111,6 @@ public class ReportedUsersAdapter extends ArrayAdapter<UserReport> {
                 Response<UserDTO> response1 = call1.execute();
                 reported = (UserDTO) response1.body();
                 receiver.setText(reported.getName() + " " + reported.getSurname());
-                // getting profile picture
-                StrictMode.setThreadPolicy(policy);
-                Call<List<String>> imageCall = ClientUtils.userService.getImage(reported.getId());
-                try{
-                    Response<List<String>> response = imageCall.execute();
-                    List<String> images = (List<String>) response.body();
-                    if(images!=null && !images.isEmpty()) {
-                        byte[] bytes = Base64.decode(images.get(0), Base64.DEFAULT);
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        receiverImage.setImageBitmap(bitmap);
-                    }
-                }catch(Exception ex){
-                    System.out.println("EXCEPTION WHILE GETTING IMAGES");
-                    ex.printStackTrace();
-                }
                 numberOfReports.setText("Number of reports: " + getNumberOfReports(reported.getId()));
                 // btn style
                 if (reported.getRole() == Role.GUEST){
@@ -140,6 +124,12 @@ public class ReportedUsersAdapter extends ArrayAdapter<UserReport> {
                             block.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.transparent_60_dark_gray));
                             block.setTextColor(ContextCompat.getColor(getContext(), R.color.dark_gray));
                             block.setText("Unblock user");
+                        }
+                        else{
+                            blocked = reportedGuest.isBlocked();
+                            block.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.dark_gray));
+                            block.setTextColor(ContextCompat.getColor(getContext(), R.color.light_gray));
+                            block.setText("Block user");
                         }
                     } catch(Exception ex){
                         System.out.println("EXCEPTION WHILE GETTING REPORTED");
@@ -156,6 +146,12 @@ public class ReportedUsersAdapter extends ArrayAdapter<UserReport> {
                             block.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.transparent_60_dark_gray));
                             block.setTextColor(ContextCompat.getColor(getContext(), R.color.dark_gray));
                             block.setText("Unblock user");
+                        }
+                        else{
+                            blocked = reportedOwner.isBlocked();
+                            block.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.dark_gray));
+                            block.setTextColor(ContextCompat.getColor(getContext(), R.color.light_gray));
+                            block.setText("Block user");
                         }
                     } catch(Exception ex){
                         System.out.println("EXCEPTION WHILE GETTING REPORTED");
@@ -180,12 +176,6 @@ public class ReportedUsersAdapter extends ArrayAdapter<UserReport> {
 
             date.setText(formatter.format(request.getDate()));
             reason.setText(request.getReason());
-            receiverImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FragmentTransition.to(ProfileFragment.newInstance(request.getReportedId()), (FragmentActivity) context, true, R.id.fragment_placeholder);
-                }
-            });
             receiver.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
