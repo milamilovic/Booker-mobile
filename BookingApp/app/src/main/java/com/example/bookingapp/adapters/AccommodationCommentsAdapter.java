@@ -75,7 +75,6 @@ public class AccommodationCommentsAdapter extends ArrayAdapter<AdminAccommodatio
                     parent, false);
         }
         TextView acc_title = convertView.findViewById(R.id.acc_title);
-        ImageView acc_image = convertView.findViewById(R.id.acc_image);
         TextView commenter_name = convertView.findViewById(R.id.commenter_name);
         TextView date = convertView.findViewById(R.id.comment_date);
         TextView comment_text = convertView.findViewById(R.id.comment_text);
@@ -96,21 +95,6 @@ public class AccommodationCommentsAdapter extends ArrayAdapter<AdminAccommodatio
                 Response<Accommodation> responseAcc = callAcc.execute();
                 Accommodation accommodation = (Accommodation) responseAcc.body();
                 acc_title.setText(accommodation.getTitle());
-                // getting profile picture
-                StrictMode.setThreadPolicy(policy);
-                Call<List<String>> imageCall = ClientUtils.accommodationService.getImages(comment.getAccommodationId());
-                try{
-                    Response<List<String>> response = imageCall.execute();
-                    List<String> images = (List<String>) response.body();
-                    if(images!=null && !images.isEmpty()) {
-                        byte[] bytes = Base64.decode(images.get(0), Base64.DEFAULT);
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        acc_image.setImageBitmap(bitmap);
-                    }
-                }catch(Exception ex){
-                    System.out.println("EXCEPTION WHILE GETTING IMAGES");
-                    ex.printStackTrace();
-                }
             }catch(Exception ex){
                 System.out.println("EXCEPTION WHILE GETTING ACC");
                 ex.printStackTrace();

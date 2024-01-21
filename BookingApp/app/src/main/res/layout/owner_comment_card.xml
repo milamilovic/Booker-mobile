@@ -25,23 +25,11 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="10dp"
             android:gravity="center">
-            <androidx.cardview.widget.CardView
-                android:id="@+id/profile_pic_wrapper"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="80dp" >
-
-                <ImageView
-                    android:id="@+id/profile_pic"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp" />
-            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/owner_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
                 android:text="Maria Jones"
                 android:textSize="18sp"
                 android:textStyle="bold"

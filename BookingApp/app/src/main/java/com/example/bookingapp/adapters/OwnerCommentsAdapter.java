@@ -85,7 +85,6 @@ public class OwnerCommentsAdapter extends ArrayAdapter<AdminOwnerComment> {
                     parent, false);
         }
         TextView owner_name = convertView.findViewById(R.id.owner_name);
-        ImageView ownerImage = convertView.findViewById(R.id.profile_pic);
         TextView commenter_name = convertView.findViewById(R.id.commenter_name);
         TextView date = convertView.findViewById(R.id.comment_date);
         TextView comment_text = convertView.findViewById(R.id.comment_text);
@@ -106,21 +105,6 @@ public class OwnerCommentsAdapter extends ArrayAdapter<AdminOwnerComment> {
                 Response<OwnerDTO> responseOwner = callOwner.execute();
                 OwnerDTO owner = (OwnerDTO) responseOwner.body();
                 owner_name.setText(owner.getName() + " " + owner.getSurname());
-                // getting profile picture
-                StrictMode.setThreadPolicy(policy);
-                Call<List<String>> imageCall = ClientUtils.userService.getImage(owner.getId());
-                try{
-                    Response<List<String>> response = imageCall.execute();
-                    List<String> images = (List<String>) response.body();
-                    if(images!=null && !images.isEmpty()) {
-                        byte[] bytes = Base64.decode(images.get(0), Base64.DEFAULT);
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        ownerImage.setImageBitmap(bitmap);
-                    }
-                }catch(Exception ex){
-                    System.out.println("EXCEPTION WHILE GETTING IMAGES");
-                    ex.printStackTrace();
-                }
             }catch(Exception ex){
                 System.out.println("EXCEPTION WHILE GETTING OWNER");
                 ex.printStackTrace();
