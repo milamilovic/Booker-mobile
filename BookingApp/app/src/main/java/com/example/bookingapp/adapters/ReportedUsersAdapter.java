@@ -111,7 +111,7 @@ public class ReportedUsersAdapter extends ArrayAdapter<UserReport> {
                 Response<UserDTO> response1 = call1.execute();
                 reported = (UserDTO) response1.body();
                 receiver.setText(reported.getName() + " " + reported.getSurname());
-                numberOfReports.setText("Number of reports: " + getNumberOfReports(reported.getId()));
+                numberOfReports.setText("Number of reportings: " + getNumberOfReports(reported.getId()));
                 // btn style
                 if (reported.getRole() == Role.GUEST){
                     StrictMode.setThreadPolicy(policy);
