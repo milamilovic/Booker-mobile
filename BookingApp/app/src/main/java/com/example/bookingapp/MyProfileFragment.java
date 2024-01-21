@@ -231,9 +231,27 @@ public class MyProfileFragment extends Fragment {
                 }
 
                 else if (user.getRole() == Role.ADMIN) {
+                    user.setName(name.getText().toString().split(" ")[0]);
+                    user.setSurname(name.getText().toString().split(" ")[1]);
+                    user.setEmail(email.getText().toString());
+                    user.setAddress(address.getText().toString());
+                    user.setPhone(phone.getText().toString());
+                    if (!password.getText().toString().isEmpty() && !confirm_password.getText().toString().isEmpty() &&
+                            password.getText().toString().equals(confirm_password.getText().toString())) {
+                        user.setPassword(password.getText().toString());
+                        System.out.println("Ovo je sifra " + password.getText().toString());
+                    } else if (!password.getText().toString().isEmpty() && !confirm_password.getText().toString().isEmpty() &&
+                            !password.getText().toString().equals(confirm_password.getText().toString())) {
+                        Toast.makeText(getActivity(), "Password and confirm password must be the same!", Toast.LENGTH_SHORT).show();
+                    } else if ((password.getText().toString().isEmpty() && !confirm_password.getText().toString().isEmpty()) ||
+                            (!password.getText().toString().isEmpty() && confirm_password.getText().toString().isEmpty())) {
+                        Toast.makeText(getActivity(), "Password and confirm password must be the same!", Toast.LENGTH_SHORT).show();
+                    } else if (password.getText().toString().isEmpty() && confirm_password.getText().toString().isEmpty()) {
+                    }
                     Call<UserDTO> stringCall = ClientUtils.userService.updateAdmin(user.getId(), user);
                     try {
                         Response<UserDTO> response = stringCall.execute();
+                        System.out.println("dunja");
                         System.out.println(response.body());
                     } catch (Exception ex) {
                         System.out.println("EXCEPTION WHILE UPDATING ADMIN DATA");
@@ -243,7 +261,7 @@ public class MyProfileFragment extends Fragment {
                 }
 
                 // save image
-                Bitmap bitmap = ((BitmapDrawable) miniProfilePic.getDrawable()).getBitmap();
+                /*Bitmap bitmap = ((BitmapDrawable) miniProfilePic.getDrawable()).getBitmap();
                 // Bitmap to byte array
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
@@ -261,7 +279,7 @@ public class MyProfileFragment extends Fragment {
                 }catch(Exception ex){
                     System.out.println("EXCEPTION WHILE GETTING IMAGES");
                     ex.printStackTrace();
-                }
+                }*/
             }
         });
 
