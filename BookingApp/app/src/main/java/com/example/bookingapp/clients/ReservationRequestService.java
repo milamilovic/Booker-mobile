@@ -4,6 +4,7 @@ import com.example.bookingapp.dto.accommodation.AccommodationViewDTO;
 import com.example.bookingapp.dto.accommodation.CreateAccommodationDTO;
 import com.example.bookingapp.model.AccommodationRequestDTO;
 import com.example.bookingapp.model.Filter;
+import com.example.bookingapp.model.ReservationRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,4 +79,8 @@ public interface ReservationRequestService {
                                                              @Path("searchDate") String searchDate,
                                                              @Path("accName") String accName,
                                                              @Body ArrayList<Filter> createAccommodationDTO);
+
+    @Headers("Content-Type: application/json")
+    @PUT("requests/owner/accept_reservation/{accept}")
+    Call<String> approveOrDenyRequest(@Path("accept") boolean accept, @Body AccommodationRequestDTO reservationRequest);
 }

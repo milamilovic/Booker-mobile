@@ -11,6 +11,7 @@ import com.example.bookingapp.dto.users.Token;
 import com.example.bookingapp.model.Accommodation;
 import com.example.bookingapp.model.AccommodationListing;
 import com.example.bookingapp.model.AccommodationName;
+import com.example.bookingapp.model.Address;
 import com.example.bookingapp.model.AdminAccommodationComment;
 import com.example.bookingapp.model.AdminOwnerComment;
 import com.example.bookingapp.model.ApproveAccommodationListing;
@@ -99,6 +100,13 @@ public interface AccommodationService {
     })
     @PUT("accommodations/update/{accommodationId}")
     Call<String> updateAccommodation(@Path("accommodationId")Long accommodationId, @Body Accommodation accommodation);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @PUT("accommodations/update/{accommodationId}/address")
+    Call<String> updateAccommodationAddress(@Path("accommodationId")Long accommodationId, @Body Address address);
 
     @Headers("Content-Type: application/json")
     @POST("accommodations/search/{startDate}/{endDate}/{location}/{people}/filter")

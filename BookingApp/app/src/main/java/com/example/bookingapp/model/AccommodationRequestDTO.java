@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.example.bookingapp.enums.ReservationRequestStatus;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -14,8 +15,8 @@ public class AccommodationRequestDTO implements Parcelable {
     private Long id;
     private Long guestId;
     private Long accommodationId;
-    private Date fromDate;
-    private Date toDate;
+    private String fromDate;
+    private String toDate;
     private int numberOfGuests;
     private ReservationRequestStatus status;
     private double price;
@@ -23,7 +24,7 @@ public class AccommodationRequestDTO implements Parcelable {
 
     public AccommodationRequestDTO(Long id, Long guestId, Long accId,
                                    int guests, double price, boolean deleted,
-                                   ReservationRequestStatus status, Date from, Date to) {
+                                   ReservationRequestStatus status, String from, String to) {
         this.id = id;
         this.guestId = guestId;
         this.accommodationId = accId;
@@ -46,8 +47,8 @@ public class AccommodationRequestDTO implements Parcelable {
         price = in.readDouble();
         deleted = in.readInt()==0;
         status = (ReservationRequestStatus) in.readSerializable();
-        fromDate = (java.util.Date) in.readSerializable();
-        toDate = (java.util.Date) in.readSerializable();
+        fromDate = in.readString();
+        toDate = in.readString();
     }
 
     public Long getId() {
@@ -90,24 +91,44 @@ public class AccommodationRequestDTO implements Parcelable {
         this.deleted = pricePerDay;
     }
 
-    public Date getFromDate() {
+    public String getFromDate() {
         return fromDate;
     }
 
-    public void setFromDate(Date fromDate) {
+    public void setFromDate(String fromDate) {
         this.fromDate = fromDate;
     }
 
-    public Date getToDate() {
+    public String getToDate() {
         return toDate;
     }
 
-    public void setToDate(Date toDate) {
+    public Date getFromDateDate(){
+        SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
+        try{
+            return s.parse(getFromDate());
+        } catch (ParseException e) {
+
+        }
+        return null;
+    }
+
+    public Date getToDateDate(){
+        SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
+        try{
+            return s.parse(getToDate());
+        } catch (ParseException e) {
+
+        }
+        return null;
+    }
+
+    public void setToDate(String toDate) {
         this.toDate = toDate;
     }
 
     public String getDateRange() {
-        return formatDate(fromDate) + " - " + formatDate(toDate);
+        return formatDate(getFromDateDate()) + " - " + formatDate(getToDateDate());
     }
 
     public void setGuestId(Long guestId) {
@@ -132,8 +153,8 @@ public class AccommodationRequestDTO implements Parcelable {
                 "guest='" + guestId + '\'' +
                 "accommodation='" + accommodationId + '\'' +
                 ", status='" + status + '\'' +
-                ", from='" + formatDate(fromDate) + '\'' +
-                ", to='" + formatDate(toDate) + '\'' +
+                ", from='" + fromDate + '\'' +
+                ", to='" + toDate + '\'' +
                 '}';
     }
 
@@ -161,8 +182,8 @@ public class AccommodationRequestDTO implements Parcelable {
             dest.writeInt(1);
         }
         dest.writeSerializable(status);
-        dest.writeSerializable(fromDate);
-        dest.writeSerializable(toDate);
+        dest.writeString(fromDate);
+        dest.writeString(toDate);
     }
 
     public static final Creator<AccommodationRequestDTO> CREATOR = new Creator<AccommodationRequestDTO>() {
