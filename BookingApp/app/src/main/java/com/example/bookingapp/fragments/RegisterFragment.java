@@ -2,6 +2,8 @@ package com.example.bookingapp.fragments;
 
 
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,6 +31,7 @@ import android.widget.ToggleButton;
 
 
 import com.example.bookingapp.BaseActivity;
+import com.example.bookingapp.BuildConfig;
 import com.example.bookingapp.FragmentTransition;
 import com.example.bookingapp.R;
 import com.example.bookingapp.clients.ClientUtils;
@@ -57,8 +60,11 @@ public class RegisterFragment extends Fragment {
     private EditText emailEditText;
     private EditText passwordEditText;
     private EditText passwordConfirmEditText;
+    private RadioGroup roleRadio;
     private RadioButton radioGuest;
     private RadioButton radioOwner;
+
+    private static final String ACTIVATION_LINK_KEY = "activation_link";
 
     public static RegisterFragment newInstance() {return new RegisterFragment();}
 
@@ -73,6 +79,7 @@ public class RegisterFragment extends Fragment {
         emailEditText = binding.email;
         passwordEditText = binding.password;
         passwordConfirmEditText = binding.passwordConfirm;
+        roleRadio = binding.roleRadio;
         radioGuest = binding.radioGuest;
         radioOwner = binding.radioOwner;
 
@@ -89,13 +96,51 @@ public class RegisterFragment extends Fragment {
                 createUserDTO.setPhone(phoneEditText.getText().toString());
                 createUserDTO.setEmail(emailEditText.getText().toString());
                 createUserDTO.setPassword(passwordEditText.getText().toString());
-                if (radioGuest.isSelected()) {
+                int selectedRoleId = roleRadio.getCheckedRadioButtonId();
+                if (selectedRoleId == R.id.radio_guest) {
                     createUserDTO.setRole(Role.GUEST);
-                } else {
+                } else if (selectedRoleId == R.id.radio_owner) {
                     createUserDTO.setRole(Role.OWNER);
                 }
 
-               new RegisterAsyncTask().execute(createUserDTO);
+               Call<CreateUserDTO> call = ClientUtils.userService.saveUser(createUserDTO);
+                SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                call.enqueue(new Callback<CreateUserDTO>() {
+                    @Override
+                    public void onResponse(Call<CreateUserDTO> call, Response<CreateUserDTO> response) {
+                        if (response.code() == 201) {
+                            Log.d("REZ", "Message received: " + response.code());
+                            Toast.makeText(getContext(), "Activation link is sent to your email address!", Toast.LENGTH_SHORT).show();
+
+                            Call<UserDTO> userDTOCall = ClientUtils.userService.activateProfile(response.body().getActivationLink());
+                            userDTOCall.enqueue(new Callback<UserDTO>() {
+                                @Override
+                                public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
+                                    if (response.code() == 200) {
+                                        Log.d("REZ", "Message received: " + response.code());
+                                    } else {
+                                        Log.d("REZ", "Message received: " + response.code());
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<UserDTO> call, Throwable t) {
+                                    Log.d("REZ", t.getMessage() != null ? t.getMessage() : "error");
+                                }
+                            });
+                        } else {
+                            Log.d("REZ", "Message received: " + response.code());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CreateUserDTO> call, Throwable t) {
+                        Log.d("REZ", t.getMessage() != null ? t.getMessage() : "error");
+                    }
+                });
+
+
+
 //                Call<CreateUserDTO> call = ClientUtils.userService.saveUser(createUserDTO);
 //
 //                try {
@@ -150,32 +195,7 @@ public class RegisterFragment extends Fragment {
             }
         });
 
-        Uri data = getActivity().getIntent().getData();
-        if (data != null) {
-            String activationLink = data.getLastPathSegment();
-            Log.d("Activation Link: ", activationLink);
-            if (activationLink != null) {
-                Call<UserDTO> call = ClientUtils.userService.activateProfile(activationLink);
-                call.enqueue(new Callback<UserDTO>() {
-                    @Override
-                    public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
-                        Log.d("REZ", "OnResponse entered");
-                        if (response.code() == 200) {
-                            Log.d("REZ", "Message received" + response.code());
-                            Toast.makeText(root.getContext(), "Activation successful", Toast.LENGTH_SHORT).show();
-                            FragmentTransition.to(HomeFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
-                        } else {
-                            Log.d("REZ", "Message received: " + response.code());
-                        }
-                    }
 
-                    @Override
-                    public void onFailure(Call<UserDTO> call, Throwable t) {
-                        Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
-                    }
-                });
-            }
-        }
         return root;
     }
 
@@ -213,28 +233,5 @@ public class RegisterFragment extends Fragment {
         super.onDetach();
     }
 
-    private class RegisterAsyncTask extends AsyncTask<CreateUserDTO, Void, Boolean> {
 
-        @Override
-        protected Boolean doInBackground(CreateUserDTO... createUserDTOs) {
-            try {
-                Response<CreateUserDTO> response = ClientUtils.userService.saveUser(createUserDTOs[0]).execute();
-                return response.isSuccessful();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean success) {
-            if (success) {
-                getActivity().getSupportFragmentManager().popBackStack();
-                Toast.makeText(getContext(), "Register successful", Toast.LENGTH_SHORT).show();
-                FragmentTransition.to(HomeFragment.newInstance(), getActivity(), false, R.id.fragment_placeholder);
-            } else {
-                Toast.makeText(getContext(), "Register failed", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 }

@@ -10,11 +10,12 @@ public class CreateUserDTO {
     public String address;
     public String phone;
     public Role role;
+    public String activationLink;
 
     public CreateUserDTO() {
     }
 
-    public CreateUserDTO(String name, String surname, String email, String password, String address, String phone, Role role) {
+    public CreateUserDTO(String name, String surname, String email, String password, String address, String phone, Role role, String activationLink) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -22,6 +23,7 @@ public class CreateUserDTO {
         this.address = address;
         this.phone = phone;
         this.role = role;
+        this.activationLink = activationLink;
     }
 
     public String getName() {
@@ -78,5 +80,13 @@ public class CreateUserDTO {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getActivationLink() {
+        return activationLink;
+    }
+
+    public void setActivationLink(String activationLink) {
+        this.activationLink = activationLink;
     }
 }
